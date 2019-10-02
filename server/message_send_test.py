@@ -11,16 +11,15 @@ def test_message_send():
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
-    token2 = authRegisterDict2['token']
+    '''authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']'''
 
     channelsCreateDict = channels_create(token, "Channel 1", True)
     channelID = channelsCreateDict['channel_id']
 
     # testing v1.0
-    message_send(token, channelID, "Hello")
     with pytest.raises(ValueError, match = r"*"):
-        message_send(token2, channelID, "Hello world")
+        message_send(token, channelID, "Hello world" * 300)
 
     # testing v1.1
     try:
