@@ -17,11 +17,12 @@ def test_message_send():
     channelsCreateDict = channels_create(token, "Channel 1", True)
     channelID = channelsCreateDict['channel_id']
 
-    # testing
+    # testing v1.0
     message_send(token, channelID, "Hello")
     with pytest.raises(ValueError, match = r"*"):
         message_send(token2, channelID, "Hello world")
 
+    # testing v1.1
     try:
         message_send(token, channelID, "Hello" * 300)
     except ValueError:
