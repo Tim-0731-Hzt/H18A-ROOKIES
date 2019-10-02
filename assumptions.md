@@ -11,3 +11,5 @@ We assumed that a message_id is not valid is because this message hase been dele
 We assumed that a valid react_id should be in range 0-10. Any other react_id will be considered invalid.
 In message_unreact:
 same as message_react
+In user_profile:
+We assumed that any negative number is a invalid u_id
