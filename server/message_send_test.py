@@ -1,4 +1,6 @@
 from message_send import *
+import auth_register
+import channels_create
 import pytest
 
 # Send a message from authorised_user to the channel specified by channel_id
@@ -19,4 +21,16 @@ def test_message_send():
     message_send(token, channelID, "Hello")
     with pytest.raises(ValueError, match = r"*"):
         message_send(token2, channelID, "Hello world")
+
+    try:
+        message_send(token, channelID, "Hello" * 300)
+    except ValueError:
+        # The exception was raised as expected
+        pass
+    else:
+        # If we get here, then the ValueError was not raised
+        # raise an exception so that the test fails
+        raise AssertionError("ValueError was not raised")
+
+
 
