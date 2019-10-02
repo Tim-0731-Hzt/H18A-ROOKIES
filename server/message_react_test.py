@@ -32,7 +32,7 @@ def test_message_react_messremoved():
     message_remove(token, messID)
     # testing
     try:
-        message_react(token2, messID, react_id):
+        message_react(token2, messID, 1):
     except ValueError:
         pass
     else:
@@ -58,7 +58,7 @@ def test_message_react_nonexist():
     messID = messDict['message_id']
     # testing
     try:
-        message_react(token2, -5, react_id):
+        message_react(token2, -5, 1):
     except ValueError:
         pass
     else:
