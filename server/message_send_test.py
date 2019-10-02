@@ -1,4 +1,4 @@
-from message_send import *
+import message_send
 import auth_register
 import channels_create
 import pytest
