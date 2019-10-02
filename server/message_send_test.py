@@ -1,7 +1,22 @@
 from message_send import *
+import pytest
 
 # Send a message from authorised_user to the channel specified by channel_id
 # ValueError when: Message is more than 1000 characters
 
 def test_message_send():
+    # set up
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    channelsCreateDict = channels_create(token, "Channel 1", True)
+    channelID = channelsCreateDict['channel_id']
+
+    # testing
+    message_send(token, channelID, "Hello")
+    with pytest.raises(ValueError, match = r"*"):
+        message_send(token2, channelID, "Hello world")
 
