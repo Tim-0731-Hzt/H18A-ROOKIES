@@ -1,6 +1,8 @@
 Assumptions
 ======
 
+## Message Part
+
 **Overall:**
 * We assumed that assume everytime a "def test_*()" function is run that the "state" of the program is reset (e.g. all users are wiped).
 * We assumed that all functions excepted for the function we are testing should be working as we expected.
