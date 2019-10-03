@@ -17,3 +17,6 @@ In channel_details
 
 In channel_messages
     * we need a function that could count the total number of messages. Now, I assume that the total number of messages are 150
+
+In channel_invite
+    * u_id is the id who is invited
