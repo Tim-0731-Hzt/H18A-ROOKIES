@@ -1,11 +1,11 @@
 Assumptions
 ======
 
-## Message Part
-
-**Overall:**
+## Overall
 * We assumed that assume everytime a "def test_*()" function is run that the "state" of the program is reset (e.g. all users are wiped).
 * We assumed that all functions excepted for the function we are testing should be working as we expected.
+
+## Message Part
 
 **In message_send:**
 * We assumed that this function will return a message dictionary what will contain message_id, u_id, message, time_created, is_unread.
