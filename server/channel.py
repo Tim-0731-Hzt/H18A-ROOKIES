@@ -41,3 +41,6 @@ def channels_listall(token):
 # Creates a new channel with that name that is either a public or private channel
 def channels_create(token, name, is_public):
     pass
+# Send a message from authorised_user to the channel specified
+# by channel_id automatically at a specified time in the future
+def message_sendlater(token, channel_id, message, time_sent):
