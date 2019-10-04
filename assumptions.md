@@ -10,10 +10,15 @@ Assumptions
 **In message_send:**
 * We assumed that this function will return a message dictionary what will contain message_id, u_id, message, time_created, is_unread.
 * We assumed that message longer than 1000 will cause a ValueError.
+* We assumed that after someone has created a channel, that user is already a member and owner of that channel.
 
 **In message_remove:**
 * We assumed that message_id nolonger exists means this message has been removed already such that a ValueError will occur.
 * We assumed that the first two user joined the channel and the poster are authorised to remove this message.
+* We assumed that a normal user cannot remove a message with message_id was sent by another member in channel.
+* We assumed that a normal user cannot remove a message which was posted by the owner of the channel or an admin or owner of slackr.
+* We assumed that a normal user can only remove the message sent by himself.
+* We assumed that the owner of the channel or an admin or owner of slackr can remove any messages.
 
 **In message_edit:**
 * same as message_remove

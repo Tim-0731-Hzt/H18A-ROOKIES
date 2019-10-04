@@ -5,33 +5,30 @@ from auth import *
 import pytest
 from Error import AccessError
 
-def test_message_send():
+def test_message_send_valerr():
     # set up
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
-    '''authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
-    token2 = authRegisterDict2['token']'''
+    channelsCreateDict = channels_create(token, "Channel 1", True)
+    channelID = channelsCreateDict['channel_id']
+
+    # testing ValueError
+    with pytest.raises(ValueError, match = r"*"):
+        message_send(token, channelID, "Hello world" * 300)
+
+def test_message_send_normal():
+    # set up
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
 
     channelsCreateDict = channels_create(token, "Channel 1", True)
     channelID = channelsCreateDict['channel_id']
 
-    # testing v1.0
-    with pytest.raises(ValueError, match = r"*"):
-        message_send(token, channelID, "Hello world" * 300)
+    # testing (check if this function works properly)
+    message_send(token, channelID, "Hello world")
 
-    # testing v1.1
-    try:
-        message_send(token, channelID, "Hello" * 300)
-    except ValueError:
-        # The exception was raised as expected
-        pass
-    else:
-        # If we get here, then the ValueError was not raised
-        # raise an exception so that the test fails
-        raise AssertionError("ValueError was not raised")
-
-def test_message_remove_1():
+def test_message_remove_valerr1():
 
     # set up
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
@@ -45,16 +42,31 @@ def test_message_remove_1():
 
     messDict = message_send(token, channelID, "Hello")
     messID = messDict['message_id']
-    # testing
+    # testing (try to remove a message that has alredy been removed)
     message_remove(token, messID)
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_remove(token, messID)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
-def test_message_remove_2():
+def test_message_remove_valerr2():
+
+    # set up
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    channelsCreateDict = channels_create(token, "Channel 1", True)
+    channelID = channelsCreateDict['channel_id']
+
+    messDict = message_send(token, channelID, "Hello")
+    messID = messDict['message_id']
+    # testing (try to remove a message with message_id -1)
+    with pytest.raises(ValueError, match = r"*"):
+        message_remove(token, -1)
+
+
+def test_message_remove_accerr1():
 
     # set up
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
@@ -73,13 +85,58 @@ def test_message_remove_2():
 
     messDict = message_send(token, channelID, "Hello")
     messID = messDict['message_id']
-    # testing
-    try:
+    # testing (a normal user (unauthorised) try to remove a message which was posted by the owner of the channel)
+    with pytest.raises(AccessError, match = r"*"):
         message_remove(token3, messID)
-    except AccessError:
-        pass
-    else:
-        raise AssertionError("AccessError was not raised")
+
+def test_message_remove_accerr2():
+
+    # set up
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    authRegisterDict3 = auth_register("normaluser1@gmail.com", "123456789", "normal1", "user")
+    token3 = authRegisterDict2['token']
+
+    authRegisterDict4 = auth_register("normaluser2@gmail.com", "123456789", "normal2", "user")
+    token4 = authRegisterDict2['token']
+
+    channelsCreateDict = channels_create(token, "Channel 1", True)
+    channelID = channelsCreateDict['channel_id']
+    channel_join(token2, channelID)
+    channel_join(token3, channelID)
+    channel_join(token4, channelID)
+
+    messDict = message_send(token3, channelID, "Hello")
+    messID = messDict['message_id']
+    # testing (a normal user try to remove a message with message_id was sent by another member in channel)
+    with pytest.raises(AccessError, match = r"*"):
+        message_remove(token2, messID)
+
+def test_message_remove_accerr3():
+
+    # set up
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    token3 = authRegisterDict2['token']
+
+    channelsCreateDict = channels_create(token, "Channel 1", True)
+    channelID = channelsCreateDict['channel_id']
+    channel_join(token2, channelID)
+    channel_join(token3, channelID)
+
+    messDict = message_send(token3, channelID, "Hello")
+    messID = messDict['message_id']
+    # testing (The channel owner try to remove a message which was posted by the a member in channel)
+    message_remove(token2, messID)
 
 def test_message_edit_1():
 
