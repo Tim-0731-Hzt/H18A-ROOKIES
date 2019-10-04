@@ -1,7 +1,7 @@
 # MESSAGE TEST
-from message import *
-from channel import *
-from auth import *
+import message
+import channel
+import auth
 import pytest
 from Error import AccessError
 
@@ -138,7 +138,7 @@ def test_message_remove_accerr3():
     # testing (The channel owner try to remove a message which was posted by the a member in channel)
     message_remove(token2, messID)
 
-def test_message_edit_1():
+def test_message_edit_Valerr():
 
     # set up
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
@@ -158,15 +158,84 @@ def test_message_edit_1():
     messDict = message_send(token, channelID, "Hello")
     messID = messDict['message_id']
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_edit(token3, messID, "I Love 1531")
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
+
+def test_message_edit_accerr1():
+
+    # set up
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    token3 = authRegisterDict2['token']
+
+    channelsCreateDict = channels_create(token, "Channel 1", True)
+    channelID = channelsCreateDict['channel_id']
+    channel_join(token2, channelID)
+    channel_join(token3, channelID)
+
+    messDict = message_send(token, channelID, "Hello")
+    messID = messDict['message_id']
+    # testing (a normal user (unauthorised) try to edit a message which was posted by the owner of the channel)
+    with pytest.raises(AccessError, match = r"*"):
+        message_edit(token3, messID)
+
+def test_message_edit_accerr2():
+
+    # set up
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    authRegisterDict3 = auth_register("normaluser1@gmail.com", "123456789", "normal1", "user")
+    token3 = authRegisterDict2['token']
+
+    authRegisterDict4 = auth_register("normaluser2@gmail.com", "123456789", "normal2", "user")
+    token4 = authRegisterDict2['token']
+
+    channelsCreateDict = channels_create(token, "Channel 1", True)
+    channelID = channelsCreateDict['channel_id']
+    channel_join(token2, channelID)
+    channel_join(token3, channelID)
+    channel_join(token4, channelID)
+
+    messDict = message_send(token3, channelID, "Hello")
+    messID = messDict['message_id']
+    # testing (a normal user try to edit a message with message_id was sent by another member in channel)
+    with pytest.raises(AccessError, match = r"*"):
+        message_edit(token2, messID)
+
+def test_message_edit_accerr3():
+
+    # set up
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    token3 = authRegisterDict2['token']
+
+    channelsCreateDict = channels_create(token, "Channel 1", True)
+    channelID = channelsCreateDict['channel_id']
+    channel_join(token2, channelID)
+    channel_join(token3, channelID)
+
+    messDict = message_send(token3, channelID, "Hello")
+    messID = messDict['message_id']
+    # testing (The channel owner try to edit a message which was posted by the a member in channel)
+    message_edit(token2, messID)
+
 
 def test_message_react_messremoved():
-        # set up
+    # set up
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
