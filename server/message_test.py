@@ -255,6 +255,8 @@ def test_message_react_messremoved():
     message_remove(token, messID)
     # testing
     with pytest.raises(ValueError, match = r"*"):
+        message_remove(token, messID)
+
 
 def test_message_react_nonexist():
     # set up
@@ -276,7 +278,7 @@ def test_message_react_nonexist():
     messID = messDict['message_id']
     # testing
     with pytest.raises(ValueError, match = r"*"):
-        message_react(token2, -5, 1):
+        message_react(token2, -5, 1)
 
 def test_message_react_invalidreactid():
     # set up
@@ -298,7 +300,7 @@ def test_message_react_invalidreactid():
     messID = messDict['message_id']
     # testing
     with pytest.raises(ValueError, match = r"*"):
-        message_react(token2, messID, -1):
+        message_react(token2, messID, -1)
 
 def test_message_react_reacted():
     # set up
@@ -318,10 +320,10 @@ def test_message_react_reacted():
 
     messDict = message_send(token, channelID, "Hello")
     messID = messDict['message_id']
-    message_react(token2, messID, 2):
+    message_react(token2, messID, 2)
     # testing
     with pytest.raises(ValueError, match = r"*"):
-        message_react(token3, messID, 3):
+        message_react(token3, messID, 3)
 
 def test_message_unreact_invalidmessid():
     # set up
@@ -341,7 +343,7 @@ def test_message_unreact_invalidmessid():
 
     messDict = message_send(token, channelID, "Hello")
     messID = messDict['message_id']
-    message_react(token2, messID, 1):
+    message_react(token2, messID, 1)
     # testing
     with pytest.raises(ValueError, match = r"*"):
         message_unreact(token2, -1, 1)
@@ -364,7 +366,7 @@ def test_message_unreact_invalidreactid():
 
     messDict = message_send(token, channelID, "Hello")
     messID = messDict['message_id']
-    message_react(token2, messID, 1):
+    message_react(token2, messID, 1)
     # testing
     with pytest.raises(ValueError, match = r"*"):
         message_unreact(token2, messID, -1)
