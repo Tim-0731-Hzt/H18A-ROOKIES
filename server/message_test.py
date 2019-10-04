@@ -254,15 +254,10 @@ def test_message_react_messremoved():
     messID = messDict['message_id']
     message_remove(token, messID)
     # testing
-    try:
-        message_react(token2, messID, 1):
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
+    with pytest.raises(ValueError, match = r"*"):
 
 def test_message_react_nonexist():
-        # set up
+    # set up
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -280,12 +275,8 @@ def test_message_react_nonexist():
     messDict = message_send(token, channelID, "Hello")
     messID = messDict['message_id']
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_react(token2, -5, 1):
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test_message_react_invalidreactid():
     # set up
@@ -306,12 +297,8 @@ def test_message_react_invalidreactid():
     messDict = message_send(token, channelID, "Hello")
     messID = messDict['message_id']
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_react(token2, messID, -1):
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test_message_react_reacted():
     # set up
@@ -333,12 +320,8 @@ def test_message_react_reacted():
     messID = messDict['message_id']
     message_react(token2, messID, 2):
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_react(token3, messID, 3):
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test_message_unreact_invalidmessid():
     # set up
@@ -360,12 +343,8 @@ def test_message_unreact_invalidmessid():
     messID = messDict['message_id']
     message_react(token2, messID, 1):
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_unreact(token2, -1, 1)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test_message_unreact_invalidreactid():
     # set up
@@ -387,12 +366,8 @@ def test_message_unreact_invalidreactid():
     messID = messDict['message_id']
     message_react(token2, messID, 1):
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_unreact(token2, messID, -1)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test_message_unreact_notreacted():
     # set up
@@ -413,12 +388,8 @@ def test_message_unreact_notreacted():
     messDict = message_send(token, channelID, "Hello")
     messID = messDict['message_id']
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_unreact(token2, messID, 1)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test_message_pin_invalidmessid():
     # set up
@@ -439,12 +410,8 @@ def test_message_pin_invalidmessid():
     messDict = message_send(token, channelID, "Hello")
     messID = messDict['message_id']
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_pin(token, -1)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test_message_pin_unauthoriseduser():
     # set up
@@ -465,12 +432,8 @@ def test_message_pin_unauthoriseduser():
     messDict = message_send(token, channelID, "Hello")
     messID = messDict['message_id']
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_pin(token3, messID)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test_message_pin_alreadypinned():
     # set up
@@ -492,12 +455,8 @@ def test_message_pin_alreadypinned():
     messID = messDict['message_id']
     message_pin(token, messID)
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_pin(token, messID)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test_message_pin_notinchannel():
     # set up
@@ -519,12 +478,8 @@ def test_message_pin_notinchannel():
     messID = messDict['message_id']
     channel_leave(token, channelID)
     # testing
-    try:
+    with pytest.raises(AccessError, match = r"*"):
         message_pin(token, messID)
-    except AccessError:
-        pass
-    else:
-        raise AssertionError("AccessError was not raised")
 
 def test_message_unpin_invalidmessid():
     # set up
@@ -546,12 +501,8 @@ def test_message_unpin_invalidmessid():
     messID = messDict['message_id']
     message_pin(token, messID)
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_unpin(token, -1)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test_message_unpin_unauthoriseduser():
     # set up
@@ -573,12 +524,8 @@ def test_message_unpin_unauthoriseduser():
     messID = messDict['message_id']
     message_pin(token, messID)
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_unpin(token3, messID)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test_message_unpin_alreadyunpinned():
     # set up
@@ -601,12 +548,8 @@ def test_message_unpin_alreadyunpinned():
     message_pin(token, messID)
     message_unpin(token, messID)
     # testing
-    try:
+    with pytest.raises(ValueError, match = r"*"):
         message_unpin(token, messID)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test_message_unpin_notinchannel():
     # set up
@@ -629,9 +572,5 @@ def test_message_unpin_notinchannel():
     message_pin(token, messID)
     channel_leave(token, channelID)
     # testing
-    try:
+    with pytest.raises(AccessError, match = r"*"):
         message_unpin(token, messID)
-    except AccessError:
-        pass
-    else:
-        raise AssertionError("AccessError was not raised")
