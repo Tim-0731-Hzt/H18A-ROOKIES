@@ -4,6 +4,7 @@ from channel import channel_join
 from channel import channel_leave
 from channel import auth_register
 from channel import channel_addowner
+from channel import channel_removeowner
 import error
 import pytest
 
@@ -86,5 +87,21 @@ def channel_addowner_test():
                 if (u_id == parts):
                 assert(False)
         pass
+
+# test for channel_removeowner
 def channel_removeowner_ChannelNotExist_test():
-        
+        authRegisterDict = auth_register("zhttim684123@gmail.com","asdffdf","jack","ma")
+        token = authRegisterDict["token"]
+        channel_id = channels_create(token,"meet up",True)
+        u_id = authRegisterDict["u_id"]
+        with pytest.raises(ValueError,match="*"):
+                channel_removeowner(token, channel_id, u_id)
+def channel_removeowner_UserNotExist_test():
+        authRegisterDict = auth_register("zhttim684123@gmail.com","asdffdf","Tim","hu")
+        token = authRegisterDict["token"]
+        channel_id = channels_create(token,"meet up",True)
+        u_id = authRegisterDict["u_id"]
+        with pytest.raises(ValueError,match="*"):
+                channel_removeowner(token, channel_id, u_id)
+def channel_removeowner_test():
+        pass
