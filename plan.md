@@ -1,3 +1,6 @@
+Plan
+======
+
 **About Iteration 2**
 
 All the function are divided into 6 parts, "auth", "channel", "user", "standup", "others", "messages"
