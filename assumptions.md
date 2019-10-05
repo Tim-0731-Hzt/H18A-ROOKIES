@@ -5,8 +5,6 @@ Assumptions
 * We assumed that assume everytime a "def test_*()" function is run that the "state" of the program is reset (e.g. all users are wiped).
 * We assumed that all functions excepted for the function we are testing should be working as we expected.
 
-## Message Part
-
 **In message_send:**
 * We assumed that this function will return a message dictionary what will contain message_id, u_id, message, time_created, is_unread.
 * We assumed that message longer than 1000 will cause a ValueError.
@@ -32,3 +30,12 @@ Assumptions
 
 **In user_profile:**
 * We assumed that any negative number is a invalid u_id
+
+**In standup_send:**
+* We assumed the time is unchanged so the user willnot be expired from the current session. The same thing happened in **all "stand"** function.
+
+**In upload photo:**
+* We assumed that the input value for the image was directly a number -- so if it is not "200 Ok", it won't pass the test.
+
+**In admin_userpermission_change:**
+* I assumed the person already is the admin or the owner.
