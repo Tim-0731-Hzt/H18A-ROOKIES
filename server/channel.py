@@ -2,7 +2,7 @@
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
 def auth_register(email, password, name_first, name_last):
-
+    pass
 # Invites a user (with user id u_id) to join a channel with ID channel_id. 
 # Once invited the user is added to the channel immediately
 def channel_invite (token, channel_id, u_id):
@@ -44,3 +44,4 @@ def channels_create(token, name, is_public):
 # Send a message from authorised_user to the channel specified
 # by channel_id automatically at a specified time in the future
 def message_sendlater(token, channel_id, message, time_sent):
+    pass
