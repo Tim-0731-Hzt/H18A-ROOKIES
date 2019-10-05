@@ -35,19 +35,19 @@ def channel_leave_test1():
 
 
 # tests for channel_join
-def channel_join_notExist_test():
+def test_channel_join_notExist():
         channel_id = -1
         authRegisterDict = auth_register("qwerty123@gmail.com","asdffdf","jack","ma")
         token = authRegisterDict["token"]
         with pytest.raises(ValueError,match="*"):
                 channel_join(token, channel_id)
-def channel_join_private_test():
+def test_channel_join_private():
         authRegisterDict = auth_register("zhttim684123@gmail.com","asdffdf","jack","ma")
         token = authRegisterDict["token"]
         channel_id = channels_create(token,"meet up",False)
         with pytest.raises(AccessError,match="*"):
                 channel_join(token, channel_id)
-def channel_join_test():
+def test_channel_join():
         authRegisterDict = auth_register("zhttim684123@gmail.com","asdffdf","jack","ma")
         token = authRegisterDict["token"]
         channel_id = channels_create(token,"meet up",True)
@@ -61,14 +61,14 @@ def channel_join_test():
         assert(False)
 
 # test for channel_addowner
-def channel_addowner_notExist_test():
+def test_channel_addowner_notExist():
         channel_id = -1
         authRegisterDict = auth_register("qwerty123@gmail.com","asdffdf","jack","ma")
         token = authRegisterDict["token"]
         u_id = authRegisterDict["u_id"]
         with pytest.raises(ValueError,match = r"*"):
                 channel_addowner(token,channel_id,u_id)
-def channel_addowner_alreadyOwner_test():
+def test_channel_addowner_alreadyOwner():
         authRegisterDict = auth_register("zhttim684123@gmail.com","asdffdf","jack","ma")
         token = authRegisterDict["token"]
         channel_id = channels_create(token,"meet up",True)
@@ -79,7 +79,7 @@ def channel_addowner_alreadyOwner_test():
         if (u_id == parts):
                 assert(False)
         pass
-def channel_addowner_test():
+def test_channel_addowner_test():
         authRegisterDict = auth_register("zhttim684123@gmail.com","asdffdf","jack","ma")
         token = authRegisterDict["token"]
         channel_id = channels_create(token,"meet up",True)
@@ -93,21 +93,21 @@ def channel_addowner_test():
         assert(False)
 
 # test for channel_removeowner
-def channel_removeowner_ChannelNotExist_test():
+def test_channel_removeowner_ChannelNotExist():
         authRegisterDict = auth_register("zhttim684123@gmail.com","asdffdf","jack","ma")
         token = authRegisterDict["token"]
         channel_id = channels_create(token,"meet up",True)
         u_id = authRegisterDict["u_id"]
         with pytest.raises(ValueError,match="*"):
                 channel_removeowner(token, channel_id, u_id)
-def channel_removeowner_UserNotExist_test():
+def test_channel_removeowner_UserNotExist():
         authRegisterDict = auth_register("zhttim684123@gmail.com","asdffdf","Tim","hu")
         token = authRegisterDict["token"]
         channel_id = channels_create(token,"meet up",True)
         u_id = authRegisterDict["u_id"]
         with pytest.raises(ValueError,match="*"):
                 channel_removeowner(token, channel_id, u_id)
-def channel_removeowner_test():
+def test_channel_removeowner():
         authRegisterDict = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
         token = authRegisterDict["token"]
         channel_id = channels_create(token,"meet up",True)
@@ -119,7 +119,7 @@ def channel_removeowner_test():
                 if (u_id == parts):
                 assert(False)
         pass
-def channels_list_test():
+def test_channels_list():
         authRegisterDict1 = auth_register("zhttim684123@gmail.com","asdffdf","jack","ma")
         token_1 = authRegisterDict1["token"] 
         channel_id_1 = channels_create(token,"meet up",True)
@@ -147,7 +147,7 @@ def channels_list_test():
                 if (parts == u_id_3 or parts == channel_id_3):
                         pass
         assert(False)
-def channels_listall_test():
+def test_channels_listall():
         authRegisterDict1 = auth_register("zhttim684123@gmail.com","asdffdf","jack","ma")
         token_1 = authRegisterDict1["token"] 
         channel_id_1 = channels_create(token,"meet up",True)
@@ -175,12 +175,12 @@ def channels_listall_test():
                 if (parts == u_id_3 or parts == channel_id_3):
                         pass
         assert(False)
-def channels_create():
+def test_channels_create():
         authRegisterDict = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
         token = authRegisterDict["token"]
         with pytest.raises(ValueError,match = r"*"):
                 channel_id = channels_create(token,"meet updscsdcdscdscsdcdsdscscddsc",True)
-def message_sendlater_channelNotExist_test():
+def test_message_sendlater_channelNotExist():
         authRegisterDict = auth_register("LebrownJames@gmail.com","James0643","Lebrown","James")
         token = authRegisterDict["token"]
         channel_id = channels_create(token,"dad",True)
@@ -188,7 +188,7 @@ def message_sendlater_channelNotExist_test():
         t1 = datetime.date.today()
         with pytest.raises(ValueError,match="*"):
                 message_sendlater(token, channel_id, "Hello NBA", t1)
-def message_sendlater_messageTooLong_test():
+def test_message_sendlater_messageTooLong():
         authRegisterDict = auth_register("LebrownJames@gmail.com","James0643","Lebrown","James")
         token = authRegisterDict["token"]
         channel_id = channels_create(token,"dad",True)
@@ -197,7 +197,7 @@ def message_sendlater_messageTooLong_test():
         message = "jomvewiirirjfrijfeijeijeijeijciejiefddcdcdcdcdcdrwrbvasddbcfdsdcmdkcmdkcmdkcmdkcmdcdmcdkcdcmddcddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssskcmdkcmdkcmkdcmdkcmkdcmkdcmkdmcddcdcdcdcdcd"
         with pytest.raises(ValueError,match="*"):
                 message_sendlater(token, channel_id, "Hello NBA", t1)
-def message_snedlater_timeInThePast_test():
+def test_message_snedlater_timeInThePast():
         authRegisterDict = auth_register("LebrownJames@gmail.com","James0643","Lebrown","James")
         token = authRegisterDict["token"]
         channel_id = channels_create(token,"dad",True)
