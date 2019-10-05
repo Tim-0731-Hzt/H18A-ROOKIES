@@ -20,8 +20,8 @@
 **In auth_password_request:**
 * We assume that the password_request funciton still need a function that generate a serious of random security code, and set it's valid period to 1 min.
 
- ## Channel Part 
- 
+## Channel Part 
+
 **In channel_invite:**
 * We assume that u_id is the id who is invited  
 
