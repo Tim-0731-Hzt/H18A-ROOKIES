@@ -1,6 +1,7 @@
-#Assumptions:
+# Assumptions:
 
-##Auth Part 
+## Auth Part 
+
 **In test_auth_login:**
 * We  assume that the first user who login will have "u_id: 00001" and "token: 1". 
 * The second user will have "u_id: 00002" and "token: 2" and so on. 
@@ -19,11 +20,12 @@
 **In auth_password_request:**
 * We assume that the password_request funciton still need a function that generate a serious of random security code, and set it's valid period to 1 min.
 
- ##Channel Part 
+ ## Channel Part 
+ 
 **In channel_invite:**
 * We assume that u_id is the id who is invited  
 
-s**In channel_details:**
+**In channel_details:**
 * We assume that we need to set a function for set up the name of channel, or we couldn't get a return "name" from the function channel_details
 
 **In channel_messages:**
