@@ -2,6 +2,8 @@
 
 All the function are divided into 6 parts, "auth", "channel", "user", "standup", "others", "messages"
 
+![Image](graph_plan.png "icon")
+
 **Auth**
 
 These part of function contains the most basic function for the website--login.
