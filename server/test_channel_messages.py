@@ -15,7 +15,7 @@ def test_channel_messages():
     
     #test1
         #channel doesn't exist
-    with pytest.raises(ValueError, match=r"*"):
+    with pytest.raises(ValueError, match=r".*"):
         channel_messages(token, 'randonNum', 0)
     
     #test2

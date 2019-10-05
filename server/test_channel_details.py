@@ -25,7 +25,7 @@ def test_channel_details():
     channel_invite(token, channel_id, u_id2)
     #test1
         #channel doesn't exist
-    with pytest.raises(ValueError, match=r"*"):
+    with pytest.raises(ValueError, match=r".*"):
        channel_details(token2, 222211111)
 
     #test2

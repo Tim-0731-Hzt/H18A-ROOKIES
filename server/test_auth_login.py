@@ -20,5 +20,5 @@ def test_auth_login_1():
     assert u_id1 == '00001'
     assert token1 =='token1'
 def test_auth_login_2():
-    with pytest.raises(ValueError, match=r"*"):
+    with pytest.raises(ValueError, match=r".*"):
         auth_login('soundsbad', '123456')

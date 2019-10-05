@@ -31,10 +31,10 @@ def test_auth_register_2():
     assert token2 == "2"
 
 def test_auth_register_3():
-    with pytest.raises(ValueError, match=r"*"):
+    with pytest.raises(ValueError, match=r".*"):
         auth_register('soundsbad', '123456') #incorrect email
 
 def test_auth_register_4():
-    with pytest.raises(ValueError, match=r"*"):
+    with pytest.raises(ValueError, match=r".*"):
         auth_register('soundsbad', '1234') #incorrect password
 

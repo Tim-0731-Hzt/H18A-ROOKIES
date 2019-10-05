@@ -14,7 +14,7 @@ def test_channel_invite_1():
     channel_id = channelDict['channel_id']
 
 
-    with pytest.raises(ValueError, match=r"*"):
+    with pytest.raises(ValueError, match=r".*"):
         channel_invite(token, 'randonNum', u_id2)
 
     
@@ -31,5 +31,5 @@ def test_channel_invite_2():
     channel_id = channelDict['channel_id']
 
 
-    with pytest.raises(ValueError, match=r"*"):
+    with pytest.raises(ValueError, match=r".*"):
         channel_invite(token, channel_id, '00002')
