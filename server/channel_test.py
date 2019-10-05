@@ -29,9 +29,9 @@ def channel_leave_test1():
         d = channel_details(token,channel_id)
         all_mem =  d[all_members]
         for parts in all_mem.keys():
-        if (u_id == parts):
-                assert(False)
-        pass
+                if u_id == parts:
+                        assert(False)
+        
 
 
 # tests for channel_join
@@ -76,9 +76,9 @@ def channel_addowner_alreadyOwner_test():
         d = channel_details(token,channel_id)
         owner = d[owner_members]
         for parts in owner.keys():
-        if (u_id == parts):
-                assert(False)
-        pass
+                if (u_id == parts):
+                        assert(False)
+
 def channel_addowner_test():
         authRegisterDict = auth_register("zhttim684123@gmail.com","asdffdf","jack","ma")
         token = authRegisterDict["token"]
@@ -89,7 +89,7 @@ def channel_addowner_test():
         owner = d[owner_members]
         for parts in owner.keys():
                 if (u_id == parts):
-                pass
+                        pass
         assert(False)
 
 # test for channel_removeowner
@@ -117,7 +117,7 @@ def channel_removeowner_test():
         owner = d[owner_members]
         for parts in owner.keys():
                 if (u_id == parts):
-                assert(False)
+                        assert(False)
         pass
 def channels_list_test():
         authRegisterDict1 = auth_register("zhttim684123@gmail.com","asdffdf","jack","ma")
