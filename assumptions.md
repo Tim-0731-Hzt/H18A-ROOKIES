@@ -5,13 +5,13 @@ Assumptions
 * We assumed that assume everytime a "def test_*()" function is run that the "state" of the program is reset (e.g. all users are wiped).
 * We assumed that all functions excepted for the function we are testing should be working as we expected.
 
-**channel_assumption**
+**In channel_assumption**
 * we assume owner_members and all_members are dictionary in the return dictionary in channel_details 
 * we assume the keys in owner_member and all_member is user_id
 * we assume the channel we create to test channel_removeowner does not exist
 * we assume the user_id we create to test channel_removeowner is not exist
 
-**message_assumption**
+**In message_assumption**
 * we assume the channel we create to test message_sendlater does not exist
 
 **In message_send:**
