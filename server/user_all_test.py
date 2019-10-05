@@ -1,9 +1,9 @@
-from user_profile_setname import user_profile_setname
+from user_all import user_profile_setname
 
-from user_profile_sethandle import user_profile_sethandle 
+from user_all import user_profile_sethandle 
 
-from user_profile_setemail import user_profile_setemail
-from user_profiles_uploadphoto import user_profiles_uploadphoto
+from user_all import user_profile_setemail
+from user_all import user_profiles_uploadphoto
 import pytest
 def test1_user_profile_setname():
     user_profile_setname(123,'Daniel', 'Quin')
