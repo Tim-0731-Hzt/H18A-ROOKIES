@@ -12,7 +12,7 @@ from datetime import datetime
 import error
 import pytest
 
-# tests for channel_leave
+# tests for channel_leave_
 def channel_leave_not_exist():
         channel_id = -1
         authRegisterDict = auth_register("qwerty123@gmail.com","asdffdf","jack","ma")
