@@ -1,26 +1,17 @@
-from channel import channels_create
-from channel import channel_details
-from channel import channel_join
-from channel import channel_leave
-from channel import auth_register
-from channel import channel_addowner
-from channel import channel_removeowner
-from channel import channels_list
-from channel import channels_listall
-from channel import message_sendlater
+import channel
 from datetime import datetime
-import error
+import Error
 import pytest
 
 # tests for channel_leave_
-def channel_leave_not_exist():
+def test_channel_leave_not_exist():
         channel_id = -1
         authRegisterDict = auth_register("qwerty123@gmail.com","asdffdf","jack","ma")
         token = authRegisterDict["token"]
         with pytest.raises(ValueError,match = r"*"):
                 channel_leave(token,channel_id)
 
-def channel_leave_test1():
+def test_channel_leave():
         authRegisterDict = auth_register("TimHu123@gmail.com","asdffdf","jack","ma")
         token = authRegisterDict["token"]
         u_id = authRegisterDict["u_id"]
@@ -29,9 +20,9 @@ def channel_leave_test1():
         d = channel_details(token,channel_id)
         all_mem =  d[all_members]
         for parts in all_mem.keys():
-        if (u_id == parts):
-                assert(False)
-        pass
+                if u_id == parts:
+                        assert(False)
+        
 
 
 # tests for channel_join
@@ -76,10 +67,11 @@ def test_channel_addowner_alreadyOwner():
         d = channel_details(token,channel_id)
         owner = d[owner_members]
         for parts in owner.keys():
-        if (u_id == parts):
-                assert(False)
-        pass
-def test_channel_addowner_test():
+
+                if (u_id == parts):
+                        assert(False)
+
+def test_channel_addowner():
         authRegisterDict = auth_register("zhttim684123@gmail.com","asdffdf","jack","ma")
         token = authRegisterDict["token"]
         channel_id = channels_create(token,"meet up",True)
@@ -89,7 +81,7 @@ def test_channel_addowner_test():
         owner = d[owner_members]
         for parts in owner.keys():
                 if (u_id == parts):
-                pass
+                        pass
         assert(False)
 
 # test for channel_removeowner
@@ -117,7 +109,7 @@ def test_channel_removeowner():
         owner = d[owner_members]
         for parts in owner.keys():
                 if (u_id == parts):
-                assert(False)
+                        assert(False)
         pass
 def test_channels_list():
         authRegisterDict1 = auth_register("zhttim684123@gmail.com","asdffdf","jack","ma")

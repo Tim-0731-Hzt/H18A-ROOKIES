@@ -1,11 +1,18 @@
 Assumptions
 ======
 
-## Overall
+**Overall**
 * We assumed that assume everytime a "def test_*()" function is run that the "state" of the program is reset (e.g. all users are wiped).
 * We assumed that all functions excepted for the function we are testing should be working as we expected.
 
-## Message Part
+**In channel_assumption**
+* we assume owner_members and all_members are dictionary in the return dictionary in channel_details 
+* we assume the keys in owner_member and all_member is user_id
+* we assume the channel we create to test channel_removeowner does not exist
+* we assume the user_id we create to test channel_removeowner is not exist
+
+**In message_assumption**
+* we assume the channel we create to test message_sendlater does not exist
 
 **In message_send:**
 * We assumed that this function will return a message dictionary what will contain message_id, u_id, message, time_created, is_unread.
@@ -32,3 +39,12 @@ Assumptions
 
 **In user_profile:**
 * We assumed that any negative number is a invalid u_id
+
+**In standup_send:**
+* We assumed the time is unchanged so the user willnot be expired from the current session. The same thing happened in **all "stand"** function.
+
+**In upload photo:**
+* We assumed that the input value for the image was directly a number -- so if it is not "200 Ok", it won't pass the test.
+
+**In admin_userpermission_change:**
+* I assumed the person already is the admin or the owner.
