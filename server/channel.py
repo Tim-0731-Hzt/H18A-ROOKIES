@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 ##CHANNEL#########
 
 ##
@@ -10,8 +10,7 @@ def channel_details(token, channel_id):
     pass
 
 ##
-def channel_messages(token, channel_id, start):
-=======
+def channel_messages(token, channel_id, start)
 
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
@@ -58,5 +57,5 @@ def channels_create(token, name, is_public):
 # Send a message from authorised_user to the channel specified
 # by channel_id automatically at a specified time in the future
 def message_sendlater(token, channel_id, message, time_sent):
->>>>>>> fa793bd05612ec37f9bec154b723781a84d61b41
+
     pass
