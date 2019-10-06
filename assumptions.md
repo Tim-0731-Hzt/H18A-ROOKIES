@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Assumptions:
 
 ## Auth Part 
@@ -32,7 +32,7 @@
 **In channel_messages:**
 * We assume that we need a function that could count the total number of messages. Now, I assume that the total number of messages are 150
 
-=======
+
 Assumptions
 ======
 
@@ -83,4 +83,4 @@ Assumptions
 
 **In admin_userpermission_change:**
 * I assumed the person already is the admin or the owner.
->>>>>>> fa793bd05612ec37f9bec154b723781a84d61b41
+
