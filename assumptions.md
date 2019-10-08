@@ -1,7 +1,11 @@
+Assumptions
+======
 
-# Assumptions:
+**Overall**
+* We assumed that assume everytime a "def test_*()" function is run that the "state" of the program is reset (e.g. all users are wiped).
+* We assumed that all functions excepted for the function we are testing should be working as we expected.
 
-## Auth Part 
+## Auth Part
 
 **In test_auth_login:**
 * We  assume that the first user who login will have "u_id: 00001" and "token: 1". 
@@ -32,19 +36,13 @@
 **In channel_messages:**
 * We assume that we need a function that could count the total number of messages. Now, I assume that the total number of messages are 150
 
-
-Assumptions
-======
-
-**Overall**
-* We assumed that assume everytime a "def test_*()" function is run that the "state" of the program is reset (e.g. all users are wiped).
-* We assumed that all functions excepted for the function we are testing should be working as we expected.
-
 **In channel_assumption**
 * we assume owner_members and all_members are dictionary in the return dictionary in channel_details 
 * we assume the keys in owner_member and all_member is user_id
 * we assume the channel we create to test channel_removeowner does not exist
 * we assume the user_id we create to test channel_removeowner is not exist
+
+## Message Part
 
 **In message_assumption**
 * we assume the channel we create to test message_sendlater does not exist
@@ -71,6 +69,8 @@ Assumptions
 
 **In message_unreact:**
 * same as message_react
+
+## User Part & Other:
 
 **In user_profile:**
 * We assumed that any negative number is a invalid u_id
