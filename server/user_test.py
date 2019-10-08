@@ -1,8 +1,11 @@
-import message
 from auth import auth_register
-import auth
-import user
 import pytest
+from user import user_profile
+from user import user_profile_setname
+from user import user_profile_sethandle 
+from user import user_profile_setemail
+from user import user_profiles_uploadphoto
+
 
 
 # For a valid user, returns information about their email, first name, last name, and handle
@@ -45,12 +48,8 @@ def test_user_profile_invaliduid():
     UID = authRegisterDict['u_id']
 
     # testing
-    try:
+    with pytest.raises(ValueError, match = r".*"):
         userDict = user_profile(token, -1)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("ValueError was not raised")
 
 def test1_user_profile_setname():
     user_profile_setname(123,'Daniel', 'Quin')
