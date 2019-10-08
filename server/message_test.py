@@ -1,7 +1,15 @@
 # MESSAGE TEST
-import message
-import channel
-import auth
+from auth import auth_register
+from channel import channels_create
+from channel import channel_join
+from channel import channel_leave
+from message import message_edit
+from message import message_send
+from message import message_pin
+from message import message_unpin
+from message import message_remove
+from message import message_react
+from message import message_unreact
 import pytest
 from Error import AccessError
 
