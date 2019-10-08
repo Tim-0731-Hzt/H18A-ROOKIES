@@ -1,5 +1,13 @@
 # MESSAGE
 
+# Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future
+# ValueError when:
+# Channel (based on ID) does not exist
+# Message is more than 1000 characters
+# Time sent is a time in the past
+def message_sendlater(token, channel_id, message, time_sent)
+    pass
+
 # Send a message from authorised_user to the channel specified by channel_id
 # ValueError when: Message is more than 1000 characters
 def message_send(token, channel_id, message):
