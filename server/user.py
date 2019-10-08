@@ -12,15 +12,18 @@ def user_profile_setemail(token, email):
     if email == 'usedemail' :
         raise ValueError('Used email')
     pass
+
 def user_profile_sethandle(token,handle_str):
     if len(handle_str) <= 20 :
         raise ValueError('handle too short')
+
 def user_profile_setname(token, name_first, name_last):
     if len(name_first) > 50 :
         raise ValueError('First name too long')
     if len(name_last) > 50 :
         raise ValueError('Last name too long')
     pass
+    
 def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     if img_url != 200:
         raise ValueError('url corrupted')
