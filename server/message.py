@@ -16,6 +16,7 @@ def message_sendlater(token, channel_id, message, time_sent):
 
 # Send a message from authorised_user to the channel specified by channel_id
 # ValueError when: Message is more than 1000 characters
+# AccessError when: the authorised user has not joined the channel they are trying to post to
 def message_send(token, channel_id, message):
     
     if len(message) > 1000:
@@ -46,8 +47,10 @@ def message_send(token, channel_id, message):
 # Message with message_id was not sent by an admin or owner of the slack
 def message_remove(token, message_id):
     global messDict
-    if message_id in messDict:
-        del messDict[message_id]
+    for mess in messDict:
+        if mess['message_id'] == message_id:
+            messDict.remove(mess)
+            break
     return messDict
 
 # Given a message, update it's text with new text
