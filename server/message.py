@@ -1,4 +1,10 @@
 # MESSAGE
+import time
+
+# global variable:
+messDict = []
+messID = 0
+
 
 # Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future
 # ValueError when:
@@ -11,7 +17,24 @@ def message_sendlater(token, channel_id, message, time_sent):
 # Send a message from authorised_user to the channel specified by channel_id
 # ValueError when: Message is more than 1000 characters
 def message_send(token, channel_id, message):
-    pass
+    
+    if len(message) > 1000:
+        raise ValueError("Message is more than 1000 characters")
+    global messID
+    global messDict
+    messID += 1
+    m = {
+        'message_id': messID,
+        'u_id': token,   # fix that later
+        'message': message,
+        'time_created': time.ctime(),
+        'is_unread': False,
+        'reacts': None,
+        'is_pinned': False
+    }
+    messDict.append(m)
+    print messDict
+    return m['message_id']
 
 # Given a message_id for a message, this message is removed from the channel
 # ValueError when
@@ -22,7 +45,10 @@ def message_send(token, channel_id, message):
 # Message with message_id was not sent by an owner of this channel
 # Message with message_id was not sent by an admin or owner of the slack
 def message_remove(token, message_id):
-    pass
+    global messDict
+    if message_id in messDict:
+        del messDict[message_id]
+    return messDict
 
 # Given a message, update it's text with new text
 # ValueError when all of the following are not true:

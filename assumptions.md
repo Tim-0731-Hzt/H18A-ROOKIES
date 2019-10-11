@@ -44,6 +44,9 @@ Assumptions
 
 ## Message Part
 
+**In message_sendlater:**
+* We assumed the parameter time_sent is in format hour/min/day/month/year.
+
 **In message_assumption**
 * we assume the channel we create to test message_sendlater does not exist
 
