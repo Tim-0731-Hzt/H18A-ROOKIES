@@ -21,16 +21,19 @@
             'channel_id': channel_id,
             'name': name,
             'channel_member': [u_id, u_id, u_id]
+            'channel_owner': [u_id, u_id, u_id]
         },
         {
             'channel_id': channel_id,
             'name': name,
             'channel_member': [u_id, u_id, u_id]
+            'channel_owner': [u_id, u_id, u_id]
         },
         {
             'channel_id': channel_id,
             'name': name,
             'channel_member': [u_id, u_id, u_id]
+            'channel_owner': [u_id, u_id, u_id]
         }
     ] 
     messDict = [
