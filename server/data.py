@@ -38,6 +38,7 @@
     ] 
     messDict = [
         {
+            'channel_id': channelID,
             'message_id': messID,
             'u_id': u_id
             'message': message,
@@ -47,6 +48,7 @@
             'is_pinned': False
         },
         {
+            'channel_id': channelID,
             'message_id': messID,
             'u_id': u_id
             'message': message,
@@ -56,6 +58,7 @@
             'is_pinned': False
         },
         {
+            'channel_id': channelID,
             'message_id': messID,
             'u_id': u_id
             'message': message,

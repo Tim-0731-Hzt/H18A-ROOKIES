@@ -1,7 +1,8 @@
-from flask import Flask
-from json import dumps
 from message import message_send, message_remove
 from Error import AccessError
+from flask import Flask
+from json import dumps
+
 
 APP = Flask(__name__)
 
@@ -18,8 +19,23 @@ def send_test_error():
 
 @APP.route('/message/remove', methods=['DELETE'])
 def remove():
-    return dumps(message_remove(1,5))
+    return dumps(message_remove(3,5))
     # return redirect("/message")
+@APP.route('/message/remove/test/value', methods=['DELETE'])
+def remove_test1():
+    try:
+        message_remove(3,100)
+    except ValueError:
+        return "message not found"
+    # return dumps(message_remove(1,100))
+
+@APP.route('/message/remove/test/access', methods=['DELETE'])
+def remove_test2():
+    try:
+        message_remove(1,4)
+    except AccessError:
+        return "Unauthorised remove"
+
 
 
 if __name__ == '__main__':

@@ -11,12 +11,14 @@ channelDict = [
     {
         'channel_id': 1,
         'name': "channel_1",
-        'channel_member': [1]
+        'channel_member': [1],
+        'channel_owner': [3]
     },
     {
         'channel_id': 2,
         'name': "channel_2",
-        'channel_member': []
+        'channel_member': [2],
+        'channel_owner': [1]
     }
 ]
 
@@ -44,6 +46,7 @@ def message_send(token, channel_id, message):
     global messDict
     messID += 1
     m = {
+        'channel_id': channel_id,
         'message_id': messID,
         'u_id': token,   # fix that later
         'message': message,
@@ -65,11 +68,23 @@ def message_send(token, channel_id, message):
 # Message with message_id was not sent by an admin or owner of the slack
 def message_remove(token, message_id):
     global messDict
+    found = False
+    
     for mess in messDict:
         if mess['message_id'] == message_id:
-            messDict.remove(mess)
+            channelID = mess['channel_id']
+            # messDict.remove(mess)
+            found = True
             break
-    return messDict
+    if not found:
+        raise ValueError("Message (based on ID) no longer exists")
+    for channel in channelDict:
+        if channel['channel_id'] == channelID:
+            if token not in channel['channel_owner']:
+                raise AccessError('Unauthorised remove')
+    messDict.remove(mess)
+    
+    pass
 
 # Given a message, update it's text with new text
 # ValueError when all of the following are not true:
