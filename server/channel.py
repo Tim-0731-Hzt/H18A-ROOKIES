@@ -1,17 +1,9 @@
+# channel
 
-##CHANNEL#########
+# global varaibles:
 
-##
-def channel_invite(token, channel_id, u_id):
-    pass
-
-##
-def channel_details(token, channel_id):
-    pass
-
-##
-def channel_messages(token, channel_id, start):
-    pass
+memberDict = []
+channelDict = []
 
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
@@ -20,6 +12,7 @@ def auth_register(email, password, name_first, name_last):
 # Invites a user (with user id u_id) to join a channel with ID channel_id. 
 # Once invited the user is added to the channel immediately
 def channel_invite (token, channel_id, u_id):
+    
     pass
 # Given a Channel with ID channel_id that the authorised user is part of, 
 # provide basic details about the channel
