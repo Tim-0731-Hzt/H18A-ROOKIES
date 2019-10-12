@@ -1,18 +1,42 @@
 # channel
-
+from Error import AccessError
 # global varaibles:
 
-memberDict = []
-channelDict = []
+memberDict = {}
+channelDict = {}
 
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
+def channel_id_check(channel_id):
+    for parts in channelDict:
+        if (parts[channel_id] == channel_id):
+            return True
+    return False
+
+def u_id_check(u_id):
+    for parts in memberDict:
+        if (parts[u_id] == u_id):
+            return True
+    return False
+
+def auth_id_check(token):
+    return True
 def auth_register(email, password, name_first, name_last):
+
     pass
 # Invites a user (with user id u_id) to join a channel with ID channel_id. 
 # Once invited the user is added to the channel immediately
 def channel_invite (token, channel_id, u_id):
-    
+    if channel_id_check(channel_id) == False:
+        raise ValueError("channel_id is invalid")
+    if u_id_check(u_id) == False:
+        raise ValueError("u_id does not refer to a valid user")
+    if auth_id_check(token) == False:
+        raise AccessError("Auth user is not a member of channel")
+    for parts in channelDict:
+        if (parts[channel_id] == channel_id):
+            parts[channel_member].append(u_id)
+
     pass
 # Given a Channel with ID channel_id that the authorised user is part of, 
 # provide basic details about the channel
