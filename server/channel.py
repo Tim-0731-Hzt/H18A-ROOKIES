@@ -2,8 +2,8 @@
 from Error import AccessError
 # global varaibles:
 
-memberDict = {}
-channelDict = {}
+memberDict = []
+channelDict = []
 
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
@@ -37,10 +37,14 @@ def channel_invite (token, channel_id, u_id):
         if (parts[channel_id] == channel_id):
             parts[channel_member].append(u_id)
 
-    pass
 # Given a Channel with ID channel_id that the authorised user is part of, 
 # provide basic details about the channel
 def channel_details (token, channel_id):
+    if channel_id_check(channel_id) == False:
+        raise ValueError("channel_id is invalid")
+    if auth_id_check(token) == False:
+        raise AccessError("Auth user is not a member of channel")
+    
     pass
 # Given a Channel with ID channel_id that the authorised user is part of, 
 # return up to 50 messages between index "start" and "start + 50". 
