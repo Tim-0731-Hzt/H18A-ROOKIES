@@ -1,10 +1,24 @@
 # MESSAGE
 import time
+from Error import AccessError
 
 # global variable:
 messDict = []
 messID = 0
 
+# just for testing
+channelDict = [
+    {
+        'channel_id': 1,
+        'name': "channel_1",
+        'channel_member': [1]
+    },
+    {
+        'channel_id': 2,
+        'name': "channel_2",
+        'channel_member': []
+    }
+]
 
 # Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future
 # ValueError when:
@@ -21,6 +35,11 @@ def message_send(token, channel_id, message):
     
     if len(message) > 1000:
         raise ValueError("Message is more than 1000 characters")
+    
+    for cha in channelDict:
+        if cha['channel_id'] == channel_id:
+            if token not in cha['channel_member']:
+                raise AccessError("The authorised user has not joined the channel they are trying to post to")
     global messID
     global messDict
     messID += 1
@@ -34,7 +53,6 @@ def message_send(token, channel_id, message):
         'is_pinned': False
     }
     messDict.append(m)
-    print messDict
     return m['message_id']
 
 # Given a message_id for a message, this message is removed from the channel
