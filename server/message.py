@@ -22,6 +22,28 @@ channelDict = [
     }
 ]
 
+def clear_backup():
+    global messDict
+    global messID
+    global channelDict
+    messDict = []
+    messID = 0
+    channelDict = [
+        {
+            'channel_id': 1,
+            'name': "channel_1",
+            'channel_member': [1],
+            'channel_owner': [3]
+        },
+        {
+            'channel_id': 2,
+            'name': "channel_2",
+            'channel_member': [2],
+            'channel_owner': [1]
+        }
+    ]
+
+
 # Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future
 # ValueError when:
 # Channel (based on ID) does not exist
@@ -73,6 +95,7 @@ def message_remove(token, message_id):
     for mess in messDict:
         if mess['message_id'] == message_id:
             channelID = mess['channel_id']
+            mess['is_unread'] = True
             # messDict.remove(mess)
             found = True
             break
@@ -92,7 +115,20 @@ def message_remove(token, message_id):
 # Message with message_id was not sent by an owner of this channel
 # Message with message_id was not sent by an admin or owner of the slack
 def message_edit(token, message_id, message):
-    pass
+    global messDict
+    for mess in messDict:
+        if mess['message_id'] == message_id:
+            channelID = mess['channel_id']
+            break
+    for channel in channelDict:
+        if channel['channel_id'] == channelID:
+            if token not in channel['channel_owner']:
+                raise AccessError('Unauthorised edit')
+    mess['message'] = message
+    mess['is_unread'] = True
+
+    return mess
+
 
 # Given a message within a channel the authorised user is part of, add a "react" to that particular message
 # ValueError when:
