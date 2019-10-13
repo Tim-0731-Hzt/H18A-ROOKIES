@@ -5,6 +5,7 @@ from auth import auth_register
 import auth
 import pytest
 from Error import AccessError
+import message
 
 ##
 def test_channel_invite_1():
