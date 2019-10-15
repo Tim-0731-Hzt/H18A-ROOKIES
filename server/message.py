@@ -22,6 +22,7 @@ channelDict = [
     }
 ]
 
+# helper function for testing
 def clear_backup():
     global messDict
     global messID
@@ -33,7 +34,7 @@ def clear_backup():
             'channel_id': 1,
             'name': "channel_1",
             'channel_member': [1],
-            'channel_owner': [3]
+            'channel_owner': [1]
         },
         {
             'channel_id': 2,
@@ -78,7 +79,7 @@ def message_send(token, channel_id, message):
         'is_pinned': False
     }
     messDict.append(m)
-    return m['message_id']
+    return messDict
 
 # Given a message_id for a message, this message is removed from the channel
 # ValueError when
@@ -106,7 +107,6 @@ def message_remove(token, message_id):
             if token not in channel['channel_owner']:
                 raise AccessError('Unauthorised remove')
     messDict.remove(mess)
-    
     pass
 
 # Given a message, update it's text with new text
