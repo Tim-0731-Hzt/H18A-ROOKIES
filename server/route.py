@@ -1,4 +1,4 @@
-from message import clear_backup, message_send, message_remove, message_edit
+from message import clear_backup, message_send, message_remove, message_edit, message_react
 from Error import AccessError
 from flask import Flask, request
 from json import dumps
@@ -63,6 +63,48 @@ def edit_test():
         message_edit(1, 4, "jeff is awesome")
     except AccessError:
         return "Unauthorised edit"
+
+@APP.route('/message/react', methods=['POST'])
+def react():
+    token = request.form.get('token')
+    message_id = request.form.get('message_id')
+    react_id = request.form.get('react_id')
+    return dumps(message_react(int(token), int(message_id), int(react_id)))
+
+@APP.route('/message/react/test1', methods=['POST'])
+def react_test1():
+    clear_backup()
+    for i in range(5):
+        message_send(1,1,"hello")
+    try:
+        message_react(1, 3, -1)
+    except ValueError:
+        return "invalid react_id"
+
+@APP.route('/message/react/test2', methods=['POST'])
+def react_test2():
+    clear_backup()
+    for i in range(5):
+        message_send(1,1,"hello")
+    try:
+        message_react(9, 3, 1)
+    except ValueError:
+        return "message_id is not a valid message within a channel that the authorised user has joined"
+
+@APP.route('/message/react/test3', methods=['POST'])
+def react_test3():
+    clear_backup()
+    for i in range(5):
+        message_send(1,1,"hello")
+    message_react(2, 3, 1)
+    try:
+        message_react(2, 3, 2)
+    except ValueError:
+        return "Message with ID message_id already contains an active React with ID react_id"
+
+
+
+
 
 if __name__ == '__main__':
     APP.run()

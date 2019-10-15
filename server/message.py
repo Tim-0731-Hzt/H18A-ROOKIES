@@ -5,13 +5,13 @@ from Error import AccessError
 # global variable:
 messDict = []
 messID = 0
-
+reactDict = []
 # just for testing
 channelDict = [
     {
         'channel_id': 1,
         'name': "channel_1",
-        'channel_member': [1],
+        'channel_member': [1, 2, 3, 4, 5],
         'channel_owner': [3]
     },
     {
@@ -27,13 +27,15 @@ def clear_backup():
     global messDict
     global messID
     global channelDict
+    global reactDict
     messDict = []
     messID = 0
+    reactDict = []
     channelDict = [
         {
             'channel_id': 1,
             'name': "channel_1",
-            'channel_member': [1],
+            'channel_member': [1, 2, 3, 4, 5],
             'channel_owner': [1]
         },
         {
@@ -69,12 +71,12 @@ def message_send(token, channel_id, message):
     global messDict
     messID += 1
     m = {
-        'channel_id': channel_id,
-        'message_id': messID,
-        'u_id': token,   # fix that later
+        'channel_id': int(channel_id),
+        'message_id': int(messID),
+        'u_id': int(token),   # fix that later
         'message': message,
         'time_created': time.ctime(),
-        'is_unread': False,
+        'is_unread': True,
         'reacts': None,
         'is_pinned': False
     }
@@ -94,9 +96,9 @@ def message_remove(token, message_id):
     found = False
     
     for mess in messDict:
-        if mess['message_id'] == message_id:
-            channelID = mess['channel_id']
-            mess['is_unread'] = True
+        if mess['message_id'] == int(message_id):
+            channelID = int(mess['channel_id'])
+            mess['is_unread'] = False
             # messDict.remove(mess)
             found = True
             break
@@ -119,6 +121,7 @@ def message_edit(token, message_id, message):
     for mess in messDict:
         if mess['message_id'] == message_id:
             channelID = mess['channel_id']
+            mess['is_unread'] = False
             break
     for channel in channelDict:
         if channel['channel_id'] == channelID:
@@ -136,6 +139,51 @@ def message_edit(token, message_id, message):
 # react_id is not a valid React ID
 # Message with ID message_id already contains an active React with ID react_id
 def message_react(token, message_id, react_id):
+
+    global reactDict
+    global messDict
+    if react_id < 0:
+        raise ValueError('React_id is not a valid React ID')
+    for mess in messDict:
+        if mess['message_id'] == message_id:
+            if mess['reacts'] != react_id and mess['reacts'] != None:
+                # raise ValueError('Message with ID message_id already contains an active React with ID {mess['reacts']}')
+                raise ValueError('Message with ID message_id already contains an active React with ID')
+            channelID = mess['channel_id']
+            uID = mess['u_id']
+            message = mess
+    for chan in channelDict:
+        if chan['channel_id'] == channelID:
+            if int(token) not in chan['channel_member']:
+                # raise ValueError('message_id:{message_id} is not a valid message within a channel that the authorised user has joined')
+                raise ValueError('message_id is not a valid message within a channel that the authorised user has joined')
+    m = {'reacts': int(react_id)}
+    message.update(m)
+
+    found = False
+    for rea in reactDict:
+        if rea['react_id'] == react_id:
+            if int(token) not in rea['u_ids']:
+                rea['u_ids'].append(int(token))
+            found = True
+            if uID == int(token):
+                u = {'is_this_user_reacted': True}
+                rea.update(u)
+    if not found:
+        
+        if uID == int(token):
+            r = {
+                'react_id': react_id, 
+                'u_ids': [int(token)], 
+                'is_this_user_reacted': True
+            }
+        else:
+            r = {
+                'react_id': react_id, 
+                'u_ids': [int(token)], 
+                'is_this_user_reacted': False
+            }
+        reactDict.append(r)
     pass
 
 # Given a message within a channel the authorised user is part of, remove a "react" to that particular message
