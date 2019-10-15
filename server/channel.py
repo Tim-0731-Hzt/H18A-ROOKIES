@@ -1,5 +1,6 @@
 # channel
 from Error import AccessError
+import jwt
 # global varaibles:
 
 memberDict = [
@@ -36,14 +37,14 @@ messDict = []
 def channel_id_check(channel_id):
     global channelDict
     for parts in channelDict:
-        if (parts[channel_id] == channel_id):
+        if (parts['channel_id'] == channel_id):
             return True
     return False
 
 def u_id_check(u_id):
     global memberDict
     for parts in memberDict:
-        if (parts[u_id] == u_id):
+        if (parts['u_id'] == u_id):
             return True
     return False
 
@@ -52,7 +53,7 @@ def auth_id_check(token):
 def message_startCheck(start,channel_id):
     messDict = []
     for parts in messDict:
-        if (parts[channel_id] == channel_id):
+        if (parts['channel_id'  ] == channel_id):
             if start >= len(parts['message']):
                 return False
     return True
