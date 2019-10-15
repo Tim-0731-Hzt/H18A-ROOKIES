@@ -2,18 +2,46 @@
 from Error import AccessError
 # global varaibles:
 
-memberDict = []
-channelDict = []
+memberDict = [
+       {
+            'u_id': "z666",
+            'name_first':"Tim",
+            'name_last': "Hu"
+        },
+        {
+            'u_id': "z888",
+            'name_first': "Jack",
+            'name_last': "Lu"
+        },
+]
+channelDict = [
+    {
+        'channel_id': 1,
+        'name': "channel_1",
+        'channel_member': ["z518"],
+        'channel_owner': [3]
+    },
+    {
+        'channel_id': 2,
+        'name': "channel_2",
+        'channel_member': ["z521"],
+        'channel_owner': [1]
+    }
+]
+
+
 messDict = []
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
 def channel_id_check(channel_id):
+    global channelDict
     for parts in channelDict:
         if (parts[channel_id] == channel_id):
             return True
     return False
 
 def u_id_check(u_id):
+    global memberDict
     for parts in memberDict:
         if (parts[u_id] == u_id):
             return True
@@ -22,9 +50,10 @@ def u_id_check(u_id):
 def auth_id_check(token):
     return True
 def message_startCheck(start,channel_id):
+    messDict = []
     for parts in messDict:
         if (parts[channel_id] == channel_id):
-            if start >= parts[message]:
+            if start >= len(parts['message']):
                 return False
     return True
 
@@ -35,6 +64,7 @@ def auth_register(email, password, name_first, name_last):
 # Invites a user (with user id u_id) to join a channel with ID channel_id. 
 # Once invited the user is added to the channel immediately
 def channel_invite (token, channel_id, u_id):
+    global channelDict
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     if u_id_check(u_id) == False:
@@ -42,12 +72,13 @@ def channel_invite (token, channel_id, u_id):
     if auth_id_check(token) == False:
         raise AccessError("Auth user is not a member of channel")
     for parts in channelDict:
-        if (parts[channel_id] == channel_id):
-            parts[channel_member].append(u_id)
-
+        if (parts['channel_id'] == channel_id):
+            parts['channel_member'].append(u_id)
+'''
 # Given a Channel with ID channel_id that the authorised user is part of, 
 # provide basic details about the channel
 def channel_details (token, channel_id):
+    global channelDict
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     if auth_id_check(token) == False:
@@ -55,9 +86,9 @@ def channel_details (token, channel_id):
     detail = {}
     for parts in channelDict:
         if (parts[channel_id] == channel_id):
-            detail[name] = parts[name]
-            detail[channel_member] = parts[channel_member]
-            detail[channel_owner] = parts[channel_owner]
+            detail['name'] = parts['name']
+            detail['channel_member'] = parts['channel_member']
+            detail['channel_owner'] = parts['channel_owner']
     return detail
     pass
 # Given a Channel with ID channel_id that the authorised user is part of, 
@@ -102,3 +133,4 @@ def channels_create(token, name, is_public):
 def message_sendlater(token, channel_id, message, time_sent):
 
     pass
+    '''
