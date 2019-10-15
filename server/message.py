@@ -142,6 +142,7 @@ def message_react(token, message_id, react_id):
 
     global reactDict
     global messDict
+    global channelDict
     if react_id < 0:
         raise ValueError('React_id is not a valid React ID')
     for mess in messDict:
@@ -192,6 +193,38 @@ def message_react(token, message_id, react_id):
 # react_id is not a valid React ID
 # Message with ID message_id does not contain an active React with ID react_id
 def message_unreact(token, message_id, react_id):
+
+    global reactDict
+    global messDict
+    global channelDict
+    if react_id < 0:
+        raise ValueError('React_id is not a valid React ID')
+    for mess in messDict:
+        if mess['message_id'] == message_id:
+            if mess['reacts'] == None:
+                # raise ValueError('Message with ID message_id does not contain an active React with ID {mess['reacts']}')
+                raise ValueError('Message with ID message_id does not contain an active React with ID')
+            if mess['reacts'] != react_id:
+                raise ValueError('React_id is not a valid React ID')
+            channelID = mess['channel_id']
+            uID = mess['u_id']
+            message = mess
+    for chan in channelDict:
+        if chan['channel_id'] == channelID:
+            if int(token) not in chan['channel_member']:
+                # raise ValueError('message_id:{message_id} is not a valid message within a channel that the authorised user has joined')
+                raise ValueError('message_id is not a valid message within a channel that the authorised user has joined')
+
+    for rea in reactDict:
+        if rea['react_id'] == react_id:
+            rea['u_ids'].remove(int(token))
+            if rea['u_ids'] == []:
+                m = {'reacts': None}
+                message.update(m)
+                reactDict.remove(rea)
+            break
+    
+    return reactDict
     pass
 
 # Given a message within a channel, mark it as "pinned" to be given special display treatment by the frontend

@@ -1,4 +1,4 @@
-from message import clear_backup, message_send, message_remove, message_edit, message_react
+from message import clear_backup, message_send, message_remove, message_edit, message_react, message_unreact
 from Error import AccessError
 from flask import Flask, request
 from json import dumps
@@ -102,6 +102,53 @@ def react_test3():
     except ValueError:
         return "Message with ID message_id already contains an active React with ID react_id"
 
+@APP.route('/message/unreact', methods=['POST'])
+def unreact():
+    token = request.form.get('token')
+    message_id = request.form.get('message_id')
+    react_id = request.form.get('react_id')
+    return dumps(message_unreact(int(token), int(message_id), int(react_id)))
+
+@APP.route('/message/unreact/test1', methods=['POST'])
+def unreact_test1():
+    clear_backup()
+    for i in range(5):
+        message_send(1,1,"hello")
+    try:
+        message_unreact(1, 3, -1)
+    except ValueError:
+        return "invalid react_id"
+
+@APP.route('/message/unreact/test2', methods=['POST'])
+def unreact_test2():
+    clear_backup()
+    for i in range(5):
+        message_send(1,1,"hello")
+    try:
+        message_unreact(9, 3, 1)
+    except ValueError:
+        return "message_id is not a valid message within a channel that the authorised user has joined"
+
+@APP.route('/message/unreact/test3', methods=['POST'])
+def unreact_test3():
+    clear_backup()
+    for i in range(5):
+        message_send(1,1,"hello")
+    try:
+        message_unreact(2, 3, 2)
+    except ValueError:
+        return "Message with ID message_id does not contain an active unreact with ID unreact_id"
+
+@APP.route('/message/unreact/test4', methods=['POST'])
+def unreact_test4():
+    clear_backup()
+    for i in range(5):
+        message_send(1,1,"hello")
+    message_react(1, 3, 1)
+    try:
+        message_unreact(1, 3, 5)
+    except ValueError:
+        return "invalid react_id"
 
 
 
