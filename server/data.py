@@ -1,44 +1,37 @@
- memberDict = [
-        {
-            'u_id': u_id,
-            'username':handle
-            'e-mail': e-mail
-            'password': password
+memberDict = [
+       {
+            'u_id': "z666",
+            'username':"TimHu",
+            'e-mail': z5210@ad.unsw.edu.au,
+            'password': "password"
         },
         {
-            'u_id': u_id,
-            'username':handle
-            'e-mail': e-mail
-            'password': password
+            'u_id': "z888",
+            'username':"JeffLu",
+            'e-mail': z23340@ad.unsw.edu.au,
+            'password': "password"
         },
         {
-            'u_id': u_id,
-            'username':handle
-            'e-mail': e-mail
-            'password': password
-        }
-
+            'u_id': "z123",
+            'username':"jackZhang",
+            'e-mail': z4560@ad.unsw.edu.au,
+            'password': "password"
+        },
     ]
-    channelDict = [
+channelDict = [
         {
-            'channel_id': channel_id,
-            'name': name,
-            'channel_member': [u_id, u_id, u_id]
-            'channel_owner': [u_id, u_id, u_id]
+            'channel_id': 1,
+            'name': "channel_1",
+            'channel_member': ["z518"],
+            'channel_owner': [3]
         },
         {
-            'channel_id': channel_id,
-            'name': name,
-            'channel_member': [u_id, u_id, u_id]
-            'channel_owner': [u_id, u_id, u_id]
-        },
-        {
-            'channel_id': channel_id,
-            'name': name,
-            'channel_member': [u_id, u_id, u_id]
-            'channel_owner': [u_id, u_id, u_id]
+            'channel_id': 2,
+            'name': "channel_2",
+            'channel_member': ["z521"],
+            'channel_owner': [1]
         }
-    ] 
+    ]
     messDict = [
         {
             'channel_id': channelID,

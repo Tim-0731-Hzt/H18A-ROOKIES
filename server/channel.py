@@ -1,10 +1,12 @@
 # channel
 from Error import AccessError
 import jwt
+from data import *
 # global varaibles:
 
 SECRET = 'sempai'
 
+'''
 memberDict = [
        {
             'u_id': "z666",
@@ -42,6 +44,7 @@ channelDict = [
 
 
 messDict = []
+'''
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
 def channel_id_check(channel_id):
