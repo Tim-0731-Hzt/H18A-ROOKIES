@@ -283,9 +283,6 @@ def message_unpin(token, message_id):
             if int(token) not in chan['channel_owner']:
                 raise ValueError('The authorised user is not an admin')
     message['is_pinned'] = False
-
-    return message
-
     pass
 
 
