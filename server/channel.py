@@ -8,18 +8,21 @@ SECRET = 'sempai'
 memberDict = [
        {
             'u_id': "z666",
-            'name_first':"Tim",
-            'name_last': "Hu"
+            'username':"TimHu",
+            'e-mail': z5210@ad.unsw.edu.au,
+            'password': "password"
         },
         {
             'u_id': "z888",
-            'name_first': "Jack",
-            'name_last': "Lu"
+            'username':"JeffLu",
+            'e-mail': z23340@ad.unsw.edu.au,
+            'password': "password"
         },
         {
             'u_id': "z123",
-            'name_first': "Zhang",
-            'name_last': "Lu"
+            'username':"jackZhang",
+            'e-mail': z4560@ad.unsw.edu.au,
+            'password': "password"
         },
 ]
 channelDict = [
@@ -56,6 +59,9 @@ def u_id_check(u_id):
     return False
 
 def auth_id_check(token):
+    global SECRET
+    decoded = jwt.decode(token,SECRET, algorithms=['HS256'])
+    decode[""]
     return True
 def message_startCheck(start,channel_id):
     messDict = []
