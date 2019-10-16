@@ -58,7 +58,7 @@ def auth_id_check(token):
 def message_startCheck(start,channel_id):
     messDict = []
     for parts in messDict:
-        if (parts['channel_id'  ] == channel_id):
+        if (parts['channel_id'] == channel_id):
             if start >= len(parts['message']):
                 return False
     return True
@@ -80,7 +80,7 @@ def channel_invite (token, channel_id, u_id):
     for parts in channelDict:
         if (parts['channel_id'] == channel_id):
             parts['channel_member'].append(u_id)
-'''
+
 # Given a Channel with ID channel_id that the authorised user is part of, 
 # provide basic details about the channel
 def channel_details (token, channel_id):
@@ -91,12 +91,13 @@ def channel_details (token, channel_id):
         raise AccessError("Auth user is not a member of channel")
     detail = {}
     for parts in channelDict:
-        if (parts[channel_id] == channel_id):
+        if (parts['channel_id'] == channel_id):
             detail['name'] = parts['name']
             detail['channel_member'] = parts['channel_member']
             detail['channel_owner'] = parts['channel_owner']
     return detail
     pass
+'''
 # Given a Channel with ID channel_id that the authorised user is part of, 
 # return up to 50 messages between index "start" and "start + 50". 
 # Message with index 0 is the most recent message in the channel. 

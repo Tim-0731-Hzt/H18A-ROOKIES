@@ -19,3 +19,13 @@ def test_channel_invite_4():
         assert (channelDict[0]['channel_member'] == ["z518","z666"])
         channel_invite("WDEWDWD", 1, "z123")
         assert (channelDict[0]['channel_member'] == ["z518","z666","z123"])
+def test_channel_details():
+        global channelDict
+        dic_1 = { 'name': "channel_2",
+        'channel_member': ["z521"],
+        'channel_owner': [1]}
+        assert(channel_details("23dc3ef*dcdc",2) == dic_1)
+        dic_2 = {'name': "channel_1",
+        'channel_member': ["z518","z666","z123"],
+        'channel_owner': [3]}
+        assert(channel_details("23dc3ef*dcdc",1) == dic_2)
