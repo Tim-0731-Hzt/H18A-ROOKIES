@@ -1,6 +1,6 @@
 from flask import Flask
 from json import dumps
-from channel import channel_invite
+from channel import *
 APP = Flask(__name__)
 
 @APP.route('/channel/invite',methods = ['POST'])
