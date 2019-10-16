@@ -1,6 +1,6 @@
 # channel
 from Error import AccessError
-import jwtg
+import jwt
 # global varaibles:
 
 memberDict = [
@@ -12,6 +12,11 @@ memberDict = [
         {
             'u_id': "z888",
             'name_first': "Jack",
+            'name_last': "Lu"
+        },
+        {
+            'u_id': "z123",
+            'name_first': "Zhang",
             'name_last': "Lu"
         },
 ]

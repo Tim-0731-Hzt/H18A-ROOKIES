@@ -17,3 +17,5 @@ def test_channel_invite_4():
         global channelDict
         channel_invite("WDEWDWD", 1, "z666")
         assert (channelDict[0]['channel_member'] == ["z518","z666"])
+        channel_invite("WDEWDWD", 1, "z123")
+        assert (channelDict[0]['channel_member'] == ["z518","z666","z123"])
