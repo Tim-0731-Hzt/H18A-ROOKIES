@@ -1,6 +1,6 @@
 # channel
 from Error import AccessError
-import jwt
+import jwtg
 # global varaibles:
 
 memberDict = [
