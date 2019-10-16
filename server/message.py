@@ -36,7 +36,7 @@ def clear_backup():
             'channel_id': 1,
             'name': "channel_1",
             'channel_member': [1, 2, 3, 4, 5],
-            'channel_owner': [1]
+            'channel_owner': [3]
         },
         {
             'channel_id': 2,
@@ -76,7 +76,6 @@ def message_send(token, channel_id, message):
         'u_id': int(token),   # fix that later
         'message': message,
         'time_created': time.ctime(),
-        'is_unread': True,
         'reacts': None,
         'is_pinned': False
     }
@@ -98,7 +97,6 @@ def message_remove(token, message_id):
     for mess in messDict:
         if mess['message_id'] == int(message_id):
             channelID = int(mess['channel_id'])
-            mess['is_unread'] = False
             # messDict.remove(mess)
             found = True
             break
@@ -121,14 +119,12 @@ def message_edit(token, message_id, message):
     for mess in messDict:
         if mess['message_id'] == message_id:
             channelID = mess['channel_id']
-            mess['is_unread'] = False
             break
     for channel in channelDict:
         if channel['channel_id'] == channelID:
             if token not in channel['channel_owner']:
                 raise AccessError('Unauthorised edit')
     mess['message'] = message
-    mess['is_unread'] = True
 
     return mess
 
@@ -223,8 +219,6 @@ def message_unreact(token, message_id, react_id):
                 message.update(m)
                 reactDict.remove(rea)
             break
-    
-    return reactDict
     pass
 
 # Given a message within a channel, mark it as "pinned" to be given special display treatment by the frontend
@@ -235,6 +229,28 @@ def message_unreact(token, message_id, react_id):
 # AccessError when: 
 # The authorised user is not a member of the channel that the message is within
 def message_pin(token, message_id):
+    global messDict
+    global channelDict
+    found = False
+    for mess in messDict:
+        if mess['message_id'] == message_id:
+            if mess['is_pinned']:
+                raise ValueError('already pinned')
+            channelID = mess['channel_id']
+            message = mess
+            found = True
+            break
+    if not found:
+        raise ValueError("Invalid message_id")
+    for chan in channelDict:
+        if chan['channel_id'] == channelID:
+            if int(token) not in chan['channel_member']:
+                # raise ValueError('message_id:{message_id} is not a valid message within a channel that the authorised user has joined')
+                raise AccessError('message_id is not a valid message within a channel that the authorised user has joined')
+            if int(token) not in chan['channel_owner']:
+                raise ValueError('The authorised user is not an admin')
+    message['is_pinned'] = True
+
     pass
 
 # Given a message within a channel, remove it's mark as unpinned
@@ -245,6 +261,31 @@ def message_pin(token, message_id):
 # AccessError when:
 # The authorised user is not a member of the channel that the message is within
 def message_unpin(token, message_id):
+
+    global messDict
+    global channelDict
+    found = False
+    for mess in messDict:
+        if mess['message_id'] == message_id:
+            if not mess['is_pinned']:
+                raise ValueError('already unpinned')
+            channelID = mess['channel_id']
+            message = mess
+            found = True
+            break
+    if not found:
+        raise ValueError("Invalid message_id")
+    for chan in channelDict:
+        if chan['channel_id'] == channelID:
+            if int(token) not in chan['channel_member']:
+                # raise ValueError('message_id:{message_id} is not a valid message within a channel that the authorised user has joined')
+                raise AccessError('message_id is not a valid message within a channel that the authorised user has joined')
+            if int(token) not in chan['channel_owner']:
+                raise ValueError('The authorised user is not an admin')
+    message['is_pinned'] = False
+
+    return message
+
     pass
 
 

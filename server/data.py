@@ -43,7 +43,6 @@
             'u_id': u_id
             'message': message,
             'time_created': time.ctime(),
-            'is_unread': False,
             'reacts': None,
             'is_pinned': False
         },
@@ -53,7 +52,6 @@
             'u_id': u_id
             'message': message,
             'time_created': time.ctime(),
-            'is_unread': False,
             'reacts': None,
             'is_pinned': False
         },
@@ -63,7 +61,6 @@
             'u_id': u_id
             'message': message,
             'time_created': time.ctime(),
-            'is_unread': False,
             'reacts': None,
             'is_pinned': False
         }

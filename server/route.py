@@ -1,4 +1,4 @@
-from message import clear_backup, message_send, message_remove, message_edit, message_react, message_unreact
+from message import clear_backup, message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
 from Error import AccessError
 from flask import Flask, request
 from json import dumps
@@ -150,7 +150,55 @@ def unreact_test4():
     except ValueError:
         return "invalid react_id"
 
+@APP.route('/message/unpin', methods=['POST'])
+def unpin():
+    token = request.form.get('token')
+    message_id = request.form.get('message_id')
+    return dumps(message_unpin(int(token), int(message_id)))
 
+@APP.route('/message/unpin/test1', methods=['POST'])
+def unpin_test1():
+    clear_backup()
+    for i in range(5):
+        message_send(1, 1, "hello")
+    try:
+        message_unpin(3, 10)
+    except ValueError:
+        return "invalid message_id"
+
+@APP.route('/message/unpin/test2', methods=['POST'])
+def unpin_test2():
+    clear_backup()
+    for i in range(5):
+        message_send(1, 1, "hello")
+    message_pin(3, 3)
+    try:
+        message_unpin(1, 3)
+    except ValueError:
+        return "authorised user is not admin"
+
+@APP.route('/message/unpin/test3', methods=['POST'])
+def unpin_test3():
+    clear_backup()
+    for i in range(5):
+        message_send(1,1,"hello")
+    message_pin(3,3)
+    message_unpin(3,3)
+    try:
+        message_unpin(3,3)
+    except ValueError:
+        return "already unpinned"
+
+@APP.route('/message/unpin/test4', methods=['POST'])
+def unpin_test4():
+    clear_backup()
+    for i in range(5):
+        message_send(1,1,"hello")
+    message_pin(3,3)    
+    try:
+        message_unpin(9,3)
+    except AccessError:
+        return "The authorised user is not a member of the channel that the message is within"
 
 
 if __name__ == '__main__':
