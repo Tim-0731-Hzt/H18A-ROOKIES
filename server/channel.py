@@ -3,6 +3,8 @@ from Error import AccessError
 import jwt
 # global varaibles:
 
+SECRET = 'sempai'
+
 memberDict = [
        {
             'u_id': "z666",
@@ -97,7 +99,7 @@ def channel_details (token, channel_id):
             detail['channel_owner'] = parts['channel_owner']
     return detail
     pass
-'''
+
 # Given a Channel with ID channel_id that the authorised user is part of, 
 # return up to 50 messages between index "start" and "start + 50". 
 # Message with index 0 is the most recent message in the channel. 
@@ -113,9 +115,12 @@ def channel_messages (token, channel_id, start):
         raise AccessError("Auth user is not a member of channel")
         
     pass
+
 # Given a channel ID, the user removed as a member of this channel
 def channel_leave(token, channel_id):
+    
     pass
+'''
 # Given a channel_id of a channel that the authorised user can join, adds them to that channel
 def channel_join(token, channel_id):
     pass
