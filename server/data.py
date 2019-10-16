@@ -1,22 +1,19 @@
     memberDict = [
         {
             'u_id': u_id,
-            'name_first': first_name,
-            'name_last': last_name
+            'username':handle
             'e-mail': e-mail
             'password': password
         },
         {
             'u_id': u_id,
-            'name_first': first_name,
-            'name_last': last_name
+            'username':handle
             'e-mail': e-mail
             'password': password
         },
         {
             'u_id': u_id,
-            'name_first': first_name,
-            'name_last': last_name
+            'username':handle
             'e-mail': e-mail
             'password': password
         }
