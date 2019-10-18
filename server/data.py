@@ -62,6 +62,7 @@ userDict = [
             'password': "password",
             'token' : "WDEWDWrtyyy",
             'online' : True
+            'permission_id': 
         }
 ]
 channelDict = [
@@ -69,13 +70,14 @@ channelDict = [
             'channel_id': 1,
             'name': "channel_1",
             'channel_member': ["z888"],
-            'channel_owner': ["zdedx11"]
+            'property':1
         },
         {
             'channel_id': 2,
             'name': "channel_2",
             'channel_member': ["z666"],
             'channel_owner': [1]
+            'property':1
         }
 ]
 
@@ -84,7 +86,7 @@ messDict = [
             'channel_id': 1,
             'message_id': "messID",
             'u_id': u_id,
-            'message': ["DCCD","DCDCD"]
+            'message': ["DCCD","DCDCD   "]
             'time_created': time.ctime(),
             'is_unread': False,
             'reacts': None,
