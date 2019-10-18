@@ -2,6 +2,7 @@
 from Error import AccessError
 import jwt
 from data import *
+from auth import getUserFromToken
 # global varaibles:
 
 SECRET = 'sempai'
@@ -56,13 +57,6 @@ def auth_id_check(token,channel_id):
                 if (users == parts['u_id']):
                     return True
     return False
-def message_startCheck(start,channel_id):
-    messDict = []
-    for parts in messDict:
-        if (parts['channel_id'] == channel_id):
-            if start >= len(parts['message']):
-                return False
-    return True
 
 # Invites a user (with user id u_id) to join a channel with ID channel_id. 
 # Once invited the user is added to the channel immediately
@@ -104,18 +98,39 @@ def channel_details (token, channel_id):
 # This function returns a new index "end" which is the value of "start + 50", 
 # or, if this function has returned the least recent messages in the channel, 
 # returns -1 in "end" to indicate there are no more messages to load after this return.
+
 def channel_messages (token, channel_id, start):
+    global messDict
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
-    if message_startCheck(start,channel_id) == False:
-        raise ValueError("start is greater than or equal to the total number of messages in the channel")
     if auth_id_check(token,channel_id) == False:
-        raise AccessError("Auth user is not a member of channel")
-       
-    pass
+        raise AccessError("Auth user is not a member of channnel")
+    dic = {'messages':none,
+            'start':start,
+            'end':none
+    }
+    L = []
+    for parts in messDict:
+        if (parts[channel_id] == channel_id):
+            L.append(parts['message'])
+    L = L[::-1]
+    if len(L) <= start:
+        raise ValueError("start is greater than or equal to the total number of messages in the channel")
+
+    if (start + 50 >= len(L)):
+        for parts in L[start:len(L) - 1]:
+            dic['messages'].append(parts)
+        dic['end'] = -1
+    else:
+        for parts in L[start:start + 50]:
+            dic['messages'].append(parts)
+        dic['end'] = start + 50
+    return dic
 
 # Given a channel ID, the user removed as a member of this channel
 def channel_leave(token, channel_id):
+    if channel_id_check(channel_id) == False:
+        raise ValueError("channel_id is invalid")
     
     pass
 

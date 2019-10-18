@@ -84,7 +84,7 @@ messDict = [
             'channel_id': 1,
             'message_id': "messID",
             'u_id': u_id,
-            'message': message,
+            'message': ["DCCD","DCDCD"]
             'time_created': time.ctime(),
             'is_unread': False,
             'reacts': None,
