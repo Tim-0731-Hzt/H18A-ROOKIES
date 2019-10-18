@@ -2,3 +2,4 @@
     channelDict = []
     messDict = []
     reactDict = []
+    standDict = []

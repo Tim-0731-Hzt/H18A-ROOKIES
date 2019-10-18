@@ -3,10 +3,6 @@ import time
 from data import *
 from Error import AccessError
 
-# global variable:
-messDict = []
-messID = 0
-reactDict = []
 # just for testing
 channelDict = [
     {
