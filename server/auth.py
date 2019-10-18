@@ -37,7 +37,7 @@ def generateToken(username):
 def getUserFromToken(token):
     global SECRET
     decoded = jwt.decode(token,SECRET, algorithms=['HS256'])
-    return decoded['username']
+    return decoded['u_id']
 
 def hashPassword(password):
     return hashlib.sha256(password.encode()).hexdigest()
