@@ -1,5 +1,6 @@
 # MESSAGE
 import time
+from data import *
 from Error import AccessError
 
 # global variable:
@@ -80,7 +81,7 @@ def message_send(token, channel_id, message):
         'is_pinned': False
     }
     messDict.append(m)
-    return messDict
+    return m['message_id']
 
 # Given a message_id for a message, this message is removed from the channel
 # ValueError when
@@ -125,9 +126,7 @@ def message_edit(token, message_id, message):
             if token not in channel['channel_owner']:
                 raise AccessError('Unauthorised edit')
     mess['message'] = message
-
-    return mess
-
+    pass
 
 # Given a message within a channel the authorised user is part of, add a "react" to that particular message
 # ValueError when:
@@ -135,7 +134,6 @@ def message_edit(token, message_id, message):
 # react_id is not a valid React ID
 # Message with ID message_id already contains an active React with ID react_id
 def message_react(token, message_id, react_id):
-
     global reactDict
     global messDict
     global channelDict
@@ -189,7 +187,6 @@ def message_react(token, message_id, react_id):
 # react_id is not a valid React ID
 # Message with ID message_id does not contain an active React with ID react_id
 def message_unreact(token, message_id, react_id):
-
     global reactDict
     global messDict
     global channelDict
@@ -250,7 +247,6 @@ def message_pin(token, message_id):
             if int(token) not in chan['channel_owner']:
                 raise ValueError('The authorised user is not an admin')
     message['is_pinned'] = True
-
     pass
 
 # Given a message within a channel, remove it's mark as unpinned
@@ -261,7 +257,6 @@ def message_pin(token, message_id):
 # AccessError when:
 # The authorised user is not a member of the channel that the message is within
 def message_unpin(token, message_id):
-
     global messDict
     global channelDict
     found = False
