@@ -66,7 +66,7 @@ def auth_id_check(token,channel_id):
 def channel_property_check(channel_id):
     global channelDict
     for parts in channelDict:
-        if (parts['property'] == 1 and parts['channel_id'] == channel_id):
+        if (parts['is_public'] == True and parts['channel_id'] == channel_id):
             # public
             return True
     # private
@@ -195,18 +195,67 @@ def channel_addowner(token, channel_id, u_id):
     for parts in channelDict:
         if parts['channel_id'] == channel_id and id in parts['channel_owner']:
         raise ValueError("user is already an owner in the channel")    
-    
-    pass
+    if if_User_Owner(token,channel_id) == False:
+        raise AccessError("the authorised user is not an owner of the slackr, or an owner of this channel")
+    for parts in channelDict:
+        if (parts['channel_id'] == channel_id):
+            parts['channel_owner'].append(u_id)
 # Remove user with user id u_id an owner of this channel
 def channel_removeowner(token, channel_id, u_id):
-    pass
+    global channelDict
+    if channel_id_check(channel_id) == False:
+        raise ValueError("channel_id is invalid")
+    if channel_admin_check(token) == False:
+        raise AccessError("the authorised user is not an owner of the slackr, or an owner of this channel")
+    if if_User_Owner(token,channel_id) == False:
+        raise AccessError("user with user id u_id is not an owner of the channel")
+    for parts in channelDict:
+        if (parts['channel_id'] == channel_id):
+            parts['channel_owner'].remove(u_id)
 # Provide a list of all channels (and their associated details) that 
 # the authorised user is part of
 def channels_list(token):
-    pass
+    global channelDict
+    L = []
+    id = getUserFromToken(token)
+    for parts in channelDict:
+        if (id in parts['channel_member'] or id in parts['channel_owner']):
+            L.append(parts)
+    return L
 # Provide a list of all channels (and their associated details) 
 def channels_listall(token):
-    pass
+    global channelDict
+    return channelDict
 # Creates a new channel with that name that is either a public or private channel
 def channels_create(token, name, is_public):
-    pass
+    global channelDict
+    if (len(name) > 20):
+        raise ValueError("Name is more than 20 characters long")
+    id = getUserFromToken(token)
+    if channelDict = none:
+        d = {
+            'channel_id': 1,
+            'name': name,
+            'channel_member': none,
+            'channel_owner':[id],
+            'is_public': is_public
+        }
+        channelDict.append(d)
+        return channelDict
+    else:
+        # if same name
+        for parts in channelDict:
+            if (parts['name'] == name):
+                raise ValueError("this name was already used")
+        count = 0
+        for channels in channelDict:
+            count += 1
+        d = {
+            'channel_id': count,
+            'name': name,
+            'channel_member': none,
+            'channel_owner':[id],
+            'is_public': is_public
+        }
+        channelDict.append(d)
+        return channelDict
