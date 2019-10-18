@@ -29,10 +29,12 @@ def if_User_Owner(token,channel_id):
     global userDict
     global channelDict
     # get the user id from token
+    id = getUserFromToken(token)
+    
+    # slacker owner or admin
     for parts in userDict:
-        if (parts['token'] == token):
-            id = parts['u_id']
-            break
+        if (parts[u_id] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
+            return True
     # find the channel and serach the owner
     for elements in channelDict:
         if (elements['channel_id'] == channel_id):
@@ -45,18 +47,22 @@ def auth_id_check(token,channel_id):
     global userDict
     global channelDict
     # find the channel's member and owner
+    id = getUserFromToken(token)
+    # if the user is slacker owner or admin
+    for parts in userDict:
+        if (parts[u_id] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
+            return True
     for elements in channelDict:
         if (elements['channel_id'] == channel_id):
             mem = elements['channel_member']
             owner = elements['channel_owner']
             break
     new = mem + owner
-    for parts in userDict:
-        if (parts['token'] == token):
-            for users in new:
-                if (users == parts['u_id']):
-                    return True
+    id = getUserFromToken(token)
+    if id in new:
+        return True
     return False
+
 
 # Invites a user (with user id u_id) to join a channel with ID channel_id. 
 # Once invited the user is added to the channel immediately
@@ -68,6 +74,7 @@ def channel_invite (token, channel_id, u_id):
         raise ValueError("u_id does not refer to a valid user")
     if auth_id_check(token,channel_id) == False:
         raise AccessError("Auth user is not a member of channel")
+    
     for parts in channelDict:
         if (parts['channel_id'] == channel_id):
             # the user invite by owner is also a owner
@@ -75,6 +82,7 @@ def channel_invite (token, channel_id, u_id):
                 parts['channel_owner'].append(u_id)
             else:
                 parts['channel_member'].append(u_id)
+
 
 # Given a Channel with ID channel_id that the authorised user is part of, 
 # provide basic details about the channel
@@ -129,9 +137,15 @@ def channel_messages (token, channel_id, start):
 
 # Given a channel ID, the user removed as a member of this channel
 def channel_leave(token, channel_id):
+    global channelDict
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
-    
+    id = getUserFromToken(token)
+    # check user is a member of channel
+    if 
+    for parts in channelDict:
+        if id in parts['channel_member']:
+            parts['channel_member'].remove(parts)
     pass
 
 # Given a channel_id of a channel that the authorised user can join, adds them to that channel
