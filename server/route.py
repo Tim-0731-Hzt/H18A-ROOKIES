@@ -6,6 +6,14 @@ from json import dumps
 APP = Flask(__name__)
 APP.debug = True
 
+@APP.route('/message/sendlater', methods=['POST'])
+def send():
+    token = request.form.get('token')
+    channel_id = request.form.get('channel_id')
+    message = request.form.get('message')
+    time_sent = request.form.get('time_sent')
+    return dumps(message_send(token,channel_id,message))
+
 @APP.route('/message/send', methods=['POST'])
 def send():
     token = request.form.get('token')
@@ -199,7 +207,6 @@ def unpin_test4():
         message_unpin(9,3)
     except AccessError:
         return "The authorised user is not a member of the channel that the message is within"
-
 
 if __name__ == '__main__':
     APP.run()
