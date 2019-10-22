@@ -3,10 +3,46 @@ from Error import AccessError
 import jwt
 from data import *
 from auth import getUserFromToken
+import re
 # global varaibles:
 
 SECRET = 'sempai'
 
+def generateToken(u_id):
+    global SECRET
+    encoded = jwt.encode({u_id},SECRET, algorithm='HS256')
+    return str(encoded)
+
+def getUserFromToken(token):
+    global SECRET
+    decoded = jwt.decode(token,SECRET, algorithms=['HS256'])
+    return decoded['u_id']
+
+def check_already_used_email(email):
+    global userDict
+    for parts in userDict:
+        if (parts['email'] == email):
+            return False
+    return True
+
+def auth_register(email, password, name_first, name_last):
+    regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
+    if ! re.search(regex,email):
+        raise ValueError("Valid Email")
+    if ! check_already_used_email(email):
+        raise ValueError("Email address is already used bt another user.")
+    if (len(name_first) > 50):
+        raise ValueError("Firstname is needed between 1 and 50 characters.")
+    if (len(name_last) > 50):
+        raise ValueError("Lastname is needed between 1 and 50 characters.")
+    # incorrect password
+    if (len(password) < 6):
+        raise ValueError("Password is not valid")
+    firstName = name_first.lower()
+    lastName = name_last.lower()
+    handle = firstName + lastName
+    handle = handle[0:20]
+    
 
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session

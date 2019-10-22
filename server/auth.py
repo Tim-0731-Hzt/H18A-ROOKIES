@@ -29,9 +29,9 @@ def sendError(message):
         '_error':message,
     })
 
-def generateToken(username):
+def generateToken(u_id):
     global SECRET
-    encoded = jwt.encode({'username':username},SECRET, algorithm='HS256')
+    encoded = jwt.encode({'u_id':u_id},SECRET, algorithm='HS256')
     return str(encoded)
 
 def getUserFromToken(token):
