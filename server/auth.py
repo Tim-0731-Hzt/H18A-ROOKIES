@@ -78,9 +78,8 @@ def auth_login (email, password):
              raise ValueError("Email entered doesn't belong to a user")
     for user in userDict:     
         if user['email'] == email and user['password'] == hashPassword(password):
-            return dumps({
-                'token':generateToken(user['u_id']),
-            })
+            return user['u_id']
+
     return sendError('Username or password incorrect')
 
 
@@ -148,22 +147,20 @@ def auth_register(email, password, name_first, name_last):
     newUser['first_name'] = name_first
     newUser['last_name'] = name_last
     newUser['email'] = email
-    newUser['u_id'] = len(userDict) + 1   
+    newUser['u_id'] = generateToken(len(userDict) + 1)
     newUser['password'] = hashPassword(password)
     userDict.append(newUser)
     
-    return dumps({
-        'token':generateToken(newUser['u_id']),
-    })
+    return newUser['u_id']
 
 # Given an email address, if the user is a registered user, send's them a an email containing a specific secret code, that when entered in auth_passwordreset_reset, shows that the user trying to reset the password is the one who got sent this email.
 def auth_passwordreset_request(email):
     global userDict
     for user in userDict:
         if user['email'] is email:
-            return (dumps({
-                user['reset_code']: generateResetCode(reset_code),
-            }))
+            user['reset_code'] == generateResetCode(reset_code),
+            return user['reset_code']
+            
 
 # Given a reset code for a user, set that user's new password to the password provided
 # ValueError when:
