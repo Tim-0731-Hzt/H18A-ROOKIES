@@ -152,9 +152,7 @@ def auth_register(email, password, name_first, name_last):
     newUser['password'] = hashPassword(password)
     userDict.append(newUser)
     
-    return dumps({
-        'token':generateToken(newUser['u_id']),
-    })
+    return newUser
 
 # Given an email address, if the user is a registered user, send's them a an email containing a specific secret code, that when entered in auth_passwordreset_reset, shows that the user trying to reset the password is the one who got sent this email.
 def auth_passwordreset_request(email):
