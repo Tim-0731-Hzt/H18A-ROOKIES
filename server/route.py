@@ -11,8 +11,8 @@ APP.debug = True
 def login():
     email = request.form.get('email')
     password = request.form.get('password')
-    after_hash_password = hashPassword(password)
-    return dumps(auth_login(email, after_hash_password))
+    #after_hash_password = hashPassword(password)
+    return dumps(auth_login(email, password))
 
 @APP.route('/auth/logout', methods=['POST'])
 def logout():
