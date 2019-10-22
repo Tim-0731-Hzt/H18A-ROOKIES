@@ -1,5 +1,5 @@
 import datetime
-import pickle
+
 
 userDict = [
         {
@@ -34,22 +34,3 @@ messDict = [
             'is_pinned': False
         }
 ]
-'''
-reactDict = [
-        {
-            'react_id': react_id, 
-            'u_ids': [u_id, u_id, u_id], 
-            'is_this_user_reacted': False
-        },
-        {
-            'react_id': react_id, 
-            'u_ids': [u_id, u_id, u_id], 
-            'is_this_user_reacted': False
-        },
-        {
-            'react_id': react_id, 
-            'u_ids': [u_id, u_id, u_id], 
-            'is_this_user_reacted': False
-        }
-]
-'''

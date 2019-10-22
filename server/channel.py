@@ -42,8 +42,14 @@ def auth_register(email, password, name_first, name_last):
     lastName = name_last.lower()
     handle = firstName + lastName
     handle = handle[0:20]
-    
-
+    if channel_handle_check(handle) == True:
+        
+def channel_handle_check(handle):
+    global userDict
+    for parts in userDict:
+        if (parts['handle'] == handle):
+            return True
+    return False
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
 def channel_id_check(channel_id):
