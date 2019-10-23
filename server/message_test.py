@@ -3,13 +3,7 @@ from auth import auth_register
 from channel import channels_create
 from channel import channel_join
 from channel import channel_leave
-from message import message_edit
-from message import message_send
-from message import message_pin
-from message import message_unpin
-from message import message_remove
-from message import message_react
-from message import message_unreact
+from message_global import *
 import pytest
 from Error import AccessError
 from pickle_unpickle import restart
@@ -18,20 +12,14 @@ def test_message_send_valerr():
     # set up
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
-
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
-
-    print(token)
-
-    token = token[4:len(token)-2]
+    channelID = channels_create(token, "Channel 1", True)
 
     # testing ValueError
     with pytest.raises(ValueError, match = r".*"):
-        message_send(token, channelID, "Hello world" * 300)
+        message_send(str(token), channelID, "Hello world" * 300)
     restart()
 
-def test_message_send_normal():
+'''def test_message_send_normal():
     # set up
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
@@ -41,7 +29,7 @@ def test_message_send_normal():
 
     # testing (check if this function works properly)
     message_send(token, channelID, "Hello world")
-    restart()
+    restart()'''
 '''
 def test_message_remove_valerr1():
 
