@@ -4,10 +4,12 @@ from flask import Flask, request
 from json import dumps
 from channel import *
 from auth import *
+from user import *
 
 
 APP = Flask(__name__)
 APP.debug = True
+
 
 @APP.route('/message/sendlater', methods=['POST'])
 def sendlater():
