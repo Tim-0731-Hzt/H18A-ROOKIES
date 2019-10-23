@@ -149,11 +149,11 @@ def auth_register(email, password, name_first, name_last):
         else:
             pass
 
-    if (len(userDict) == 0) {
+    if (len(userDict) == 0):
         newUser['permission_id'] = 1
-    }elif (len(userDict) == 1) {
+    elif (len(userDict) == 1):
         newUser['permission_id'] = 2
-    }
+    
     newUser['first_name'] = name_first
     newUser['last_name'] = name_last
     newUser['email'] = email

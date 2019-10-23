@@ -22,9 +22,9 @@ def test_message_send_valerr():
     channelsCreateDict = channels_create(token, "Channel 1", True)
     channelID = channelsCreateDict['channel_id']
 
-    print token
+    print(token)
 
-    token= token[2:len(token)-1]
+    token = token[4:len(token)-2]
 
     # testing ValueError
     with pytest.raises(ValueError, match = r".*"):
