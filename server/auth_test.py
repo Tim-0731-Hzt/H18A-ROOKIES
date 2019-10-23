@@ -22,6 +22,7 @@ def test_auth_login_1():
     assert login_token1 == token1
     assert u_id1 == 1
     assert token1 == "b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoxfQ.Bodqy1hnwpsmGtf3MFEhvemrfLLiGQgxuiW4MlbD2WM'"
+    restart() 
 
 def test_auth_login_2():
     registerDict1 = auth_register('shenjingbing@gmail.com', '123456', 'taobuguo','sb')
@@ -43,28 +44,29 @@ def test_auth_login_2():
     assert u_id2 == 3
     assert token1 == "b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoxfQ.Bodqy1hnwpsmGtf3MFEhvemrfLLiGQgxuiW4MlbD2WM'"
     assert token2 == "b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoyfQ.ZVPCVZoNzgFB9Am_imX_52K6WO_CZf-o8kpsbpdCJl0'"
+    restart()
 
 def test_auth_login_invalidEmail():
     with pytest.raises(ValueError, match=r".*"):
         auth_login('soundsbad', '123456')
-
+    restart()
 def test_auth_login_passwordIncorrect(): 
     registerDict = auth_register('good@gmail.com', '123456','hayden','smith')
     with pytest.raises(ValueError, match=r".*"):
         auth_login('good@gmail.com', '888888')
-    
+    restart()
 def test_auth_login_notBelongToUser():
     registerDict = auth_register('Jankie@gmail.com', '123456','hayden','smith') 
     with pytest.raises(ValueError, match=r".*"):
         auth_login('bad@gmail.com', '123456')  
-
+    restart()
 ##
 def test_auth_logout_1():
     authRegisterDict = auth_register('hayden@gmail.com', '123456','hayden','smith')
     token1 = authRegisterDict['token']
    # token1 = token1[2:len(token1)-1]
     assert auth_logout(token1) == True
-     
+    restart()
 
 
 
@@ -75,7 +77,7 @@ def test_auth_register_1():
     token1 = registerDict['token']
     assert u_id1 == 1
     assert token1 == "b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoxfQ.Bodqy1hnwpsmGtf3MFEhvemrfLLiGQgxuiW4MlbD2WM'"
-
+    restart()
 """ def test_auth_register_2():
     authRegisterDict = auth_register('Jankie@gmail.com', '123456','Jankie','Lyu')
     u_id2 = authRegisterDict2['u_id']
