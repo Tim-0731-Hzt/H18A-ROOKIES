@@ -44,14 +44,14 @@ def getUserFromToken(token):
     global SECRET
     decoded = jwt.decode(token,SECRET, algorithms=['HS256'])
     u_id = decoded['u_id']
-    
-    characters = 'abcdefghijklmnopqrstuvwxyz'
+    return u_id
+"""     characters = 'abcdefghijklmnopqrstuvwxyz'
     if ( re.search(characters, u_id)):
         pass
     else:
         raise ValueError("Invalid Token")
-
-    return u_id
+ """
+    
 
 def hashPassword(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -90,7 +90,7 @@ def auth_login (email, password):
 def auth_logout(token):
     global userDict
     u_id = getUserFromToken(token)
-    print(u_id)
+    #print(u_id)
     for user in userDict:
         if user['u_id'] == u_id:
             user['online'] = False
@@ -139,16 +139,27 @@ def auth_register(email, password, name_first, name_last):
     firstName = name_first.lower()
     lastName = name_last.lower()
     handle = firstName + lastName 
+    if (len(handle) > 40):
+        handle = handle[:20]
 
-    newUser['handle'] = handle 
-    for user in userDict:
-        if user['handle'] is handle:
-            for i in range(0,9999):
-                if user['handle'] is not handle + str(i):
-                    newUser['handle'] = handle + str(i)
-                    break
-        else:
-            pass
+    newUser['handle'] = handle
+    if (len(handle) < 20):
+        for user in userDict:
+            if user['handle'] is handle:
+                for i in range(0,9999):
+                    if user['handle'] is not handle + str(i) and (len(handle + str(i)) < 20):
+                        newUser['handle'] = handle + str(i)
+                        break
+            else:
+                pass
+    else:
+        for user in userDict:
+            if user['handle'] is handle:
+                for i in range (0,10):
+                    if  user['handle'] is not (i + handle[1:20]):
+                        handle[0] = i
+            else:
+                pass
 
     if (len(userDict) == 0):
         newUser['permission_id'] = 1
