@@ -253,6 +253,27 @@ def password_reset():
     new_password = request.form.get('new_password')
     return dumps(auth_passwordreset_reset(reset_code, new_password))
 
+'''Dan'''
+@APP.route('/user/profile', methods = ['GET'])
+def user1():
+    token = request.args.get('token')
+    u_id = request.args.get('u_id')
+    profile = user_profile(token,u_id)
+    return dumps(profile)
+
+@APP.route('/user/profile/setname', methods = ['PUT'])
+def user2():
+    token = request.form.get('token')
+    name_first = request.form.get('name_first')
+    name_last = request.form.get('name_last')
+    user_profile_setname(token,name_first, name_last)
+    return dumps({})
+
+@APP.route('/user/profile/setemail', method = ['PUT'])
+def user3():
+    token = request.form.get('token')
+    email = request.form.get('email')
+
 
 if __name__ == '__main__':
     APP.run()
