@@ -331,8 +331,6 @@ def message_unpin(token, message_id):
     messDict = DATA['messDict']
     channelDict = DATA['channelDict']
 
-    global messDict
-    global channelDict
     found = False
     for mess in messDict:
         if mess['message_id'] == message_id:
