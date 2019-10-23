@@ -129,6 +129,7 @@ def auth_register(email, password, name_first, name_last):
         'last_name' : None,
         'email' : None,
         'u_id' : None,
+        'permission_id': None,
         'handle' : None,
         'password' : None,
         'online' : True,
@@ -147,11 +148,17 @@ def auth_register(email, password, name_first, name_last):
                     break
         else:
             pass
-        
+
+    if (len(userDict) == 0) {
+        newUser['permission_id'] = 1
+    }elif (len(userDict) == 1) {
+        newUser['permission_id'] = 2
+    }
     newUser['first_name'] = name_first
     newUser['last_name'] = name_last
     newUser['email'] = email
     newUser['u_id'] = len(userDict) + 1
+    newUser['permission_id'] = 3
     newUser['password'] = hashPassword(password)
     userDict.append(newUser)
     

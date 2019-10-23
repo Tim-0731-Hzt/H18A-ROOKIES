@@ -2,21 +2,10 @@
 from Error import AccessError
 import jwt
 from data import *
-from auth import getUserFromToken
+from auth import *
 import re
 # global varaibles:
 
-SECRET = 'sempai'
-
-def generateToken(u_id):
-    global SECRET
-    encoded = jwt.encode({u_id},SECRET, algorithm='HS256')
-    return str(encoded)
-
-def getUserFromToken(token):
-    global SECRET
-    decoded = jwt.decode(token,SECRET, algorithms=['HS256'])
-    return decoded['u_id']
 
 def check_already_used_email(email):
     global userDict
@@ -152,9 +141,9 @@ def channel_messages (token, channel_id, start):
         raise ValueError("channel_id is invalid")
     if auth_id_check(token,channel_id) == False:
         raise AccessError("Auth user is not a member of channnel")
-    dic = {'messages':none,
+    dic = {'messages':None,
             'start':start,
-            'end':none
+            'end':None
     }
     L = []
     for parts in messDict:
@@ -242,8 +231,12 @@ def channels_list(token):
     L = []
     id = getUserFromToken(token)
     for parts in channelDict:
-        if (id in parts['channel_member'] or id in parts['channel_owner']):
-            L.append(parts)
+        if (parts['channel_member'] == None):
+            if id in parts['channel_owner']:
+                L.append(parts)
+        else:
+            if (id in parts['channel_member'] or id in parts['channel_owner']):
+                L.append(parts)
     return L
 # Provide a list of all channels (and their associated details) 
 def channels_listall(token):
@@ -255,16 +248,17 @@ def channels_create(token, name, is_public):
     if (len(name) > 20):
         raise ValueError("Name is more than 20 characters long")
     id = getUserFromToken(token)
-    if channelDict == none:
+    if channelDict == None:
         d = {
             'channel_id': 1,
             'name': name,
-            'channel_member': none,
+            'channel_member': None,
             'channel_owner':[id],
-            'is_public': is_public
+            'is_public': is_public,
+            'standUp':0
         }
-        channelDict.append(d)
-        return channelDict
+        channelDict = d
+        return d['channel_id']
     else:
         # if same name
         for parts in channelDict:
@@ -276,9 +270,10 @@ def channels_create(token, name, is_public):
         d = {
             'channel_id': count,
             'name': name,
-            'channel_member': none,
+            'channel_member': None,
             'channel_owner':[id],
-            'is_public': is_public
+            'is_public': is_public,
+            'standUp':0
         }
         channelDict.append(d)
-        return channelDict
+        return d['channel_id']
