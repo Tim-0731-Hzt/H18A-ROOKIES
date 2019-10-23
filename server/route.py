@@ -338,5 +338,13 @@ def se():
     result = search(token, query_str)
     return dumps(result)
 
+@APP.route('/admin/userpermission/change', method = ['POST'])
+def admin():
+    token = request.form.get('token')
+    u_id = request.form.get('premission_id')
+    permission_id = request.form.get('premission_id')
+    admin_userpermission_change(token,u_id,premission_id)
+    return dumps({})
+
 if __name__ == '__main__':
     APP.run()
