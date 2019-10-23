@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 from message import clear_backup, message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
 from Error import AccessError
 from flask import Flask, request
@@ -266,4 +264,3 @@ def password_reset():
 
 if __name__ == '__main__':
     APP.run()
->>>>>>> Chenkai_lyu
