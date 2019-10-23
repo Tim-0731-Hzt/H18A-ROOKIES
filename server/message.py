@@ -1,11 +1,14 @@
 # MESSAGE
 import time
 from auth import getUserFromToken
-from data import *
+
 from Error import AccessError
+from pickle_unpickle import save, load
+
+messID = 0
 
 # just for testing
-channelDict = [
+'''channelDict = [
     {
         'channel_id': 1,
         'name': "channel_1",
@@ -18,11 +21,12 @@ channelDict = [
         'channel_member': [2],
         'channel_owner': [1]
     }
-]
+]'''
 
 # helper function for testing
-def clear_backup():
-    global messDict
+'''def clear_backup():
+    DATA = load()
+    messDict = DATA['messDict']
     global messID
     global channelDict
     global reactDict
@@ -43,7 +47,7 @@ def clear_backup():
             'channel_owner': [1]
         }
     ]
-
+'''
 
 # Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future
 # ValueError when:
@@ -51,6 +55,8 @@ def clear_backup():
 # Message is more than 1000 characters
 # Time sent is a time in the past
 def message_sendlater(token, channel_id, message, time_sent):
+    DATA = load()
+    messDict = DATA['messDict']
     uID = getUserFromToken(token)
     if len(message) > 1000:
         raise ValueError("Message is more than 1000 characters")
@@ -61,7 +67,6 @@ def message_sendlater(token, channel_id, message, time_sent):
                 raise AccessError("The authorised user has not joined the channel they are trying to post to")
     
     global messID
-    global messDict
     messID += 1
     m = {
         'channel_id': int(channel_id),
@@ -76,6 +81,8 @@ def message_sendlater(token, channel_id, message, time_sent):
         raise ValueError("Time sent is a time in the past")
     time.sleep(time_sent)
     messDict.append(m)
+    DATA['messDict'] = messDict
+    save(DATA)
     return m['message_id']
 
 
@@ -84,7 +91,8 @@ def message_sendlater(token, channel_id, message, time_sent):
 # AccessError when: the authorised user has not joined the channel they are trying to post to
 def message_send(token, channel_id, message):
     uID = getUserFromToken(token)
-
+    DATA = load()
+    messDict = DATA['messDict']
     if len(message) > 1000:
         raise ValueError("Message is more than 1000 characters")
     
@@ -93,7 +101,7 @@ def message_send(token, channel_id, message):
             if uID not in cha['channel_member']:
                 raise AccessError("The authorised user has not joined the channel they are trying to post to")
     global messID
-    global messDict
+
     messID += 1
     m = {
         'channel_id': int(channel_id),
@@ -105,6 +113,8 @@ def message_send(token, channel_id, message):
         'is_pinned': False
     }
     messDict.append(m)
+    DATA['messDict'] = messDict
+    save(DATA)
     return m['message_id']
 
 # Given a message_id for a message, this message is removed from the channel
@@ -117,7 +127,8 @@ def message_send(token, channel_id, message):
 # Message with message_id was not sent by an admin or owner of the slack
 def message_remove(token, message_id):
     uID = getUserFromToken(token)
-    global messDict
+    DATA = load()
+    messDict = DATA['messDict']
     found = False
     
     for mess in messDict:
@@ -133,6 +144,9 @@ def message_remove(token, message_id):
             if uID not in channel['channel_owner']:
                 raise AccessError('Unauthorised remove')
     messDict.remove(mess)
+    DATA['messDict'] = messDict
+    save(DATA)
+
     pass
 
 # Given a message, update it's text with new text
@@ -143,7 +157,8 @@ def message_remove(token, message_id):
 def message_edit(token, message_id, message):
     uID = getUserFromToken(token)
 
-    global messDict
+    DATA = load()
+    messDict = DATA['messDict']
     for mess in messDict:
         if mess['message_id'] == message_id:
             channelID = mess['channel_id']
@@ -153,6 +168,9 @@ def message_edit(token, message_id, message):
             if uID not in channel['channel_owner']:
                 raise AccessError('Unauthorised edit')
     mess['message'] = message
+    DATA['messDict'] = messDict
+    save(DATA)
+
     pass
 
 # Given a message within a channel the authorised user is part of, add a "react" to that particular message
@@ -162,9 +180,11 @@ def message_edit(token, message_id, message):
 # Message with ID message_id already contains an active React with ID react_id
 def message_react(token, message_id, react_id):
     uID = getUserFromToken(token)
-    global reactDict
-    global messDict
-    global channelDict
+    DATA = load()
+    messDict = DATA['messDict']
+    reactDict = DATA['reactDict']
+    channelDict = DATA['channelDict']
+
     if react_id < 0:
         raise ValueError('React_id is not a valid React ID')
     for mess in messDict:
@@ -207,6 +227,11 @@ def message_react(token, message_id, react_id):
                 'is_this_user_reacted': False
             }
         reactDict.append(r)
+    DATA['messDict'] = messDict
+    DATA['reactDict'] = reactDict
+    DATA['channelDict'] = channelDict
+    save(DATA)
+
     pass
 
 # Given a message within a channel the authorised user is part of, remove a "react" to that particular message
@@ -216,9 +241,10 @@ def message_react(token, message_id, react_id):
 # Message with ID message_id does not contain an active React with ID react_id
 def message_unreact(token, message_id, react_id):
     uID = getUserFromToken(token)
-    global reactDict
-    global messDict
-    global channelDict
+    DATA = load()
+    messDict = DATA['messDict']
+    reactDict = DATA['reactDict']
+    channelDict = DATA['channelDict']
     if react_id < 0:
         raise ValueError('React_id is not a valid React ID')
     for mess in messDict:
@@ -245,6 +271,11 @@ def message_unreact(token, message_id, react_id):
                 message.update(m)
                 reactDict.remove(rea)
             break
+    DATA['messDict'] = messDict
+    DATA['reactDict'] = reactDict
+    DATA['channelDict'] = channelDict
+    save(DATA)
+
     pass
 
 # Given a message within a channel, mark it as "pinned" to be given special display treatment by the frontend
@@ -256,8 +287,10 @@ def message_unreact(token, message_id, react_id):
 # The authorised user is not a member of the channel that the message is within
 def message_pin(token, message_id):
     uID = getUserFromToken(token)
-    global messDict
-    global channelDict
+    DATA = load()
+    messDict = DATA['messDict']
+    channelDict = DATA['channelDict']
+
     found = False
     for mess in messDict:
         if mess['message_id'] == message_id:
@@ -277,6 +310,10 @@ def message_pin(token, message_id):
             if int(uID) not in chan['channel_owner']:
                 raise ValueError('The authorised user is not an admin')
     message['is_pinned'] = True
+    DATA['messDict'] = messDict
+    DATA['channelDict'] = channelDict
+    save(DATA)
+
     pass
 
 # Given a message within a channel, remove it's mark as unpinned
@@ -288,6 +325,10 @@ def message_pin(token, message_id):
 # The authorised user is not a member of the channel that the message is within
 def message_unpin(token, message_id):
     uID = getUserFromToken(token)
+    DATA = load()
+    messDict = DATA['messDict']
+    channelDict = DATA['channelDict']
+
     global messDict
     global channelDict
     found = False
@@ -309,6 +350,10 @@ def message_unpin(token, message_id):
             if int(uID) not in chan['channel_owner']:
                 raise ValueError('The authorised user is not an admin')
     message['is_pinned'] = False
+    DATA['messDict'] = messDict
+    DATA['channelDict'] = channelDict
+    save(DATA)
+
     pass
 
 
