@@ -13,13 +13,7 @@ userDict = [
         } 
 ]
 channelDict = [
-        {
-            'channel_id': None,
-            'name': None,
-            'channel_member': None,
-            'channel_owner': None,
-            'is_public': None
-        }
+        
 ]
 
 messDict = [

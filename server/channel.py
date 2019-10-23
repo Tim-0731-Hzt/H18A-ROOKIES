@@ -262,8 +262,12 @@ def channels_list(token):
     L = []
     id = getUserFromToken(token)
     for parts in channelDict:
-        if (id in parts['channel_member'] or id in parts['channel_owner']):
-            L.append(parts)
+        if (parts['channel_member'] == None):
+            if id in parts['channel_owner']:
+                L.append(parts)
+        else:
+            if (id in parts['channel_member'] or id in parts['channel_owner']):
+                L.append(parts)
     return L
 # Provide a list of all channels (and their associated details) 
 def channels_listall(token):
@@ -281,9 +285,10 @@ def channels_create(token, name, is_public):
             'name': name,
             'channel_member': None,
             'channel_owner':[id],
-            'is_public': is_public
+            'is_public': is_public,
+            'standUp':0
         }
-        channelDict.append(d)
+        channelDict = d
         return d['channel_id']
     else:
         # if same name
@@ -298,7 +303,8 @@ def channels_create(token, name, is_public):
             'name': name,
             'channel_member': None,
             'channel_owner':[id],
-            'is_public': is_public
+            'is_public': is_public,
+            'standUp':0
         }
         channelDict.append(d)
         return d['channel_id']
