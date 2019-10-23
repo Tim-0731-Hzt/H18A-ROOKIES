@@ -300,7 +300,8 @@ def standup2():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
-    stand_up()
+    standup_send(token,channel_id, message)
+    return dumps({})
 
 if __name__ == '__main__':
     APP.run()
