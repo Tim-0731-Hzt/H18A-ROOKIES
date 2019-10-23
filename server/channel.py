@@ -2,12 +2,13 @@
 from Error import AccessError
 import jwt
 from data import *
-from auth import getUserFromToken
+from auth import *
 import re
 # global varaibles:
 
-SECRET = 'sempai'
 
+
+'''
 def generateToken(u_id):
     global SECRET
     encoded = jwt.encode({u_id},SECRET, algorithm='HS256')
@@ -43,7 +44,7 @@ def auth_register(email, password, name_first, name_last):
     handle = firstName + lastName
     handle = handle[0:20]
     if channel_handle_check(handle) == True:
-        
+'''
 def channel_handle_check(handle):
     global userDict
     for parts in userDict:
@@ -171,9 +172,9 @@ def channel_messages (token, channel_id, start):
         raise ValueError("channel_id is invalid")
     if auth_id_check(token,channel_id) == False:
         raise AccessError("Auth user is not a member of channnel")
-    dic = {'messages':none,
+    dic = {'messages':None,
             'start':start,
-            'end':none
+            'end':None
     }
     L = []
     for parts in messDict:
@@ -225,7 +226,7 @@ def channel_join(token, channel_id):
     else:
         for parts in channelDict:
             if (parts['channel_id'] == channel_id):
-                parts.['channel_member'].append(id)
+                parts['channel_member'].append(id)
     pass
 # Make user with user id u_id an owner of this channel
 def channel_addowner(token, channel_id, u_id):
@@ -236,7 +237,7 @@ def channel_addowner(token, channel_id, u_id):
     id = getUserFromToken(token)
     for parts in channelDict:
         if parts['channel_id'] == channel_id and id in parts['channel_owner']:
-        raise ValueError("user is already an owner in the channel")    
+            raise ValueError("user is already an owner in the channel")    
     if if_User_Owner(token,channel_id) == False:
         raise AccessError("the authorised user is not an owner of the slackr, or an owner of this channel")
     for parts in channelDict:
@@ -274,16 +275,16 @@ def channels_create(token, name, is_public):
     if (len(name) > 20):
         raise ValueError("Name is more than 20 characters long")
     id = getUserFromToken(token)
-    if channelDict = none:
+    if channelDict == None:
         d = {
             'channel_id': 1,
             'name': name,
-            'channel_member': none,
+            'channel_member': None,
             'channel_owner':[id],
             'is_public': is_public
         }
         channelDict.append(d)
-        return channelDict
+        return d['channel_id']
     else:
         # if same name
         for parts in channelDict:
@@ -295,9 +296,9 @@ def channels_create(token, name, is_public):
         d = {
             'channel_id': count,
             'name': name,
-            'channel_member': none,
+            'channel_member': None,
             'channel_owner':[id],
             'is_public': is_public
         }
         channelDict.append(d)
-        return channelDict
+        return d['channel_id']

@@ -2,7 +2,6 @@
 import re
 import hashlib
 import jwt
-import user
 import random
 from json import dumps
 from flask import Flask, request
@@ -41,7 +40,7 @@ def generateToken(username):
 
 def getUserFromToken(token):
     global SECRET
-    decoded = jwt.decode(token,SECRET, algorithms=['HS256'])
+    decoded = jwt.decode(token, verify = False)
     return decoded['u_id']
 
 def hashPassword(password):

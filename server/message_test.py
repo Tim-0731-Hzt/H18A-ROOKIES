@@ -266,7 +266,7 @@ def test_message_react_messremoved():
         message_remove(token, messID)
 
 
-def test_message_react_nonexist():
+def test_message_react_Nonexist():
     # set up
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
