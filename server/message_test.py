@@ -12,6 +12,7 @@ from message import message_react
 from message import message_unreact
 import pytest
 from Error import AccessError
+from pickle_unpickle import restart
 
 def test_message_send_valerr():
     # set up
@@ -24,6 +25,7 @@ def test_message_send_valerr():
     # testing ValueError
     with pytest.raises(ValueError, match = r"*"):
         message_send(token, channelID, "Hello world" * 300)
+    restart()
 
 def test_message_send_normal():
     # set up
@@ -35,6 +37,7 @@ def test_message_send_normal():
 
     # testing (check if this function works properly)
     message_send(token, channelID, "Hello world")
+    restart()
 
 def test_message_remove_valerr1():
 
@@ -54,6 +57,7 @@ def test_message_remove_valerr1():
     message_remove(token, messID)
     with pytest.raises(ValueError, match = r"*"):
         message_remove(token, messID)
+    restart()
 
 def test_message_remove_valerr2():
 
@@ -72,6 +76,8 @@ def test_message_remove_valerr2():
     # testing (try to remove a message with message_id -1)
     with pytest.raises(ValueError, match = r"*"):
         message_remove(token, -1)
+    restart()
+
 
 
 def test_message_remove_accerr1():
