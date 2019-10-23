@@ -3,6 +3,7 @@ import re
 import hashlib
 import jwt
 import user
+import random
 from json import dumps
 from flask import Flask, request
 from Error import AccessError
@@ -10,9 +11,9 @@ from Error import AccessError
 
 SECRET = 'ROOKIES'
 # Global variable
-memberDict = []
-channelDict = []
-messDict = [] 
+#memberDict = []
+#channelDict = []
+#messDict = [] 
 userDict = []
 
 """ data = {
@@ -27,12 +28,13 @@ def sendError(message):
         '_error':message,
     })
 
-def generateResetCode(reset_code):
+def generateResetCode():
     num = []
     for i in range(6):
          num.append(random.randint(1,10))
     str = ''.join(num)
-    return len(str)
+    
+    return str
     
 
 def generateToken(username):
@@ -78,9 +80,8 @@ def auth_login (email, password):
              raise ValueError("Email entered doesn't belong to a user")
     for user in userDict:     
         if user['email'] == email and user['password'] == hashPassword(password):
-            return dumps({
-                'token':generateToken(user['u_id']),
-            })
+            return user['u_id']
+
     return sendError('Username or password incorrect')
 
 
@@ -130,6 +131,7 @@ def auth_register(email, password, name_first, name_last):
         'handle' : None,
         'password' : None,
         'online' : True,
+        'reset_code': None,
     }
     firstName = name_first.lower()
     lastName = name_last.lower()
@@ -148,7 +150,7 @@ def auth_register(email, password, name_first, name_last):
     newUser['first_name'] = name_first
     newUser['last_name'] = name_last
     newUser['email'] = email
-    newUser['u_id'] = len(userDict) + 1   
+    newUser['u_id'] = generateToken(len(userDict) + 1)
     newUser['password'] = hashPassword(password)
     userDict.append(newUser)
     
@@ -158,10 +160,10 @@ def auth_register(email, password, name_first, name_last):
 def auth_passwordreset_request(email):
     global userDict
     for user in userDict:
-        if user['email'] is email:
-            return (dumps({
-                user['reset_code']: generateResetCode(reset_code),
-            }))
+        if user['email'] == email:
+            user['reset_code'] = generateResetCode()
+            return user['reset_code']
+            
 
 # Given a reset code for a user, set that user's new password to the password provided
 # ValueError when:
