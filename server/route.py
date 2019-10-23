@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 from message import clear_backup, message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
 from Error import AccessError
 from flask import Flask, request
 from json import dumps
+from channel import *
+from auth import *
+
 
 APP = Flask(__name__)
 APP.debug = True
@@ -207,6 +211,11 @@ def unpin_test4():
         message_unpin(9,3)
     except AccessError:
         return "The authorised user is not a member of the channel that the message is within"
+
+@APP.route('/channel/create',methods = ['POST'])
+def test_channel_create():
+    token = auth_register("hzt731tim@gmail.com","Qewewfrfc","Tim","Hu")
+    channels_create(token,"COMP1531", True):
 
 if __name__ == '__main__':
     APP.run()
