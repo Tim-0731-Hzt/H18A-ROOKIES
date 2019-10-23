@@ -10,7 +10,7 @@ APP = Flask(__name__)
 APP.debug = True
 
 @APP.route('/message/sendlater', methods=['POST'])
-def send():
+def sendlater():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
