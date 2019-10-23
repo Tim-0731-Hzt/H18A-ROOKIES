@@ -273,7 +273,15 @@ def user2():
 def user3():
     token = request.form.get('token')
     email = request.form.get('email')
+    user_profile_setmail(token,email)
+    return dumps({})
 
+@APP.route('/user/profile/sethandle', method = ['PUT'])
+def user4():
+    token = request.form.get('token')
+    handle_str = request.form.get('handle_str')
+    user_profile_sethandle(token,handle_str)
+    return dumps({})
 
 if __name__ == '__main__':
     APP.run()
