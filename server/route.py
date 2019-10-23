@@ -303,5 +303,12 @@ def standup2():
     standup_send(token,channel_id, message)
     return dumps({})
 
+@APP.route('/search', method = ['GET'])
+def se():
+    token = request.args.get('token')
+    query_str = request.args.get('query_str')
+    result = search(token, query_str)
+    return dumps(result)
+
 if __name__ == '__main__':
     APP.run()
