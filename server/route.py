@@ -283,5 +283,24 @@ def user4():
     user_profile_sethandle(token,handle_str)
     return dumps({})
 
+@APP.route('/user/profiles/uploadphoto', method = ['POST'])
+
+
+
+@APP.route('/standup/start', method = ['POST'])
+def standup1():
+    token = request.form.get('token')
+    channel_id = request.form.get('channel_id')
+    standup_start(token,channel_id)
+    time = showtime()
+    return dumps(time)
+
+@APP.route('/standup/send', method = ['POST'])
+def standup2():
+    token = request.form.get('token')
+    channel_id = request.form.get('channel_id')
+    message = request.form.get('message')
+    stand_up()
+
 if __name__ == '__main__':
     APP.run()
