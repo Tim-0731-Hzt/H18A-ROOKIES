@@ -25,7 +25,8 @@ def register():
     password = request.form.get('password')
     name_first = request.form.get('name_first')
     name_last = request.form.get('name_last')
-    return dumps(auth_register(email, password, name_first, name_last))
+    user = auth_register(email, password, name_first, name_last)
+    return dumps(user)
     
 
 @APP.route('/auth/passwordreset/request', methods=['POST'])
@@ -36,7 +37,7 @@ def password_request():
 @APP.route('/auth/passwordreset/reset', methods=['POST'])
 def password_reset():
     reset_code = request.form.get('reset_code')
-    new_password = request.form.get(hashPassword(new_password))
+    new_password = request.form.get('new_password')
     return dumps(auth_passwordreset_reset(reset_code, new_password))
 
 
