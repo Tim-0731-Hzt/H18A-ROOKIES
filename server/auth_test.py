@@ -7,8 +7,8 @@ import auth
 import pytest
 from Error import AccessError
 from pickle_unpickle import restart
-
-
+from auth import refresh
+from user import user_profile
 ##
 def test_auth_login_1():
     registerDict = auth_register('goodemail@gmail.com', '123456', 'hayden','smith')
@@ -22,7 +22,7 @@ def test_auth_login_1():
     assert login_token1 == token1
     assert u_id1 == 1
     assert token1 == "b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoxfQ.Bodqy1hnwpsmGtf3MFEhvemrfLLiGQgxuiW4MlbD2WM'"
-    restart() 
+    refresh() 
 
 def test_auth_login_2():
     registerDict1 = auth_register('shenjingbing@gmail.com', '123456', 'taobuguo','sb')
@@ -44,29 +44,32 @@ def test_auth_login_2():
     assert u_id2 == 3
     assert token1 == "b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoxfQ.Bodqy1hnwpsmGtf3MFEhvemrfLLiGQgxuiW4MlbD2WM'"
     assert token2 == "b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoyfQ.ZVPCVZoNzgFB9Am_imX_52K6WO_CZf-o8kpsbpdCJl0'"
-    restart()
+    refresh()
 
 def test_auth_login_invalidEmail():
+    registerDict = auth_register('zhanggaoping@gmail.com', '123456','gaoping','zhang')
     with pytest.raises(ValueError, match=r".*"):
         auth_login('soundsbad', '123456')
-    restart()
+    refresh()
+
 def test_auth_login_passwordIncorrect(): 
     registerDict = auth_register('good@gmail.com', '123456','hayden','smith')
     with pytest.raises(ValueError, match=r".*"):
         auth_login('good@gmail.com', '888888')
-    restart()
+    refresh()
+
 def test_auth_login_notBelongToUser():
     registerDict = auth_register('Jankie@gmail.com', '123456','hayden','smith') 
     with pytest.raises(ValueError, match=r".*"):
         auth_login('bad@gmail.com', '123456')  
-    restart()
+    refresh()
 ##
 def test_auth_logout_1():
     authRegisterDict = auth_register('hayden@gmail.com', '123456','hayden','smith')
     token1 = authRegisterDict['token']
    # token1 = token1[2:len(token1)-1]
     assert auth_logout(token1) == True
-    restart()
+    refresh()
 
 
 
@@ -77,7 +80,41 @@ def test_auth_register_1():
     token1 = registerDict['token']
     assert u_id1 == 1
     assert token1 == "b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoxfQ.Bodqy1hnwpsmGtf3MFEhvemrfLLiGQgxuiW4MlbD2WM'"
-    restart()
+    refresh()
+
+def test_auth_register_emailBeUsed():
+    auth_register('jankie@gmail.com', '123456','gaoping','zhang')
+    with pytest.raises(ValueError, match=r".*"):
+        auth_register('jankie@gmail.com', '123456','gaoping','zhang')
+    refresh()
+
+def test_auth_register_invalidEmail():
+    with pytest.raises(ValueError, match=r".*"):
+        auth_register('asdadsad', '123456','gaoping','zhang')
+    refresh() 
+
+def test_auth_register_invalidPassword():
+    with pytest.raises(ValueError, match=r".*"):
+        auth_register('zhanggaoping@gmail.com', '6','gaoping','zhang')
+    refresh() 
+
+def test_auth_register_invalidFirstName():
+    with pytest.raises(ValueError, match=r".*"):
+        auth_register('zhanggaoping@gmail.com', '6','','zhang')
+    refresh()
+
+def test_auth_register_invalidLastName():
+    with pytest.raises(ValueError, match=r".*"):
+        auth_register('zhanggaoping@gmail.com', '6','Lebron','')
+    refresh()
+
+def test_auth_register_50_handleTest():
+    registerDict = auth_register('xuanhongzhou@gmail.com', '123456','zzxxccvvbbnnmmaassddffggh','qqwweerrttyyuuiiooppaassd')
+    token = registerDict['token']
+    u_id = registerDict['u_id']
+    userDict = user_profile(token, u_id)
+    assert userDict['handle'] == 'zzxxccvvbbnnmmaassdd'
+
 """ def test_auth_register_2():
     authRegisterDict = auth_register('Jankie@gmail.com', '123456','Jankie','Lyu')
     u_id2 = authRegisterDict2['u_id']
