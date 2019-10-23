@@ -2,7 +2,7 @@
 import re
 import hashlib
 import jwt
-import user
+# import user
 import random
 from json import dumps
 from flask import Flask, request
