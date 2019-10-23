@@ -4,6 +4,7 @@ import hashlib
 import jwt
 import user
 import random
+
 from json import dumps
 from flask import Flask, request
 from Error import AccessError
@@ -45,7 +46,14 @@ def generateToken(username):
 def getUserFromToken(token):
     global SECRET
     decoded = jwt.decode(token,SECRET, algorithms=['HS256'])
-    return decoded['u_id']
+    u_id = decoded['u_id']
+    characters = 'abcdefghijklmnopqrstuvwxyz'
+    if ( re.search(characters, u_id)):
+        pass
+    else:
+        raise ValueError("Invalid Token")
+
+    return u_id
 
 def hashPassword(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -189,4 +197,5 @@ def auth_passwordreset_reset(reset_code, new_password):
         if user['reset_code'] == reset_code:
             user['password'] = hashPassword(new_password)
             user['reset_code'] = None
+            return {}
     raise ValueError("reset_code is not valid")
