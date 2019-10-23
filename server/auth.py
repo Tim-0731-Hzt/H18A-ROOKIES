@@ -44,6 +44,7 @@ def getUserFromToken(token):
     global SECRET
     decoded = jwt.decode(token,SECRET, algorithms=['HS256'])
     u_id = decoded['u_id']
+    
     characters = 'abcdefghijklmnopqrstuvwxyz'
     if ( re.search(characters, u_id)):
         pass

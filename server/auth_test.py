@@ -8,17 +8,34 @@ import pytest
 from Error import AccessError
 
 
+
 ##
 def test_auth_login_1():
-    authLoginDict = auth_login('goodemail@gmail.com', '123456') 
-    u_id1 = authLoginDict['u_id']
-    token1 = authLoginDict['token1']
+    registerDict = auth_register('goodemail@gmail.com', '123456','hayden','smith')
+    token1 = registerDict['token']
+    auth_logout(token1)
+    loginDict = auth_login('goodemail@gmail.com', '123456') 
+    u_id1 = loginDict['u_id']
+    login_token1 = loginDict['token']
+    assert login_token1 == token1
+    assert u_id1 == '1'
+    assert token1 =='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoxLCJ0aW1lIjoxNTcxODAzMDMxLjc5MDIyMzZ9.gx27PhR1lkjiOD2vorX7m2RERKSGMC4MEfby3ZJfs3U'
+ #   assert u_id1 == '2'
+ #   assert token2 =='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoyLCJ0aW1lIjoxNTcxODAxODkzLjc1MDU0NDV9.AiWQnbL9k8BV_UWR2m7PrvR8Oj5R914tFcpTpn0-VfA'
 
-    assert u_id1 == '00001'
-    assert token1 =='token1'
-def test_auth_login_2():
+def test_auth_login_invalidEmail():
     with pytest.raises(ValueError, match=r".*"):
         auth_login('soundsbad', '123456')
+
+def test_auth_login_passwordIncorrect(): 
+    registerDict = auth_register('goodemail@gmail.com', '123456','hayden','smith')
+    with pytest.raises(ValueError, match=r".*"):
+        auth_login('goodmail@gmail.com', '888888')
+
+def test_auth_login_notBelongToUser():
+    registerDict = auth_register('goodemail@gmail.com', '123456','hayden','smith') 
+    with pytest.raises(ValueError, match=r".*"):
+        auth_login('bad@gmail.com', '123456') 
 
 ##
 def test_auth_logout_1():
