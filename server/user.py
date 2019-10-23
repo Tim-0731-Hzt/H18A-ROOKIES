@@ -6,40 +6,45 @@ from auth import *
 import pickle_unpickle
 userDict = [
     {
-        'first_name' : 56
-        'last_name' : 1
-        'email' : 1 
-        'u_id' : 1
-        'handle' : 1
-        'password' : 244
-        'token' : 1
-        'online' : True
+        'first_name' : 56,
+        'last_name' : 1,
+        'email' : 1 ,
+        'u_id' : 1,
+        'handle' : 1,
+        'password' : 244,
+        'token' : 1,
+        'online' : True,
         
     } ,
     {
-        'first_name' : 2
-        'last_name' : 2
-        'email' : 2
-        'u_id' : 2
-        'handle' : 2
+        'first_name' : 2,
+        'last_name' : 2,
+        'email' : 2,
+        'u_id' : 2,
+        'handle' : 2,
     },
     {
-        'first_name' : 3
-        'last_name' : 3
-        'email' : 3
-        'u_id' : 3
-        'handle' : 3
+        'first_name' : 3,
+        'last_name' : 3,
+        'email' : 3,
+        'u_id' : 3,
+        'handle' : 3,
     }
 ]
 
 def user_profile(token, u_id):
     opid = getUserFromToken(token)
     
-    global userdict
+    global userDict
     for user in userDict:
-        if user['u_id'] == u_id:
-            return {user['email'], user['firstname'], user['lastname'], user['handle']}
-    raise ValueError('uid was incorrect')
+        if user['u_id'] == opid:
+            return {
+                'email': user['email'], 
+                'first_name': user['first_name'],
+                'last_name': user['last_name'],
+                'handle': user['handle']
+            }
+    raise ValueError('u_id was incorrect')
     
 # returned: { email, name_first, name_last, handle_str }
 
