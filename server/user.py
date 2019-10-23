@@ -11,7 +11,7 @@ userDict = [
         'email' : 1 
         'u_id' : 1
         'handle' : 1
-        'password' : 235
+        'password' : 244
         'token' : 1
         'online' : True
         
