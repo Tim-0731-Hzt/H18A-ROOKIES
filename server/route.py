@@ -281,6 +281,70 @@ def password_reset():
     new_password = request.form.get('new_password')
     return dumps(auth_passwordreset_reset(reset_code, new_password))
 
+'''Dan'''
+@APP.route('/user/profile', methods = ['GET'])
+def user1():
+    token = request.args.get('token')
+    u_id = request.args.get('u_id')
+    profile = user_profile(token,u_id)
+    return dumps(profile)
+
+@APP.route('/user/profile/setname', methods = ['PUT'])
+def user2():
+    token = request.form.get('token')
+    name_first = request.form.get('name_first')
+    name_last = request.form.get('name_last')
+    user_profile_setname(token,name_first, name_last)
+    return dumps({})
+
+@APP.route('/user/profile/setemail', method = ['PUT'])
+def user3():
+    token = request.form.get('token')
+    email = request.form.get('email')
+    user_profile_setmail(token,email)
+    return dumps({})
+
+@APP.route('/user/profile/sethandle', method = ['PUT'])
+def user4():
+    token = request.form.get('token')
+    handle_str = request.form.get('handle_str')
+    user_profile_sethandle(token,handle_str)
+    return dumps({})
+
+@APP.route('/user/profiles/uploadphoto', method = ['POST'])
+
+
+
+@APP.route('/standup/start', method = ['POST'])
+def standup1():
+    token = request.form.get('token')
+    channel_id = request.form.get('channel_id')
+    standup_start(token,channel_id)
+    time = showtime()
+    return dumps(time)
+
+@APP.route('/standup/send', method = ['POST'])
+def standup2():
+    token = request.form.get('token')
+    channel_id = request.form.get('channel_id')
+    message = request.form.get('message')
+    standup_send(token,channel_id, message)
+    return dumps({})
+
+@APP.route('/search', method = ['GET'])
+def se():
+    token = request.args.get('token')
+    query_str = request.args.get('query_str')
+    result = search(token, query_str)
+    return dumps(result)
+
+@APP.route('/admin/userpermission/change', method = ['POST'])
+def admin():
+    token = request.form.get('token')
+    u_id = request.form.get('premission_id')
+    permission_id = request.form.get('premission_id')
+    admin_userpermission_change(token,u_id,premission_id)
+    return dumps({})
 
 if __name__ == '__main__':
     APP.run()
