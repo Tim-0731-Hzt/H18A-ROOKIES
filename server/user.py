@@ -34,14 +34,13 @@ userDict = [
 
 def user_profile(token, u_id):
     opid = getUserFromToken(token)
-    if opid != u_id:
-        raise ValueError('invalid token')
+    
     global userdict
     for user in userDict:
         if user['u_id'] == u_id:
             return {user['email'], user['firstname'], user['lastname'], user['handle']}
     raise ValueError('uid was incorrect')
-    return 'incorrect_uid'
+    
 # returned: { email, name_first, name_last, handle_str }
 
 def user_profile_setemail(token, email):
