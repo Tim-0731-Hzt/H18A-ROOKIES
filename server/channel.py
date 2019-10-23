@@ -24,25 +24,6 @@ def check_already_used_email(email):
         if (parts['email'] == email):
             return False
     return True
-
-def auth_register(email, password, name_first, name_last):
-    regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
-    if ! re.search(regex,email):
-        raise ValueError("Valid Email")
-    if ! check_already_used_email(email):
-        raise ValueError("Email address is already used bt another user.")
-    if (len(name_first) > 50):
-        raise ValueError("Firstname is needed between 1 and 50 characters.")
-    if (len(name_last) > 50):
-        raise ValueError("Lastname is needed between 1 and 50 characters.")
-    # incorrect password
-    if (len(password) < 6):
-        raise ValueError("Password is not valid")
-    firstName = name_first.lower()
-    lastName = name_last.lower()
-    handle = firstName + lastName
-    handle = handle[0:20]
-    if channel_handle_check(handle) == True:
         
 def channel_handle_check(handle):
     global userDict
@@ -225,7 +206,7 @@ def channel_join(token, channel_id):
     else:
         for parts in channelDict:
             if (parts['channel_id'] == channel_id):
-                parts.['channel_member'].append(id)
+                parts['channel_member'].append(id)
     pass
 # Make user with user id u_id an owner of this channel
 def channel_addowner(token, channel_id, u_id):
@@ -236,7 +217,7 @@ def channel_addowner(token, channel_id, u_id):
     id = getUserFromToken(token)
     for parts in channelDict:
         if parts['channel_id'] == channel_id and id in parts['channel_owner']:
-        raise ValueError("user is already an owner in the channel")    
+            raise ValueError("user is already an owner in the channel")    
     if if_User_Owner(token,channel_id) == False:
         raise AccessError("the authorised user is not an owner of the slackr, or an owner of this channel")
     for parts in channelDict:
@@ -274,7 +255,7 @@ def channels_create(token, name, is_public):
     if (len(name) > 20):
         raise ValueError("Name is more than 20 characters long")
     id = getUserFromToken(token)
-    if channelDict = none:
+    if channelDict == none:
         d = {
             'channel_id': 1,
             'name': name,

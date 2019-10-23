@@ -214,18 +214,7 @@ def unpin_test4():
 @APP.route('/channel/create',methods = ['POST'])
 def test_channel_create():
     token = auth_register("hzt731tim@gmail.com","Qewewfrfc","Tim","Hu")
-    channels_create(token,"COMP1531", True):
-
-if __name__ == '__main__':
-    APP.run()
-=======
-from flask import Flask, request
-from json import dumps
-from auth import *
-
-APP = Flask(__name__)
-
-APP.debug = True
+    channels_create(token,"COMP1531", True)
 
 
 @APP.route('/auth/login', methods=['POST'])

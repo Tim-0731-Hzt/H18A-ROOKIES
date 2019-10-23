@@ -24,12 +24,7 @@ messID = 0
 ]'''
 
 # helper function for testing
-'''def clear_backup():
-    DATA = load()
-    messDict = DATA['messDict']
-    global messID
-    global channelDict
-    global reactDict
+def clear_backup():
     messDict = []
     messID = 0
     reactDict = []
@@ -47,7 +42,14 @@ messID = 0
             'channel_owner': [1]
         }
     ]
-'''
+
+    DATA = {
+        'messDict': messDict,
+        'messID': messID,
+        'reactDict': eractDict,
+        'channelDict': channelDict
+    }
+
 
 # Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future
 # ValueError when:
