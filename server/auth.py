@@ -4,6 +4,7 @@ import hashlib
 import jwt
 # import user
 import random
+
 from json import dumps
 from flask import Flask, request
 from Error import AccessError
@@ -29,9 +30,9 @@ def generateResetCode():
     num = []
     for i in range(6):
          num.append(random.randint(1,10))
-    str = ''.join(num)
+    reset_code = ''.join(map(str,num))
     
-    return str
+    return reset_code
     
 
 def generateToken(username):
@@ -42,7 +43,14 @@ def generateToken(username):
 def getUserFromToken(token):
     global SECRET
     decoded = jwt.decode(token,SECRET, algorithms=['HS256'])
-    return decoded['u_id']
+    u_id = decoded['u_id']
+    characters = 'abcdefghijklmnopqrstuvwxyz'
+    if ( re.search(characters, u_id)):
+        pass
+    else:
+        raise ValueError("Invalid Token")
+
+    return u_id
 
 def hashPassword(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -70,8 +78,10 @@ def auth_login (email, password):
              raise ValueError("Email entered doesn't belong to a user")
     for user in userDict:     
         if user['email'] == email and user['password'] == hashPassword(password):
-            return user['u_id']
-
+            return {
+                'u_id': user['u_id'],
+                'token': generateToken(user['u_id'])
+            }
     return sendError('Username or password incorrect')
 
 
@@ -79,10 +89,11 @@ def auth_login (email, password):
 def auth_logout(token):
     global userDict
     u_id = getUserFromToken(token)
+    print(u_id)
     for user in userDict:
         if user['u_id'] == u_id:
             user['online'] = False
-            return true
+            return True
     return False
 
 # Given a user's first and last name, email address, and password, create a new account for them and return a new token for authentication in their session. A handle is generated that is the concatentation of a lowercase-only first name and last name. If the handle is already taken, a number is added to the end of the handle to make it unique.
@@ -101,7 +112,7 @@ def auth_register(email, password, name_first, name_last):
         raise ValueError("Invalid Email")
     # Email already be used 
     for user in userDict:
-        if email is userDict['email']:
+        if user['email'] == email:
             raise ValueError("Email address is already used bt another user.")
     # incorrect name
     if (len(name_first) > 50):
@@ -140,11 +151,16 @@ def auth_register(email, password, name_first, name_last):
     newUser['first_name'] = name_first
     newUser['last_name'] = name_last
     newUser['email'] = email
-    newUser['u_id'] = generateToken(len(userDict) + 1)
+    newUser['u_id'] = len(userDict) + 1
     newUser['password'] = hashPassword(password)
     userDict.append(newUser)
     
-    return newUser['u_id']
+    returned = {
+        'u_id': newUser['u_id'],
+        'token': generateToken(newUser['u_id'])
+    }
+
+    return returned
 
 # Given an email address, if the user is a registered user, send's them a an email containing a specific secret code, that when entered in auth_passwordreset_reset, shows that the user trying to reset the password is the one who got sent this email.
 def auth_passwordreset_request(email):
@@ -168,6 +184,8 @@ def auth_passwordreset_reset(reset_code, new_password):
         raise ValueError("reset_code is not valid")
 
     for user in userDict:
-        if user['reset_code'] is  reset_code:
+        if user['reset_code'] == reset_code:
             user['password'] = hashPassword(new_password)
+            user['reset_code'] = None
+            return {}
     raise ValueError("reset_code is not valid")
