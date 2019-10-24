@@ -6,14 +6,6 @@ from auth import *
 import re
 # global varaibles:
 
-
-def check_already_used_email(email):
-    global userDict
-    for parts in userDict:
-        if (parts['email'] == email):
-            return False
-    return True
-        
 def channel_handle_check(handle):
     global userDict
     for parts in userDict:
@@ -25,7 +17,7 @@ def channel_handle_check(handle):
 def channel_id_check(channel_id):
     global channelDict
     for parts in channelDict:
-        if (parts['channel_id'] == channel_id):
+        if parts['channel_id'] == int(channel_id):
             return True
     return False
 
@@ -96,7 +88,7 @@ def channel_admin_check(token):
 # Once invited the user is added to the channel immediately
 def channel_invite (token, channel_id, u_id):
     global channelDict
-    if channel_id_check(channel_id) == False:
+    if channel_id_check(int(channel_id)) == False:
         raise ValueError("channel_id is invalid")
     if u_id_check(u_id) == False:
         raise ValueError("u_id does not refer to a valid user")
@@ -248,7 +240,7 @@ def channels_create(token, name, is_public):
     if (len(name) > 20):
         raise ValueError("Name is more than 20 characters long")
     id = getUserFromToken(token)
-    if channelDict == None:
+    if channelDict == []:
         d = {
             'channel_id': 1,
             'name': name,
