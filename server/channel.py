@@ -54,14 +54,16 @@ def auth_id_check(token,channel_id):
     id = getUserFromToken(token)
     # if the user is slacker owner or admin
     for parts in userDict:
-        if (parts[u_id] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
+        if (parts['u_id'] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
             return True
     for elements in channelDict:
         if (elements['channel_id'] == channel_id):
             mem = elements['channel_member']
             owner = elements['channel_owner']
             break
-    new = mem + owner
+    new = []
+    new.append(mem)
+    new.append(owner)
     id = getUserFromToken(token)
     if id in new:
         return True
@@ -249,16 +251,14 @@ def channels_create(token, name, is_public):
             'is_public': is_public,
             'standUp':0
         }
-        channelDict = d
+        channelDict.append(d)
         return d['channel_id']
     else:
         # if same name
         for parts in channelDict:
             if (parts['name'] == name):
                 raise ValueError("this name was already used")
-        count = 0
-        for channels in channelDict:
-            count += 1
+        count = len(channelDict) + 1
         d = {
             'channel_id': count,
             'name': name,
