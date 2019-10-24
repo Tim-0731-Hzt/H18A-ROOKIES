@@ -60,7 +60,7 @@ def hashPassword(password):
 # Given aregisterd user' email and password and generates a valid token for the user to remain authenticated.
 # ValueError when:
 # Email entered is not a valid email
-# Email entered does not belong to a user
+    # Email entered does not belong to a user
 # password is not correct
 def auth_login (email, password):
     global userDict
