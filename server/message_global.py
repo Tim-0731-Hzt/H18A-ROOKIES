@@ -29,20 +29,8 @@ def clear_backup():
     messDict = []
     messID = 0
     reactDict = []
-    channelDict = [
-        {
-            'channel_id': 1,
-            'name': "channel_1",
-            'channel_member': [1, 2, 3, 4, 5],
-            'channel_owner': [3]
-        },
-        {
-            'channel_id': 2,
-            'name': "channel_2",
-            'channel_member': [2],
-            'channel_owner': [1]
-        }
-    ]
+    channelDict = []
+        
 
 
 # Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future

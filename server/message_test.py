@@ -17,7 +17,8 @@ def test_message_send_valerr():
     # testing ValueError
     with pytest.raises(ValueError, match = r".*"):
         message_send(str(token), channelID, "Hello world" * 300)
-    restart()
+    clear_backup()
+    # restart()
 
 '''def test_message_send_normal():
     # set up
