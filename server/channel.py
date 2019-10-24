@@ -6,45 +6,6 @@ from auth import *
 import re
 # global varaibles:
 
-
-
-'''
-def generateToken(u_id):
-    global SECRET
-    encoded = jwt.encode({u_id},SECRET, algorithm='HS256')
-    return str(encoded)
-
-def getUserFromToken(token):
-    global SECRET
-    decoded = jwt.decode(token,SECRET, algorithms=['HS256'])
-    return decoded['u_id']
-
-def check_already_used_email(email):
-    global userDict
-    for parts in userDict:
-        if (parts['email'] == email):
-            return False
-    return True
-
-def auth_register(email, password, name_first, name_last):
-    regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
-    if ! re.search(regex,email):
-        raise ValueError("Valid Email")
-    if ! check_already_used_email(email):
-        raise ValueError("Email address is already used bt another user.")
-    if (len(name_first) > 50):
-        raise ValueError("Firstname is needed between 1 and 50 characters.")
-    if (len(name_last) > 50):
-        raise ValueError("Lastname is needed between 1 and 50 characters.")
-    # incorrect password
-    if (len(password) < 6):
-        raise ValueError("Password is not valid")
-    firstName = name_first.lower()
-    lastName = name_last.lower()
-    handle = firstName + lastName
-    handle = handle[0:20]
-    if channel_handle_check(handle) == True:
-'''
 def channel_handle_check(handle):
     global userDict
     for parts in userDict:
@@ -56,7 +17,7 @@ def channel_handle_check(handle):
 def channel_id_check(channel_id):
     global channelDict
     for parts in channelDict:
-        if (parts['channel_id'] == channel_id):
+        if parts['channel_id'] == int(channel_id):
             return True
     return False
 
@@ -127,7 +88,7 @@ def channel_admin_check(token):
 # Once invited the user is added to the channel immediately
 def channel_invite (token, channel_id, u_id):
     global channelDict
-    if channel_id_check(channel_id) == False:
+    if channel_id_check(int(channel_id)) == False:
         raise ValueError("channel_id is invalid")
     if u_id_check(u_id) == False:
         raise ValueError("u_id does not refer to a valid user")
@@ -279,7 +240,7 @@ def channels_create(token, name, is_public):
     if (len(name) > 20):
         raise ValueError("Name is more than 20 characters long")
     id = getUserFromToken(token)
-    if channelDict == None:
+    if channelDict == []:
         d = {
             'channel_id': 1,
             'name': name,

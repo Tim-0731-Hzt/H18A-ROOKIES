@@ -1,18 +1,34 @@
 
 ##CHANNEL TEST
-from channel import channel_invite
+from channel import *
+from auth import *
 import pytest
 from Error import AccessError
-import message
 
-##
+authRegisterDict = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
+token = authRegisterDict["token"]
+
+def test_channels_create():
+        global token
+        with pytest.raises(ValueError,match = r".*"):
+                channel_id = channels_create(token,"meet updscsdcdscdscsdcdsdscscddsc",True)
+
+def test_channel_create_1():
+        global token
+        assert(channels_create(token, "COMP1531", True) == 1)
+def test_channel_create_2():
+        global token
+        assert(channels_create(token, "COMP1531", True) == 2)
+
+
+'''
 def test_channel_invite_1():
         with pytest.raises(ValueError, match=r".*"):
                 channel_invite("WDEWDWD", 4, "z666")
 
  
  
-  '''def test_channel_invite_2():
+  def test_channel_invite_2():
     authRegisterDict = auth_register('hayden@gmail.com', '123456','hayden','smith')
     u_id = authRegisterDict['u_id']
     token = authRegisterDict['token']
@@ -306,4 +322,5 @@ def test_message_snedlater_timeInThePast():
         u_id = authRegisterDict["u_id"]
         t1 = datetime.date.yesterday()
         with pytest.raises(ValueError,match="*"):
-                message_sendlater(token, channel_id, "Hello NBA", t1) '''
+                message_sendlater(token, channel_id, "Hello NBA", t1) 
+'''

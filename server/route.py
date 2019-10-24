@@ -34,5 +34,13 @@ def test_channel_list():
     token = request.args.get("token")
     return dumps(channels_list(token))
 
+@APP.route('/channel/invite',methods = ['POST'])
+def test_channel_invite():
+    token = request.form.get('token')
+    channel_id = request.form.get('channel_id')
+    #return dumps(channel_id)
+    u_id = request.form.get('u_id')
+    channel_invite (token, channel_id, u_id)
+    return dumps(channels_listall(token))
 if __name__ == '__main__':
     APP.run()
