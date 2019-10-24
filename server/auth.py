@@ -209,3 +209,11 @@ def auth_passwordreset_reset(reset_code, new_password):
             user['reset_code'] = None
             return {}
     raise ValueError("reset_code is not valid")
+
+
+def refresh():
+    global userDict
+
+    userDict.clear()
+
+    return {}
