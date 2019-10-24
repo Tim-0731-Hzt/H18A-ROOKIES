@@ -6,14 +6,6 @@ from auth import *
 import re
 # global varaibles:
 
-
-def check_already_used_email(email):
-    global userDict
-    for parts in userDict:
-        if (parts['email'] == email):
-            return False
-    return True
-        
 def channel_handle_check(handle):
     global userDict
     for parts in userDict:
@@ -25,7 +17,7 @@ def channel_handle_check(handle):
 def channel_id_check(channel_id):
     global channelDict
     for parts in channelDict:
-        if (parts['channel_id'] == channel_id):
+        if parts['channel_id'] == int(channel_id):
             return True
     return False
 
@@ -62,14 +54,16 @@ def auth_id_check(token,channel_id):
     id = getUserFromToken(token)
     # if the user is slacker owner or admin
     for parts in userDict:
-        if (parts[u_id] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
+        if (parts['u_id'] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
             return True
     for elements in channelDict:
         if (elements['channel_id'] == channel_id):
             mem = elements['channel_member']
             owner = elements['channel_owner']
             break
-    new = mem + owner
+    new = []
+    new.append(mem)
+    new.append(owner)
     id = getUserFromToken(token)
     if id in new:
         return True
@@ -96,7 +90,7 @@ def channel_admin_check(token):
 # Once invited the user is added to the channel immediately
 def channel_invite (token, channel_id, u_id):
     global channelDict
-    if channel_id_check(channel_id) == False:
+    if channel_id_check(int(channel_id)) == False:
         raise ValueError("channel_id is invalid")
     if u_id_check(u_id) == False:
         raise ValueError("u_id does not refer to a valid user")
@@ -248,7 +242,7 @@ def channels_create(token, name, is_public):
     if (len(name) > 20):
         raise ValueError("Name is more than 20 characters long")
     id = getUserFromToken(token)
-    if channelDict == None:
+    if channelDict == []:
         d = {
             'channel_id': 1,
             'name': name,
@@ -257,16 +251,14 @@ def channels_create(token, name, is_public):
             'is_public': is_public,
             'standUp':0
         }
-        channelDict = d
+        channelDict.append(d)
         return d['channel_id']
     else:
         # if same name
         for parts in channelDict:
             if (parts['name'] == name):
                 raise ValueError("this name was already used")
-        count = 0
-        for channels in channelDict:
-            count += 1
+        count = len(channelDict) + 1
         d = {
             'channel_id': count,
             'name': name,

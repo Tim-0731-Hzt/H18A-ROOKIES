@@ -1,18 +1,48 @@
 
 ##CHANNEL TEST
-from channel import channel_invite
+from channel import *
+from auth import *
 import pytest
 from Error import AccessError
-import message
 
-##
+# first user
+authRegisterDict1 = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
+token1 = authRegisterDict1["token"]
+# second user
+authRegisterDict2 = auth_register("HaydenSmith@gmail.com","1we33456","Hayden","Smith")
+token2 = authRegisterDict2["token"]
+
+def test_channels_create():
+        global token1
+        with pytest.raises(ValueError,match = r".*"):
+                channel_id = channels_create(token1,"meet updscsdcdscdscsdcdsdscscddsc",True)
+
+def test_channel_create_1():
+        global token1
+        assert(channels_create(token1, "COMP1531", True) == 1)
+def test_channel_create_2():
+        global token1
+        assert(channels_create(token1, "COMP2521", True) == 2)
+def test_channel_invite_1():
+        global token1
+        with pytest.raises(ValueError, match=r".*"):
+                channel_invite(token1,4,2)
+def test_channel_invite_2():
+        global token1
+        with pytest.raises(ValueError, match=r".*"):
+                channel_invite(token1,1,3)
+def test_channel_invite_3():
+        global token_2
+        with pytest.raises(AccessError, match=r".*"):
+                channel_invite(token2,1,1)
+'''
 def test_channel_invite_1():
         with pytest.raises(ValueError, match=r".*"):
                 channel_invite("WDEWDWD", 4, "z666")
 
  
  
-  '''def test_channel_invite_2():
+  def test_channel_invite_2():
     authRegisterDict = auth_register('hayden@gmail.com', '123456','hayden','smith')
     u_id = authRegisterDict['u_id']
     token = authRegisterDict['token']
@@ -306,4 +336,5 @@ def test_message_snedlater_timeInThePast():
         u_id = authRegisterDict["u_id"]
         t1 = datetime.date.yesterday()
         with pytest.raises(ValueError,match="*"):
-                message_sendlater(token, channel_id, "Hello NBA", t1) '''
+                message_sendlater(token, channel_id, "Hello NBA", t1) 
+'''

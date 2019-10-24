@@ -47,7 +47,8 @@ def clear_backup():
         'messDict': messDict,
         'messID': messID,
         'reactDict': eractDict,
-        'channelDict': channelDict
+        'channelDict': channelDict,
+        'userDict': userDict
     }
 
 

@@ -7,7 +7,7 @@ import auth
 import pytest
 from Error import AccessError
 from pickle_unpickle import restart
-from auth import refresh
+from auth import refresh, userDict
 from user import user_profile
 ##
 def test_auth_login_1():
@@ -53,10 +53,10 @@ def test_auth_login_invalidEmail():
     refresh()
 
 def test_auth_login_passwordIncorrect(): 
+    refresh()
     registerDict = auth_register('good@gmail.com', '123456','hayden','smith')
     with pytest.raises(ValueError, match=r".*"):
         auth_login('good@gmail.com', '888888')
-    refresh()
 
 def test_auth_login_notBelongToUser():
     registerDict = auth_register('Jankie@gmail.com', '123456','hayden','smith') 

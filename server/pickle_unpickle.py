@@ -9,6 +9,12 @@ def load():
     return DATA
 
 def restart():
-    DATA = {}
+    DATA = {
+        'messDict': [],
+        'messID': 0,
+        'reactDict': [],
+        'channelDict': [],
+        'userDict': []
+    }
     with open('../datastore.p', 'wb') as FILE:
         pickle.dump(DATA, FILE)

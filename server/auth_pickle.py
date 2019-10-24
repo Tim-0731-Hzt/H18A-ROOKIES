@@ -5,18 +5,17 @@ import jwt
 # import user
 import random
 
-# from json import dumps
-# from flask import Flask, request
+from json import dumps
+from flask import Flask, request
 from Error import AccessError
-from data import *
-
+from pickle_unpickle import save, load
 
 SECRET = 'ROOKIES'
 # Global variable
 #memberDict = []
 #channelDict = []
 #messDict = [] 
-# userDict = []
+userDict = []
 
 def sendSuccess(userDict):
     return dumps(userDict)
@@ -61,7 +60,7 @@ def hashPassword(password):
 # Given aregisterd user' email and password and generates a valid token for the user to remain authenticated.
 # ValueError when:
 # Email entered is not a valid email
-    # Email entered does not belong to a user
+# Email entered does not belong to a user
 # password is not correct
 def auth_login (email, password):
     global userDict
