@@ -37,7 +37,7 @@ def if_User_Owner(token,channel_id):
     
     # slacker owner or admin
     for parts in userDict:
-        if (parts[u_id] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
+        if (parts['u_id'] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
             return True
     # find the channel and serach the owner
     for elements in channelDict:
@@ -64,9 +64,12 @@ def auth_id_check(token,channel_id):
     new = []
     new.append(mem)
     new.append(owner)
-    id = getUserFromToken(token)
-    if id in new:
-        return True
+    for parts in new:
+        if (parts == None):
+            continue
+        else:
+            if (id in parts):
+                return True
     return False
 
 def channel_property_check(channel_id):
