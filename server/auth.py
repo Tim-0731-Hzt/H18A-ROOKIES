@@ -8,6 +8,7 @@ import random
 # from json import dumps
 # from flask import Flask, request
 from Error import AccessError
+from data import *
 
 
 SECRET = 'ROOKIES'
@@ -15,7 +16,7 @@ SECRET = 'ROOKIES'
 #memberDict = []
 #channelDict = []
 #messDict = [] 
-userDict = []
+# userDict = []
 
 def sendSuccess(userDict):
     return dumps(userDict)

@@ -1,11 +1,11 @@
-# MESSAGE
+# MESSAGE global variable version
 import time
 from auth import getUserFromToken
 from data import *
 from Error import AccessError
 
 # just for testing
-channelDict = [
+'''channelDict = [
     {
         'channel_id': 1,
         'name': "channel_1",
@@ -18,7 +18,7 @@ channelDict = [
         'channel_member': [2],
         'channel_owner': [1]
     }
-]
+]'''
 
 # helper function for testing
 def clear_backup():
@@ -26,11 +26,13 @@ def clear_backup():
     global messID
     global channelDict
     global reactDict
+    global userDict
     messDict = []
     messID = 0
     reactDict = []
     channelDict = []
-        
+    userDict = []
+    pass
 
 
 # Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future
@@ -72,7 +74,9 @@ def message_sendlater(token, channel_id, message, time_sent):
 # AccessError when: the authorised user has not joined the channel they are trying to post to
 def message_send(token, channel_id, message):
     uID = getUserFromToken(token)
-
+    global messID
+    global messDict
+    global channelDict
     if len(message) > 1000:
         raise ValueError("Message is more than 1000 characters")
     
@@ -80,8 +84,6 @@ def message_send(token, channel_id, message):
         if cha['channel_id'] == channel_id:
             if uID not in cha['channel_member']:
                 raise AccessError("The authorised user has not joined the channel they are trying to post to")
-    global messID
-    global messDict
     messID += 1
     m = {
         'channel_id': int(channel_id),
