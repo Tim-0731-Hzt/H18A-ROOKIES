@@ -1,10 +1,6 @@
 # channel
 from Error import AccessError
-import jwt
-from data import *
 from auth import *
-from pickle_unpickle import *
-import re
 from pickle_unpickle import *
 # global varaibles:
 
@@ -148,7 +144,7 @@ def channel_details (token, channel_id):
 
 def channel_messages (token, channel_id, start):
     DATA = load()
-    channelDict = DATA['messDict']
+    messDict = DATA['messDict']
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     if auth_id_check(token,channel_id) == False:
@@ -211,7 +207,10 @@ def channel_join(token, channel_id):
     else:
         for parts in channelDict:
             if (parts['channel_id'] == channel_id):
-                parts['channel_member'].append(id)
+                if (parts['channel_member'] == None):
+                    parts['channel_member'] = [id]
+                else:
+                    parts['channel_member'].append(id)
     
     DATA['channelDict'] = channelDict
     save(DATA)
