@@ -43,7 +43,7 @@ def test_channel_invite_2():
         with pytest.raises(ValueError, match=r".*"):
                 channel_invite(token1,1,400)
 def test_channel_invite_3():
-        global token_2
+        global token3
         with pytest.raises(AccessError, match=r".*"):
                 channel_invite(token3,1,1)
 def test_channel_invite_4():
@@ -67,7 +67,7 @@ def test_channel_details():
         detail = {
                 'name': 'COMP1531', 
                 'channel_member': [4], 
-                'channel_owner': [1, 2,3]
+                'channel_owner': [1,2,3]
         }
         assert(channel_details(token1,1) == detail)
 
@@ -82,18 +82,21 @@ def test_channel_join_public_2():
         channel_join(token2, 2)
         DATA = load()
         channelDict = DATA['channelDict']
-        assert (channelDict[1]['channel_owner'] == [1,2])    
+        assert (channelDict[1]['channel_member'] == [5,2])    
+
 def test_channel_join_private():
         global token1
         global token2
         assert(channels_create(token1, "COMP1521", False) == 3)
-        channel_join(token2, 3)
-        DATA = load()
-        channelDict = DATA['channelDict']
-        assert (channelDict[2]['channel_owner'] == [1,2])    
+        with pytest.raises(AccessError,match = r".*"):
+                channel_join(token2, 3)   
 def test_channel_leave_1():
+        global token5
         with pytest.raises(ValueError, match=r".*"):
-                
+                channel_leave(token5,1)
+def test_channel_leave_2():
+        global token2
+        channel_leave(token2,1)
 def test_fcf():
         global token1
         print(channels_listall(token1))

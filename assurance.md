@@ -17,3 +17,13 @@ exception tests for handle is too short or bad token.
 user_upload photo : not yet finished.
 
 
+standup_start // standup_send:  provided 3 normal test alone with 9 exception including invalid token , incalid user id
+(user not in channel), already in standup, message too long and ...etc
+so far , there is one question not solved , noly one cahnnel can start a standup at a time due to the storage of \
+message data.
+
+search :  waiting for more message to be tested , have already 3 test  to be done
+
+
+change admin : having 3 normal test and 7 exception like : giving others owners premission as an admin, member can not access
+owner can not demote other owners and admins can not demote other admins
