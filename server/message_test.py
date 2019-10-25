@@ -114,8 +114,8 @@ def test_message_remove_accerr2():
     messID = message_send(token3, channelID, "Hello")
     # testing (a normal user try to remove a message with message_id was sent by another member in channel)
     with pytest.raises(AccessError, match = r".*"):
-        message_remove(token2, messID)
-'''
+        message_remove(token3, messID)
+
 def test_message_remove_accerr3():
 
     # set up
@@ -129,13 +129,13 @@ def test_message_remove_accerr3():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelID = channels_create(token, "Channel 1", True)
+    channelID = channels_create(token3, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
     messID = message_send(token2, channelID, "Hello")
     # testing (The channel owner try to remove a message which was posted by the a member in channel)
-    message_remove(token3, messID)'''
+    message_remove(token3, messID)
 
 def test_message_edit_Valerr():
 
@@ -206,8 +206,8 @@ def test_message_edit_accerr2():
     # testing (a normal user try to edit a message with message_id was sent by another member in channel)
     with pytest.raises(AccessError, match = r".*"):
         message_edit(token2, messID, "hahahahah")
-'''
-def test_message_edit_accerr3():
+
+def test_message_edit():
 
     # set up
     restart()
@@ -226,7 +226,7 @@ def test_message_edit_accerr3():
 
     messID = message_send(token3, channelID, "Hello")
     # testing (The channel owner try to edit a message which was posted by the a member in channel)
-    message_edit(token2, messID, "blahblahblah")'''
+    message_edit(token, messID, "blahblahblah")
 
 
 def test_message_react_messremoved():
@@ -315,9 +315,10 @@ def test_message_react_reacted():
     # testing
     with pytest.raises(ValueError, match = r".*"):
         message_react(token3, messID, 3)
-'''
+
 def test_message_unreact_invalidmessid():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -327,20 +328,19 @@ def test_message_unreact_invalidmessid():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     message_react(token2, messID, 1)
     # testing
-    with pytest.raises(ValueError, match = r"*"):
+    with pytest.raises(ValueError, match = r".*"):
         message_unreact(token2, -1, 1)
 
 def test_message_unreact_invalidreactid():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -350,20 +350,19 @@ def test_message_unreact_invalidreactid():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     message_react(token2, messID, 1)
     # testing
-    with pytest.raises(ValueError, match = r"*"):
+    with pytest.raises(ValueError, match = r".*"):
         message_unreact(token2, messID, -1)
 
 def test_message_unreact_notreacted():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -373,17 +372,15 @@ def test_message_unreact_notreacted():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     # testing
-    with pytest.raises(ValueError, match = r"*"):
+    with pytest.raises(ValueError, match = r".*"):
         message_unreact(token2, messID, 1)
-
+'''
 def test_message_pin_invalidmessid():
     # set up
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")

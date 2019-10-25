@@ -262,6 +262,7 @@ def message_unreact(token, message_id, react_id):
     channelDict = DATA['channelDict']
     if react_id < 0:
         raise ValueError('React_id is not a valid React ID')
+    is_mess = False
     for mess in messDict:
         if mess['message_id'] == message_id:
             if mess['reacts'] == None:
@@ -272,6 +273,10 @@ def message_unreact(token, message_id, react_id):
             channelID = mess['channel_id']
             uID = mess['u_id']
             message = mess
+            is_mess = True
+            break
+    if not is_mess:
+        raise ValueError('invalid message_id')
     for chan in channelDict:
         if chan['channel_id'] == channelID:
             if int(uID) not in chan['channel_member']:
