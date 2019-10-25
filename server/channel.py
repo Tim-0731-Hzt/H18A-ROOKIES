@@ -180,8 +180,14 @@ def channel_leave(token, channel_id):
     id = getUserFromToken(token)
     
     channel = channelDict[channel_id - 1]
-    if id in channel['channel_owner']:
-        channel['channel_owner'].remove(id)
+    if channel['channel_owner'] != None:
+        if id in channel['channel_owner']:
+            channel['channel_owner'].remove(id)
+        else:
+            if (channel['channel_member'] == None or id not in channel['channel_member']):
+                raise ValueError("user is not a member of channel")
+            else:
+                parts['channel_member'].remove(id)
     else:
         if (channel['channel_member'] == None or id not in channel['channel_member']):
             raise ValueError("user is not a member of channel")
