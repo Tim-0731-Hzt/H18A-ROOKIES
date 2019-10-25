@@ -15,7 +15,7 @@ SECRET = 'ROOKIES'
 #memberDict = []
 #channelDict = []
 #messDict = [] 
-userDict = []
+#userDict = []
 
 def sendSuccess(userDict):
     return dumps(userDict)
@@ -63,7 +63,8 @@ def hashPassword(password):
 # Email entered does not belong to a user
 # password is not correct
 def auth_login (email, password):
-    global userDict
+    DATA = load()
+    userDict = DATA['userDict']
     #check email
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
     if ( re.search(regex, email)):
@@ -90,12 +91,16 @@ def auth_login (email, password):
 
 # Given an active token, invalidates the taken to log the user out. If a valid token is given, and the user is successfully logged out, it returns true, otherwise false.
 def auth_logout(token):
-    global userDict
+    DATA = load()
+    userDict = DATA['userDict']
+
     u_id = getUserFromToken(token)
     #print(u_id)
     for user in userDict:
         if user['u_id'] == u_id:
             user['online'] = False
+            DATA['userDict'] = userDict
+            save(DATA)
             return True
     return False
 
@@ -106,7 +111,8 @@ def auth_logout(token):
 # password entered less than 6 words
 # name_first and name_last is between 1 and 50 characters
 def auth_register(email, password, name_first, name_last):
-    global userDict
+    DATA = load()
+    userDict = DATA['userDict']
     #check email
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
     if (re.search(regex, email)):
@@ -180,15 +186,17 @@ def auth_register(email, password, name_first, name_last):
         'u_id': newUser['u_id'],
         'token': generateToken(newUser['u_id'])
     }
-
+    DATA['userDict'] = userDict
     return returned
 
 # Given an email address, if the user is a registered user, send's them a an email containing a specific secret code, that when entered in auth_passwordreset_reset, shows that the user trying to reset the password is the one who got sent this email.
 def auth_passwordreset_request(email):
-    global userDict
+    DATA = load()
+    userDict = DATA['userDict']
     for user in userDict:
         if user['email'] == email:
             user['reset_code'] = generateResetCode()
+            DATA['userDict'] = userDict
             return user['reset_code']
             
 
@@ -197,7 +205,8 @@ def auth_passwordreset_request(email):
 # reset_code is not valid reset code
 # password entered is not valid
 def auth_passwordreset_reset(reset_code, new_password):
-    global userDict
+    DATA = load()
+    userDict = DATA['userDict']
     #incorrect password
     if (len(new_password) < 5):
         raise ValueError("New password is not valid")
@@ -208,13 +217,8 @@ def auth_passwordreset_reset(reset_code, new_password):
         if user['reset_code'] == reset_code:
             user['password'] = hashPassword(new_password)
             user['reset_code'] = None
+            DATA['userDict'] = userDict
             return {}
     raise ValueError("reset_code is not valid")
 
 
-def refresh():
-    global userDict
-
-    userDict.clear()
-
-    return {}
