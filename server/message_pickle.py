@@ -3,7 +3,7 @@ import time
 from auth import getUserFromToken
 
 from Error import AccessError
-from pickle_unpickle import save, load
+from pickle_unpickle import *
 
 messID = 0
 
@@ -96,12 +96,17 @@ def message_send(token, channel_id, message):
     uID = getUserFromToken(token)
     DATA = load()
     messDict = DATA['messDict']
+    channelDict = DATA['channelDict']
     if len(message) > 1000:
         raise ValueError("Message is more than 1000 characters")
     
     for cha in channelDict:
         if cha['channel_id'] == channel_id:
-            if uID not in cha['channel_member']:
+            if uID in cha['channel_owner']:
+                pass
+            elif uID in cha['channel_member']:
+                pass
+            else:
                 raise AccessError("The authorised user has not joined the channel they are trying to post to")
     global messID
 

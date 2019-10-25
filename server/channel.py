@@ -1,11 +1,12 @@
 # channel
 from Error import AccessError
 import jwt
-from data import *
-from auth import *
+#from data import *
+from auth import getUserFromToken
 import re
+from pickle_unpickle import *
 # global varaibles:
-
+'''
 def channel_handle_check(handle):
     global userDict
     for parts in userDict:
@@ -236,9 +237,10 @@ def channels_list(token):
 def channels_listall(token):
     global channelDict
     return channelDict
-# Creates a new channel with that name that is either a public or private channel
+# Creates a new channel with that name that is either a public or private channel'''
 def channels_create(token, name, is_public):
-    global channelDict
+    DATA = load()
+    channelDict = DATA['channelDict']
     if (len(name) > 20):
         raise ValueError("Name is more than 20 characters long")
     id = getUserFromToken(token)
@@ -252,6 +254,9 @@ def channels_create(token, name, is_public):
             'standUp':0
         }
         channelDict.append(d)
+        DATA['channelDict'] = channelDict
+        save(DATA)
+
         return d['channel_id']
     else:
         # if same name
@@ -268,4 +273,6 @@ def channels_create(token, name, is_public):
             'standUp':0
         }
         channelDict.append(d)
+        DATA['channelDict'] = channelDict
+        save(DATA)
         return d['channel_id']

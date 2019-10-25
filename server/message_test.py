@@ -1,43 +1,50 @@
 # MESSAGE TEST
+'''from message_global import clear_backup, message_send, message_remove
 from channel import channels_create
 from channel import channel_join
 from channel import channel_leave
+from auth import auth_register, userDict, messDict, channelDict, reactDict'''
+from message_pickle import *
+from channel import channels_create
 from auth import auth_register
-
-from message_global import clear_backup, message_send, message_remove, userDict, messDict, channelDict
 import pytest
 from Error import AccessError
-from pickle_unpickle import restart
+from pickle_unpickle import *
 
 #from data import userDict, messDict
 
 def test_message_send_valerr():
     # set up
-    clear_backup()
+    '''clear_backup()
     global userDict
     global messDict
     global channelDict
-    print(userDict)
-
+    print(userDict)'''
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
     channelID = channels_create(token, "Channel 1", True)
-    print(userDict)
-    print(channelDict)
-
+    #channelID2 = channels_create(token, "Channel 1", True)
+    '''print(userDict)
+    print(channelDict)'''
+    DATA = load()
+    print(DATA)
 
     # testing ValueError
-    with pytest.raises(ValueError, match = r".*"):
-        message_send(token, channelID, "Hello world" * 300)
+    #with pytest.raises(ValueError, match = r".*"):
+    #    message_send(token, channelID, "Hello world" * 300)
     id = message_send(token, channelID, "Hello world")
-    print(id)
+    DATA = load()
+    print(DATA)
+
+    '''print(id)
     print(messDict)
     clear_backup()
     print(userDict)
-    print(messDict)
+    print(messDict)'''
 
     # restart()
-
+'''
 def test_message_send_normal():
     # set up
     clear_backup()
@@ -84,7 +91,7 @@ def test_message_remove_valerr2():
     # testing (try to remove a message with message_id -1)
     with pytest.raises(ValueError, match = r".*"):
         message_remove(token, -1)
-    # restart()
+    # restart()'''
 
 '''
 

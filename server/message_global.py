@@ -1,7 +1,9 @@
 # MESSAGE global variable version
 import time
-from auth import getUserFromToken
-from data import *
+#from auth import getUserFromToken
+#from data import *
+from channel import *
+# from auth import messDict, userDict, channelDict, reactDict
 from Error import AccessError
 
 # just for testing
