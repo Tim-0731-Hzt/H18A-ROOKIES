@@ -178,13 +178,15 @@ def channel_leave(token, channel_id):
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     id = getUserFromToken(token)
-   
-    for parts in channelDict:
-        if id in parts['channel_member']:
-            parts['channel_member'].remove(id)
-        # check user is a member of channel
-        else:
+    
+    channel = channelDict[channel_id - 1]
+    if id in channel['channel_owner']:
+        channel['channel_owner'].remove(id)
+    else:
+        if (channel['channel_member'] == None or id not in channel['channel_member']):
             raise ValueError("user is not a member of channel")
+        else:
+            parts['channel_member'].remove(id)
     DATA['channelDict'] = channelDict
     save(DATA)
 
@@ -281,6 +283,7 @@ def channels_create(token, name, is_public):
         d = {
             'channel_id': 1,
             'name': name,
+            'channel_creater': id,
             'channel_member': None,
             'channel_owner':[id],
             'is_public': is_public,
@@ -299,6 +302,7 @@ def channels_create(token, name, is_public):
         d = {
             'channel_id': count,
             'name': name,
+            'channel_creater': id,
             'channel_member': None,
             'channel_owner':[id],
             'is_public': is_public,
