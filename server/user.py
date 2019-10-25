@@ -12,7 +12,7 @@ def user_profile(token, u_id):
     data = load()
     userDict = data['userDict']
     for user in userDict:
-        if user['u_id'] == opid:
+        if user['u_id'] == u_id:
             return {
                 'email': user['email'], 
                 'first_name': user['first_name'],
@@ -54,15 +54,21 @@ def user_profile_sethandle(token,handle_str):
     opid = getUserFromToken(token)
     data = load()
     userDict = data['userDict']
-    if len(handle_str) <= 20 :
+    if len(handle_str) <= 3 :
         raise ValueError('handle too short')
+    if len(handle_str) >= 20:
+        raise ValueError('handle too long')
+    for user in userDict:
+        if user['handle'] == handle_str:
+            raise ValueError('handle already used')
+
     for user in userDict:
         if opid == user['u_id']:
             user['handle'] = handle_str
             save(userDict)
             return
-    raise ValueError('incorrect token')
-    return 'incorrect_token'
+    
+    pass
 
 
 
