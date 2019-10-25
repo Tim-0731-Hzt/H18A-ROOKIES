@@ -2,6 +2,7 @@
 ##CHANNEL TEST
 from channel import *
 from auth import *
+from message_pickle import *
 import pytest
 from Error import AccessError
 from pickle_unpickle import *
@@ -94,12 +95,50 @@ def test_channel_leave_1():
         global token5
         with pytest.raises(ValueError, match=r".*"):
                 channel_leave(token5,1)
-def test_channel_leave_2():
+'''def test_channel_leave_2():
         global token2
+        global token1
+        global token3
+        global token4
         channel_leave(token2,1)
-def test_fcf():
+        channel_leave(token1,1)
+        channel_leave(token3,1)
+        channel_leave(token4,1)'''
+def test_channel_messages_1():
+        global token1
+        for i in range(0,20):
+                mess_id = message_send(token1,1,str(i))
+        with pytest.raises(ValueError, match=r".*"):
+                channel_messages (token1, 1, 23)
+def test_channel_messages_2():
+        global token1
+        for i in range(0,100):
+                mess_id = message_send(token1,2,str(i))
+        dic = {
+                'messages': ['96', '95', '94', '93', '92', '91', '90', '89', '88', 
+                '87', '86', '85', '84', '83', '82', '81', '80', '79', '78', '77', '76', '75', 
+                '74', '73', '72', '71', '70', '69', '68', '67', '66', '65', '64', '63', '62', 
+                '61', '60', '59', '58', '57', '56', '55', 
+                '54', '53', '52', '51', '50', '49', '48', '47'], 
+                'start': 3, 
+                'end': 53
+        }
+        assert(dic == channel_messages (token1, 2, 3))
+def test_channel_message_3():
+       global token1
+       dic = {
+               'messages': ['17', '16', '15', '14', 
+               '13', '12', '11', '10', '9',
+                '8', '7', '6', '5', '4', '3', '2', '1'], 
+                'start': 2, 
+                'end': -1
+        }
+       assert(dic == channel_messages (token1, 1, 2))
+'''
+def test_channel_listall():
         global token1
         print(channels_listall(token1))
+'''
 '''
 def test_channel_invite_1():
         with pytest.raises(ValueError, match=r".*"):

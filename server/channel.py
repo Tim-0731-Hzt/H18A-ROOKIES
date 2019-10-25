@@ -149,13 +149,13 @@ def channel_messages (token, channel_id, start):
         raise ValueError("channel_id is invalid")
     if auth_id_check(token,channel_id) == False:
         raise AccessError("Auth user is not a member of channnel")
-    dic = {'messages':None,
+    dic = {'messages':[],
             'start':start,
             'end':None
     }
     L = []
     for parts in messDict:
-        if (parts[channel_id] == channel_id):
+        if (parts['channel_id'] == channel_id):
             L.append(parts['message'])
     L = L[::-1]
     if len(L) <= start:
@@ -167,7 +167,10 @@ def channel_messages (token, channel_id, start):
         dic['end'] = -1
     else:
         for parts in L[start:start + 50]:
-            dic['messages'].append(parts)
+            if (dic['messages'] == None):
+                dic['messages'] = [parts]
+            else:
+                dic['messages'].append(parts)
         dic['end'] = start + 50
     return dic
 
@@ -187,7 +190,7 @@ def channel_leave(token, channel_id):
             if (channel['channel_member'] == None or id not in channel['channel_member']):
                 raise ValueError("user is not a member of channel")
             else:
-                parts['channel_member'].remove(id)
+                channel['channel_member'].remove(id)
     else:
         if (channel['channel_member'] == None or id not in channel['channel_member']):
             raise ValueError("user is not a member of channel")
