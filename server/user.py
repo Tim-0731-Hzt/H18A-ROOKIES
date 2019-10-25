@@ -4,33 +4,8 @@
 from Error import AccessError
 from auth import *
 import pickle_unpickle
-userDict = [
-    {
-        'first_name' : 56,
-        'last_name' : 1,
-        'email' : 1 ,
-        'u_id' : 1,
-        'handle' : 1,
-        'password' : 244,
-        'token' : 1,
-        'online' : True,
-        
-    } ,
-    {
-        'first_name' : 2,
-        'last_name' : 2,
-        'email' : 2,
-        'u_id' : 2,
-        'handle' : 2,
-    },
-    {
-        'first_name' : 3,
-        'last_name' : 3,
-        'email' : 3,
-        'u_id' : 3,
-        'handle' : 3,
-    }
-]
+import re
+
 
 def user_profile(token, u_id):
     opid = getUserFromToken(token)
@@ -38,7 +13,7 @@ def user_profile(token, u_id):
     data = load()
     userDict = data['userDict']
     for user in userDict:
-        if user['u_id'] == opid:
+        if user['u_id'] == u_id:
             return {
                 'email': user['email'], 
                 'first_name': user['first_name'],
@@ -46,6 +21,7 @@ def user_profile(token, u_id):
                 'handle': user['handle']
             }
     raise ValueError('u_id was incorrect')
+    pass
     
 # returned: { email, name_first, name_last, handle_str }
 
@@ -54,21 +30,23 @@ def user_profile_setemail(token, email):
     
     data = load()
     userDict = data['userDict']
-
+    regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
+    if (re.search(regex, email)):
+        pass
+    else:
+        raise ValueError("Invalid Email")
     
-
-    if email == 'bademail' :
-        raise ValueError('Invalid email')
-    if email == 'usedemail' :
-        raise ValueError('Used email')
+    for user in userDict:
+        if user['email'] == email:
+            raise ValueError("Email address is already used bt another user.")
     '''if token == uid'''
     for user in userDict:
         if opid == user['u_id']:
             user['email'] = email
             save(userDict)
             return
-    raise ValueError('incorrect token')
-    return 'incorrect_token'
+    pass
+     
 
 
 
@@ -77,15 +55,21 @@ def user_profile_sethandle(token,handle_str):
     opid = getUserFromToken(token)
     data = load()
     userDict = data['userDict']
-    if len(handle_str) <= 20 :
+    if len(handle_str) <= 3 :
         raise ValueError('handle too short')
+    if len(handle_str) >= 20:
+        raise ValueError('handle too long')
+    for user in userDict:
+        if user['handle'] == handle_str:
+            raise ValueError('handle already used')
+
     for user in userDict:
         if opid == user['u_id']:
             user['handle'] = handle_str
             save(userDict)
             return
-    raise ValueError('incorrect token')
-    return 'incorrect_token'
+    
+    pass
 
 
 
@@ -99,6 +83,10 @@ def user_profile_setname(token, name_first, name_last):
         raise ValueError('First name too long')
     if len(name_last) > 50 :
         raise ValueError('Last name too long')
+    if len(name_first) < 1:
+        raise ValueError('First name too short')
+    if len(name_last) < 1:
+        raise ValueError('Last name too short')
     
     for user in userDict:
         if opid == user['u_id']:
@@ -106,9 +94,7 @@ def user_profile_setname(token, name_first, name_last):
             user['lastname'] = name_last
             save(userDict)
             return
-
-    raise ValueError('incorrect token')
-    return 'incorrect_token'
+    pass
 
 
 

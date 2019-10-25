@@ -149,13 +149,13 @@ def channel_messages (token, channel_id, start):
         raise ValueError("channel_id is invalid")
     if auth_id_check(token,channel_id) == False:
         raise AccessError("Auth user is not a member of channnel")
-    dic = {'messages':None,
+    dic = {'messages':[],
             'start':start,
             'end':None
     }
     L = []
     for parts in messDict:
-        if (parts[channel_id] == channel_id):
+        if (parts['channel_id'] == channel_id):
             L.append(parts['message'])
     L = L[::-1]
     if len(L) <= start:
@@ -167,7 +167,10 @@ def channel_messages (token, channel_id, start):
         dic['end'] = -1
     else:
         for parts in L[start:start + 50]:
-            dic['messages'].append(parts)
+            if (dic['messages'] == None):
+                dic['messages'] = [parts]
+            else:
+                dic['messages'].append(parts)
         dic['end'] = start + 50
     return dic
 
@@ -187,7 +190,7 @@ def channel_leave(token, channel_id):
             if (channel['channel_member'] == [] or id not in channel['channel_member']):
                 raise ValueError("user is not a member of channel")
             else:
-                parts['channel_member'].remove(id)
+                channel['channel_member'].remove(id)
     else:
         if (channel['channel_member'] == [] or id not in channel['channel_member']):
             raise ValueError("user is not a member of channel")
@@ -234,28 +237,33 @@ def channel_addowner(token, channel_id, u_id):
     # already an owner
     id = getUserFromToken(token)
     for parts in channelDict:
-        if parts['channel_id'] == channel_id and id in parts['channel_owner']:
+        if parts['channel_id'] == channel_id and u_id in parts['channel_owner']:
             raise ValueError("user is already an owner in the channel")    
     if if_User_Owner(token,channel_id) == False:
         raise AccessError("the authorised user is not an owner of the slackr, or an owner of this channel")
+    if u_id not in channelDict[channel_id - 1]['channel_member']:
+        raise AccessError("the user is not a member of this channel")
     for parts in channelDict:
         if (parts['channel_id'] == channel_id):
             parts['channel_owner'].append(u_id)
+            parts['channel_member'].remove(u_id)
     DATA['channelDict'] = channelDict
     save(DATA)
 # Remove user with user id u_id an owner of this channel
 def channel_removeowner(token, channel_id, u_id):
     DATA = load()
     channelDict = DATA['channelDict']   
+    id = getUserFromToken(token)
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
-    if channel_admin_check(token) == False:
+    if if_User_Owner(token,channel_id) == False: 
         raise AccessError("the authorised user is not an owner of the slackr, or an owner of this channel")
-    if if_User_Owner(token,channel_id) == False:
+    if u_id not in channelDict[channel_id - 1]['channel_owner']:
         raise AccessError("user with user id u_id is not an owner of the channel")
     for parts in channelDict:
         if (parts['channel_id'] == channel_id):
             parts['channel_owner'].remove(u_id)
+            parts['channel_member'].append(u_id)
     DATA['channelDict'] = channelDict
     save(DATA)
 # Provide a list of all channels (and their associated details) that 
