@@ -567,3 +567,5 @@ def test_message_unpin_notinchannel():
     # testing
     with pytest.raises(AccessError, match = r"*"):
         message_unpin(token, messID)'''
+
+    restart()

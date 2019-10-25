@@ -90,7 +90,7 @@ def channel_admin_check(token):
     id = getUserFromToken(token)
     # if the user is slacker owner or admin
     for parts in userDict:
-        if (parts[u_id] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
+        if (parts['u_id'] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
             return True
     return False       
 # Invites a user (with user id u_id) to join a channel with ID channel_id. 
@@ -207,10 +207,13 @@ def channel_join(token, channel_id):
     else:
         for parts in channelDict:
             if (parts['channel_id'] == channel_id):
-                if (parts['channel_member'] == None):
-                    parts['channel_member'] = [id]
+                if channel_admin_check(token) == False:
+                    if (parts['channel_member'] == None):
+                        parts['channel_member'] = [id]
+                    else:
+                        parts['channel_member'].append(id)
                 else:
-                    parts['channel_member'].append(id)
+                    parts['channel_owner'].append(id)
     
     DATA['channelDict'] = channelDict
     save(DATA)
