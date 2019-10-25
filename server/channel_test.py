@@ -11,6 +11,9 @@ token1 = authRegisterDict1["token"]
 # second user
 authRegisterDict2 = auth_register("HaydenSmith@gmail.com","1we33456","Hayden","Smith")
 token2 = authRegisterDict2["token"]
+# third user
+authRegisterDict3 = auth_register("Luhaodong@gmail.com","1we33ee456","Jeff","Lu")
+token3 = authRegisterDict2["token"]
 
 def test_channels_create():
         global token1
@@ -35,6 +38,13 @@ def test_channel_invite_3():
         global token_2
         with pytest.raises(AccessError, match=r".*"):
                 channel_invite(token2,1,1)
+def test_channel_invite_4():
+        global token1
+        global channelDict
+        channel_invite(token1,1,2)
+        assert (channelDict[0]['channel_owner'] == [1,2])
+def test_channel_invite_5():
+
 '''
 def test_channel_invite_1():
         with pytest.raises(ValueError, match=r".*"):
