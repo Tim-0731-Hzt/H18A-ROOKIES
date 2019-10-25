@@ -5,53 +5,6 @@ from auth import getUserFromToken
 from Error import AccessError
 from pickle_unpickle import *
 
-messID = 0
-
-# just for testing
-'''channelDict = [
-    {
-        'channel_id': 1,
-        'name': "channel_1",
-        'channel_member': [1, 2, 3, 4, 5],
-        'channel_owner': [3]
-    },
-    {
-        'channel_id': 2,
-        'name': "channel_2",
-        'channel_member': [2],
-        'channel_owner': [1]
-    }
-]'''
-
-# helper function for testing
-def clear_backup():
-    messDict = []
-    messID = 0
-    reactDict = []
-    channelDict = [
-        {
-            'channel_id': 1,
-            'name': "channel_1",
-            'channel_member': [1, 2, 3, 4, 5],
-            'channel_owner': [3]
-        },
-        {
-            'channel_id': 2,
-            'name': "channel_2",
-            'channel_member': [2],
-            'channel_owner': [1]
-        }
-    ]
-
-    DATA = {
-        'messDict': messDict,
-        'messID': messID,
-        'reactDict': eractDict,
-        'channelDict': channelDict,
-        'userDict': userDict
-    }
-
-
 # Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future
 # ValueError when:
 # Channel (based on ID) does not exist
@@ -60,13 +13,16 @@ def clear_backup():
 def message_sendlater(token, channel_id, message, time_sent):
     DATA = load()
     messDict = DATA['messDict']
+    channelDict = DATA['channelDict']
     uID = getUserFromToken(token)
     if len(message) > 1000:
         raise ValueError("Message is more than 1000 characters")
     
     for cha in channelDict:
         if cha['channel_id'] == channel_id:
-            if uID not in cha['channel_member']:
+            if uID in cha['channel_member'] or uID in cha['channel_owner']:\
+                pass
+            else:
                 raise AccessError("The authorised user has not joined the channel they are trying to post to")
     
     DATA['messID'] += 1
@@ -111,7 +67,7 @@ def message_send(token, channel_id, message):
     m = {
         'channel_id': int(channel_id),
         'message_id': DATA['messID'],
-        'u_id': int(uID),   # fix that later
+        'u_id': int(uID),
         'message': message,
         'time_created': time.ctime(),
         'reacts': None,
@@ -198,10 +154,9 @@ def message_react(token, message_id, react_id):
     for mess in messDict:
         if mess['message_id'] == message_id:
             if mess['reacts'] != react_id and mess['reacts'] != None:
-                # raise ValueError('Message with ID message_id already contains an active React with ID {mess['reacts']}')
                 raise ValueError('Message with ID message_id already contains an active React with ID')
             channelID = mess['channel_id']
-            uID = mess['u_id']
+            sender_id = mess['u_id']
             message = mess
             is_mess = True
             break
@@ -209,7 +164,7 @@ def message_react(token, message_id, react_id):
         raise ValueError('invalid message_id')
     for chan in channelDict:
         if chan['channel_id'] == channelID:
-            if int(uID) in chan['channel_owner']:
+            if uID in chan['channel_owner']:
                 pass
             elif uID in chan['channel_member']:
                 pass
@@ -224,12 +179,12 @@ def message_react(token, message_id, react_id):
             if int(uID) not in rea['u_ids']:
                 rea['u_ids'].append(int(uID))
             found = True
-            if uID == int(uID):
+            if uID == sender_id:
                 u = {'is_this_user_reacted': True}
                 rea.update(u)
     if not found:
         
-        if uID == int(uID):
+        if uID == sender_id:
             r = {
                 'react_id': react_id, 
                 'u_ids': [int(uID)], 
@@ -266,12 +221,11 @@ def message_unreact(token, message_id, react_id):
     for mess in messDict:
         if mess['message_id'] == message_id:
             if mess['reacts'] == None:
-                # raise ValueError('Message with ID message_id does not contain an active React with ID {mess['reacts']}')
                 raise ValueError('Message with ID message_id does not contain an active React with ID')
             if mess['reacts'] != react_id:
                 raise ValueError('React_id is not a valid React ID')
             channelID = mess['channel_id']
-            uID = mess['u_id']
+            #sender_id = mess['u_id']
             message = mess
             is_mess = True
             break
@@ -279,8 +233,11 @@ def message_unreact(token, message_id, react_id):
         raise ValueError('invalid message_id')
     for chan in channelDict:
         if chan['channel_id'] == channelID:
-            if int(uID) not in chan['channel_member']:
-                # raise ValueError('message_id:{message_id} is not a valid message within a channel that the authorised user has joined')
+            if uID in chan['channel_owner']:
+                pass
+            elif uID in chan['channel_member']:
+                pass
+            else:
                 raise ValueError('message_id is not a valid message within a channel that the authorised user has joined')
 
     for rea in reactDict:
@@ -334,9 +291,7 @@ def message_pin(token, message_id):
     for chan in channelDict:
         if chan['channel_id'] == channelID:
             
-            if int(uID) in chan['channel_owner']:
-                pass
-            elif uID in chan['channel_member']:
+            if uID in chan['channel_owner'] or uID in chan['channel_member']:
                 pass
             else:
                 # raise ValueError('message_id:{message_id} is not a valid message within a channel that the authorised user has joined')
@@ -359,6 +314,7 @@ def message_unpin(token, message_id):
     DATA = load()
     messDict = DATA['messDict']
     channelDict = DATA['channelDict']
+    userDict = DATA['userDict']
 
     found = False
     for mess in messDict:
@@ -371,13 +327,22 @@ def message_unpin(token, message_id):
             break
     if not found:
         raise ValueError("Invalid message_id")
+    is_admin = False
+    for user in userDict:
+        if user['u_id'] == uID:
+            if user['permission_id'] == 1 or user['permission_id'] == 2:
+                is_admin = True
+    if not is_admin:
+        raise ValueError('The authorised user is not an admin')
+
     for chan in channelDict:
         if chan['channel_id'] == channelID:
-            if int(uID) not in chan['channel_member']:
-                # raise ValueError('message_id:{message_id} is not a valid message within a channel that the authorised user has joined')
+            if int(uID) in chan['channel_member']:
+                pass
+            elif uID in chan['channel_owner']:
+                pass
+            else:
                 raise AccessError('message_id is not a valid message within a channel that the authorised user has joined')
-            if int(uID) not in chan['channel_owner']:
-                raise ValueError('The authorised user is not an admin')
     message['is_pinned'] = False
     DATA['messDict'] = messDict
     DATA['channelDict'] = channelDict

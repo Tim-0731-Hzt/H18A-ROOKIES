@@ -7,7 +7,43 @@ from Error import AccessError
 from pickle_unpickle import *
 from admin_userpermission_change import *
 
-#from data import userDict, messDict
+def test_message_sendlater_valerr():
+    # set up
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    channelID = channels_create(token, "Channel 1", True)
+    # testing ValueError
+    with pytest.raises(ValueError, match = r".*"):
+        message_sendlater(token, channelID, "Hello world" * 300, 5)
+
+def test_message_sendlater_valerr2():
+    # set up
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    channelID = channels_create(token, "Channel 1", True)
+    # testing ValueError
+    with pytest.raises(ValueError, match = r".*"):
+        message_sendlater(token, channelID, "Hello world", -3)
+
+def test_message_sendlater_notinchannel():
+    # set up
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+    authRegisterDict3 = auth_register("comp1531@gmail.com", "123456789", "cse", "lu")
+    token3 = authRegisterDict3['token']
+
+    channelID = channels_create(token, "Channel 1", True)
+    channel_join(token3, channelID)
+    message_sendlater(token3, channelID, "Hello world", 5)
+    # testing ValueError
+    with pytest.raises(AccessError, match = r".*"):
+        message_sendlater(token2, channelID, "Hello world", 5)
+
 
 def test_message_send_valerr():
     # set up
@@ -18,6 +54,20 @@ def test_message_send_valerr():
     # testing ValueError
     with pytest.raises(ValueError, match = r".*"):
         message_send(token, channelID, "Hello world" * 300)
+
+def test_message_send_notinchannel():
+    # set up
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    channelID = channels_create(token, "Channel 1", True)
+    # testing ValueError
+    with pytest.raises(AccessError, match = r".*"):
+        message_send(token2, channelID, "Hello world")
 
 def test_message_send_normal():
     # set up
@@ -229,6 +279,59 @@ def test_message_edit():
     # testing (The channel owner try to edit a message which was posted by the a member in channel)
     message_edit(token, messID, "blahblahblah")
 
+def test_message_react_bymember():
+    # set up
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    token3 = authRegisterDict3['token']
+
+    channelID = channels_create(token, "Channel 1", True)
+    channel_join(token2, channelID)
+
+    messID = message_send(token, channelID, "Hello")
+    # testing
+    message_react(token2, messID, 1)
+
+def test_message_react_notinchannel():
+    # set up
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    channelID = channels_create(token, "Channel 1", True)
+
+    messID = message_send(token, channelID, "Hello")
+    messID2 = message_send(token, channelID, "Hello")
+    message_react(token, messID2, 1)
+    # testing
+    with pytest.raises(ValueError, match = r".*"):
+        message_react(token2, messID, 1)
+
+def test_message_react_multireacts():
+    # set up
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    channelID = channels_create(token, "Channel 1", True)
+    channel_join(token2, channelID)
+
+    messID = message_send(token, channelID, "Hello")
+    message_react(token2, messID, 1)
+    message_react(token, messID, 1)
+
 
 def test_message_react_messremoved():
     # set up
@@ -361,6 +464,30 @@ def test_message_unreact_invalidreactid():
     with pytest.raises(ValueError, match = r".*"):
         message_unreact(token2, messID, -1)
 
+def test_message_unreact_invalidreactid2():
+    # set up
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    token3 = authRegisterDict2['token']
+
+    channelID = channels_create(token, "Channel 1", True)
+    channel_join(token2, channelID)
+    channel_join(token3, channelID)
+
+    messID = message_send(token, channelID, "Hello")
+    message_react(token2, messID, 1)
+
+    # testing
+    with pytest.raises(ValueError, match = r".*"):
+        message_unreact(token, messID, 2)
+
+
 def test_message_unreact_notreacted():
     # set up
     restart()
@@ -381,6 +508,50 @@ def test_message_unreact_notreacted():
     # testing
     with pytest.raises(ValueError, match = r".*"):
         message_unreact(token2, messID, 1)
+
+def test_message_unreact_notinchannel():
+    # set up
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    token3 = authRegisterDict3['token']
+
+    channelID = channels_create(token, "Channel 1", True)
+    channel_join(token2, channelID)
+
+    messID = message_send(token, channelID, "Hello")
+    message_react(token, messID, 1)
+    message_react(token2, messID, 1)
+
+    message_unreact(token, messID, 1)
+
+    # testing
+    with pytest.raises(ValueError, match = r".*"):
+        message_unreact(token3, messID, 1)
+
+def test_message_unreact_nomore_reacts():
+    # set up
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    channelID = channels_create(token, "Channel 1", True)
+    channel_join(token2, channelID)
+
+    messID = message_send(token, channelID, "Hello")
+    message_react(token, messID, 1)
+    message_react(token2, messID, 1)
+
+    message_unreact(token, messID, 1)
+    message_unreact(token2, messID, 1)
 
 def test_message_pin_invalidmessid():
     # set up
@@ -469,9 +640,33 @@ def test_message_pin_notinchannel():
     # testing
     with pytest.raises(AccessError, match = r".*"):
         message_pin(token3, messID)
-'''
+
+def test_message_pin():
+    # set up
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    token3 = authRegisterDict3['token']
+    u_id3 = authRegisterDict3['u_id']
+
+    channelID = channels_create(token, "Channel 1", True)
+    channel_join(token2, channelID)
+    channel_join(token3, channelID)
+
+    messID = message_send(token, channelID, "Hello")
+
+    admin_userpermission_change(token, u_id3, 2)
+    message_pin(token3, messID)
+
+
 def test_message_unpin_invalidmessid():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -481,20 +676,19 @@ def test_message_unpin_invalidmessid():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     message_pin(token, messID)
     # testing
-    with pytest.raises(ValueError, match = r"*"):
+    with pytest.raises(ValueError, match = r".*"):
         message_unpin(token, -1)
 
 def test_message_unpin_unauthoriseduser():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -504,20 +698,19 @@ def test_message_unpin_unauthoriseduser():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     message_pin(token, messID)
     # testing
-    with pytest.raises(ValueError, match = r"*"):
+    with pytest.raises(ValueError, match = r".*"):
         message_unpin(token3, messID)
 
 def test_message_unpin_alreadyunpinned():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -527,21 +720,20 @@ def test_message_unpin_alreadyunpinned():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     message_pin(token, messID)
     message_unpin(token, messID)
     # testing
-    with pytest.raises(ValueError, match = r"*"):
+    with pytest.raises(ValueError, match = r".*"):
         message_unpin(token, messID)
 
 def test_message_unpin_notinchannel():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -549,19 +741,39 @@ def test_message_unpin_notinchannel():
     token2 = authRegisterDict2['token']
 
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
-    token3 = authRegisterDict2['token']
+    token3 = authRegisterDict3['token']
+    u_id3 = authRegisterDict3['u_id']
+    channelID = channels_create(token, "Channel 1", True)
+    channel_join(token2, channelID)
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    messID = message_send(token, channelID, "Hello")
+    message_pin(token, messID)
+    admin_userpermission_change(token, u_id3, 2)
+
+    # testing
+    with pytest.raises(AccessError, match = r".*"):
+        message_unpin(token3, messID)
+
+def test_message_unpin():
+    # set up
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+
+    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    token3 = authRegisterDict3['token']
+    u_id3 = authRegisterDict3['u_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     message_pin(token, messID)
-    channel_leave(token, channelID)
-    # testing
-    with pytest.raises(AccessError, match = r"*"):
-        message_unpin(token, messID)'''
+    admin_userpermission_change(token, u_id3, 2)
+    message_unpin(token3, messID)
 
-#restart()
+
+restart()
