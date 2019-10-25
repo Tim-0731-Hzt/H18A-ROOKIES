@@ -69,11 +69,10 @@ def message_sendlater(token, channel_id, message, time_sent):
             if uID not in cha['channel_member']:
                 raise AccessError("The authorised user has not joined the channel they are trying to post to")
     
-    global messID
-    messID += 1
+    DATA['messID'] += 1
     m = {
         'channel_id': int(channel_id),
-        'message_id': int(messID),
+        'message_id': DATA['messID'],
         'u_id': int(uID),   # fix that later
         'message': message,
         'time_created': time.ctime(),
@@ -82,7 +81,7 @@ def message_sendlater(token, channel_id, message, time_sent):
     }
     if time_sent < 0:
         raise ValueError("Time sent is a time in the past")
-    time.sleep(time_sent)
+    time.sleep(time_sent)       # time_sent is in unit seconds
     messDict.append(m)
     DATA['messDict'] = messDict
     save(DATA)
@@ -108,12 +107,10 @@ def message_send(token, channel_id, message):
                 pass
             else:
                 raise AccessError("The authorised user has not joined the channel they are trying to post to")
-    global messID
-
-    messID += 1
+    DATA['messID'] += 1
     m = {
         'channel_id': int(channel_id),
-        'message_id': int(messID),
+        'message_id': DATA['messID'],
         'u_id': int(uID),   # fix that later
         'message': message,
         'time_created': time.ctime(),
