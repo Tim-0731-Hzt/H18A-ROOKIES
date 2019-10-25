@@ -1,11 +1,6 @@
 # MESSAGE TEST
-'''from message_global import clear_backup, message_send, message_remove
-from channel import channels_create
-from channel import channel_join
-from channel import channel_leave
-from auth import auth_register, userDict, messDict, channelDict, reactDict'''
 from message_pickle import *
-from channel import channels_create
+from channel import channels_create, channel_join
 from auth import auth_register
 import pytest
 from Error import AccessError
@@ -15,39 +10,17 @@ from pickle_unpickle import *
 
 def test_message_send_valerr():
     # set up
-    '''clear_backup()
-    global userDict
-    global messDict
-    global channelDict
-    print(userDict)'''
     restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
     channelID = channels_create(token, "Channel 1", True)
-    #channelID2 = channels_create(token, "Channel 1", True)
-    '''print(userDict)
-    print(channelDict)'''
-    DATA = load()
-    print(DATA)
-
     # testing ValueError
-    #with pytest.raises(ValueError, match = r".*"):
-    #    message_send(token, channelID, "Hello world" * 300)
-    id = message_send(token, channelID, "Hello world")
-    DATA = load()
-    print(DATA)
+    with pytest.raises(ValueError, match = r".*"):
+        message_send(token, channelID, "Hello world" * 300)
 
-    '''print(id)
-    print(messDict)
-    clear_backup()
-    print(userDict)
-    print(messDict)'''
-
-    # restart()
-'''
 def test_message_send_normal():
     # set up
-    clear_backup()
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -55,12 +28,12 @@ def test_message_send_normal():
 
     # testing (check if this function works properly)
     message_send(token, channelID, "Hello world")
-    
-    # restart()
+
 
 def test_message_remove_valerr1():
 
     # set up
+    restart()
     authRegisterDict = auth_register("haodong321@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -74,11 +47,11 @@ def test_message_remove_valerr1():
     message_remove(token, messID)
     with pytest.raises(ValueError, match = r".*"):
         message_remove(token, messID)
-    # restart()
 
 def test_message_remove_valerr2():
 
     # set up
+    restart()
     authRegisterDict = auth_register("hao123dong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -91,13 +64,13 @@ def test_message_remove_valerr2():
     # testing (try to remove a message with message_id -1)
     with pytest.raises(ValueError, match = r".*"):
         message_remove(token, -1)
-    # restart()'''
 
-'''
+
 
 def test_message_remove_accerr1():
 
     # set up
+    restart()
     authRegisterDict = auth_register("hao431dong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -120,6 +93,7 @@ def test_message_remove_accerr1():
 def test_message_remove_accerr2():
 
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -132,8 +106,7 @@ def test_message_remove_accerr2():
     authRegisterDict4 = auth_register("normaluser2@gmail.com", "123456789", "normal2", "user")
     token4 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
     channel_join(token4, channelID)
@@ -141,9 +114,9 @@ def test_message_remove_accerr2():
     messDict = message_send(token3, channelID, "Hello")
     messID = messDict['message_id']
     # testing (a normal user try to remove a message with message_id was sent by another member in channel)
-    with pytest.raises(AccessError, match = r"*"):
+    with pytest.raises(AccessError, match = r".*"):
         message_remove(token2, messID)
-
+'''
 def test_message_remove_accerr3():
 
     # set up

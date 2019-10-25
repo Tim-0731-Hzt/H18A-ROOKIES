@@ -134,6 +134,7 @@ def message_remove(token, message_id):
     uID = getUserFromToken(token)
     DATA = load()
     messDict = DATA['messDict']
+    channelDict = DATA['channelDict']
     found = False
     
     for mess in messDict:
