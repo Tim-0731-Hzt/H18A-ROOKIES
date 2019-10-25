@@ -5,9 +5,12 @@ from auth import *
 from data import *
 import time
 from datetime import datetime, timedelta
+import pickle_unpickle
 def standup_start(token, channel_id):
-    global channelDict
-    global standlist
+   
+    data = load()
+    channelDict = data['channelDict']
+
     opid = getUserFromToken(token)
     for ch in channelDict:
         if channel_id == ch['channel_id']:
@@ -22,6 +25,7 @@ def standup_start(token, channel_id):
 
             '''time out'''
             ch['standup'] == 0
+            standlist = load().['standList']
             message_send(token, channel_id, standlist)
             return
     raise ValueError('incorrect channel id')
@@ -33,9 +37,9 @@ def showtime():
     return now_15
 
 def standup_send(token, channel_id, message):
-    global channelDict
-    global standlist
-    
+    data = load()
+    channelDict = data['channelDict']
+    standlist = data['standlist']
     if len(message) > 1000 :
         raise ValueError("Message too long")
     for ch in channelDict:
@@ -47,8 +51,10 @@ def standup_send(token, channel_id, message):
                     'An active standup is not currently running in this channel')
             if standlist == "":
                 standlist = message
+                save(standlist)
                 return
             else: standlist = standlist + ": " + message
+                save(standlist)
                 return
     raise ValueError('Channel ID is not a valid channel')
 
