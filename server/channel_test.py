@@ -77,13 +77,20 @@ def test_channel_join_public():
         DATA = load()
         channelDict = DATA['channelDict']
         assert (channelDict[1]['channel_member'] == [5])    
-def test_channel_join_private():
+def test_channel_join_public_2():
         global token2
         channel_join(token2, 2)
         DATA = load()
         channelDict = DATA['channelDict']
-        print(channelDict[1]['channel_member'])
         assert (channelDict[1]['channel_owner'] == [1,2])    
+def test_channel_join_private():
+        global token1
+        global token2
+        assert(channels_create(token1, "COMP1521", False) == 3)
+        channel_join(token2, 3)
+        DATA = load()
+        channelDict = DATA['channelDict']
+        assert (channelDict[2]['channel_owner'] == [1,2])    
 '''
 def test_channel_invite_1():
         with pytest.raises(ValueError, match=r".*"):
