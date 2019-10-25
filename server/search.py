@@ -2,8 +2,10 @@ from channel import *
 from message import *
 from auth import *
 from data import *
+import pickle_unpickle
 def search(token, query_str): 
-    global messDict
+    data = load()
+    messDict = data['messDict']
     result = []
     it = channels_list(token)
     for meg in messDict:
