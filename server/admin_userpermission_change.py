@@ -1,9 +1,11 @@
 import pytest
 import error
 from auth import *
+import pickle_unpickle
 def admin_userpermission_change(token, u_id, permission_id):
     fl = 1
-    global userdict
+    data = load()
+    userDict = data['userDict']
     for user in userdict:
         if u_id == user['u_id']:
             fl = 0
@@ -24,5 +26,7 @@ def admin_userpermission_change(token, u_id, permission_id):
                     if sb['permissopn_id'] == 1:
                         raise AccessError('Permission Denied: Trying to change owner  permission')
                     sb['permission_id'] == permission_id
+                    save(userDict)
+                    return
 
-    pass
+  

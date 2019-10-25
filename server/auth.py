@@ -169,8 +169,6 @@ def auth_register(email, password, name_first, name_last):
 
     if (len(userDict) == 0):
         newUser['permission_id'] = 1
-    elif (len(userDict) == 1):
-        newUser['permission_id'] = 2
     else:
         newUser['permission_id'] = 3
 
