@@ -111,6 +111,27 @@ def test2_user_profile_sethandle_badhandle():
         user_profile_sethandle(token, "sbsbsbsbsbsbsbsbsbsbsbssbbsbsbsbsbsbbsbsbsbsbsbsbsbb")
 
 
+def test3_user_profile_sethandle_usedhandle():
+    restart()
+    authRegisterDict = auth_register(
+        "haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    UID = authRegisterDict['u_id']
+
+    authRegisterDict2 = auth_register(
+        "jeff@gmail.com", "123456789", "jeffsb", "lu")
+    token2 = authRegisterDict2['token']
+    UID2 = authRegisterDict['u_id']
+
+    authRegisterDict3 = auth_register(
+        "normaluser@gmail.com", "123456789", "normal", "user")
+    token3 = authRegisterDict2['token']
+    UID3 = authRegisterDict['u_id']
+    with pytest.raises(ValueError, match = r".*"):
+        user_profile_sethandle(token, "jeffsblu")
+    with pytest.raises(ValueError, match=r".*"):
+        user_profile_sethandle(token, "normaluser")
+
 def test1_user_profile_setemail():
     restart()
     authRegisterDict = auth_register(

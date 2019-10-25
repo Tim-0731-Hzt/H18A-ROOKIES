@@ -82,6 +82,10 @@ def user_profile_setname(token, name_first, name_last):
         raise ValueError('First name too long')
     if len(name_last) > 50 :
         raise ValueError('Last name too long')
+    if len(name_first) < 1:
+        raise ValueError('First name too short')
+    if len(name_last) < 1:
+        raise ValueError('Last name too short')
     
     for user in userDict:
         if opid == user['u_id']:
