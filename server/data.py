@@ -1,4 +1,4 @@
-memberDict = []
+userDict = []
 channelDict = []
 messDict = []
 reactDict = []
