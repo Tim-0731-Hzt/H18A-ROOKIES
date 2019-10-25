@@ -1,11 +1,6 @@
-from auth import auth_register
+
 import pytest
 import re
-from user import user_profile
-from user import user_profile_setname
-from user import user_profile_sethandle 
-from user import user_profile_setemail
-from user import user_profiles_uploadphoto
 from auth_pickle import *
 from message_pickle import *
 from channel import *
@@ -71,11 +66,34 @@ def test_user_profile_invaliduid():
         userDict = user_profile(token, -1)
 
 def test1_user_profile_setname():
-    
+    restart()
+    authRegisterDict = auth_register(
+        "haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    UID = authRegisterDict['u_id']
+    user_profile_setname(token,'daniel','quin')
+    user = user_profile(token, UID)
+    assert 'daniel' == user['name_first']
+    assert 'quin' == user['name_last']
+
+
 def test2_user_profile_setname():
-    user_profile_setname(123,'Daniel','bgyerfhuqwdcfcfcfcfcfcfcfafffffffffffffffafafaiffffffffffffffffifififififififififififififi')
+    restart()
+    authRegisterDict = auth_register(
+        "haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    UID = authRegisterDict['u_id']
+    with pytest.raises(ValueError, match=r".*"):
+        user_profile_setname(token, '', 'quin')
+    with pytest.raises(ValueError, match=r".*"):
+        user_profile_setname(token, 'daniel', '')
+    with pytest.raises(ValueError, match=r".*"):
+        user_profile_setname(token, 'dhasgbdhbashjdbjhasbdhjasgbdhjasgbhjcxbashjbdhjasvgbdyhuasgdyuagsyxgvuasgvduasgbduasg', 'quin')
+    with pytest.raises(ValueError, match=r".*"):
+        user_profile_setname(token, 'daniel', 'sgbhdyhugausydghuasjdgbyhujasgdyuagyudgasyugdyuqawgyuegawyhughuagshjdgvbhjasvdjhasv')
+
 def test3_user_profile_setname():
-    user_profile_setname(123,'fyhuiawseoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyooooooooooso','Quin')
+    
 
 def test1_user_profile_sethandle_normalCases():
     restart()

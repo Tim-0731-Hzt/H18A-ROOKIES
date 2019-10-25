@@ -4,6 +4,7 @@
 from Error import AccessError
 from auth import *
 import pickle_unpickle
+import re
 
 
 def user_profile(token, u_id):
@@ -93,9 +94,7 @@ def user_profile_setname(token, name_first, name_last):
             user['lastname'] = name_last
             save(userDict)
             return
-
-    raise ValueError('incorrect token')
-    return 'incorrect_token'
+    pass
 
 
 
