@@ -24,15 +24,14 @@ token4 = authRegisterDict4["token"]
 
 authRegisterDict5 = auth_register("Chdrrrenkai@gmail.com","1we33ee456","bbeceff","ledv")
 token5 = authRegisterDict5["token"]
-def test_channels_create():
+def test_channels_create_1():
         global token1
         with pytest.raises(ValueError,match = r".*"):
                 channel_id = channels_create(token1,"meet updscsdcdscdscsdcdsdscscddsc",True)
-
-def test_channel_create_1():
+def test_channel_create_2():
         global token1
         assert(channels_create(token1, "COMP1531", True) == 1)
-def test_channel_create_2():
+def test_channel_create_3():
         global token1
         assert(channels_create(token1, "COMP2521", True) == 2)
 def test_channel_invite_1():
@@ -62,8 +61,16 @@ def test_channel_invite_5():
         channelDict = DATA['channelDict']
         assert (channelDict[0]['channel_owner'] == [1,2,3])
         assert (channelDict[0]['channel_member'] == [4])
-   
-def test_channel_details():
+
+def test_channel_details_1():
+        global token1
+        with pytest.raises(ValueError, match=r".*"):
+                channel_details(token1,5)
+def test_channel_detail_2():
+        global token5
+        with pytest.raises(AccessError, match=r".*"):
+                channel_details(token5,1)
+def test_channel_details_2():
         global token1
         detail = {
                 'name': 'COMP1531', 
