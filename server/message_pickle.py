@@ -20,7 +20,7 @@ def message_sendlater(token, channel_id, message, time_sent):
     
     for cha in channelDict:
         if cha['channel_id'] == channel_id:
-            if uID in cha['channel_member'] or uID in cha['channel_owner']:\
+            if uID in cha['channel_member'] or uID in cha['channel_owner']:
                 pass
             else:
                 raise AccessError("The authorised user has not joined the channel they are trying to post to")
