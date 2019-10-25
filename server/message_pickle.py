@@ -134,6 +134,7 @@ def message_remove(token, message_id):
     uID = getUserFromToken(token)
     DATA = load()
     messDict = DATA['messDict']
+    channelDict = DATA['channelDict']
     found = False
     
     for mess in messDict:
@@ -164,6 +165,7 @@ def message_edit(token, message_id, message):
 
     DATA = load()
     messDict = DATA['messDict']
+    channelDict = DATA['channelDict']
     for mess in messDict:
         if mess['message_id'] == message_id:
             channelID = mess['channel_id']
@@ -192,6 +194,7 @@ def message_react(token, message_id, react_id):
 
     if react_id < 0:
         raise ValueError('React_id is not a valid React ID')
+    is_mess = False
     for mess in messDict:
         if mess['message_id'] == message_id:
             if mess['reacts'] != react_id and mess['reacts'] != None:
@@ -200,10 +203,17 @@ def message_react(token, message_id, react_id):
             channelID = mess['channel_id']
             uID = mess['u_id']
             message = mess
+            is_mess = True
+            break
+    if not is_mess:
+        raise ValueError('invalid message_id')
     for chan in channelDict:
         if chan['channel_id'] == channelID:
-            if int(uID) not in chan['channel_member']:
-                # raise ValueError('message_id:{message_id} is not a valid message within a channel that the authorised user has joined')
+            if int(uID) in chan['channel_owner']:
+                pass
+            elif uID in chan['channel_member']:
+                pass
+            else:
                 raise ValueError('message_id is not a valid message within a channel that the authorised user has joined')
     m = {'reacts': int(react_id)}
     message.update(m)
