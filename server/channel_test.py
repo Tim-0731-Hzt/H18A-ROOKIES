@@ -134,11 +134,44 @@ def test_channel_message_3():
                 'end': -1
         }
        assert(dic == channel_messages (token1, 1, 2))
-'''
+def test_channel_addowner_1():
+        global token1
+        with pytest.raises(ValueError, match=r".*"):
+                channel_addowner(token1,1,1)
+def test_channel_addowner_2():
+        global token2
+        with pytest.raises(AccessError, match=r".*"):
+                channel_addowner(token2,1,4)
+def test_channel_addowner_3():
+        global token1
+        with pytest.raises(AccessError, match=r".*"):
+                channel_addowner(token1,1,5)
+def test_channel_adowner_4():
+        global token1
+        channel_addowner(token1,1,4)
+        DATA = load()
+        channelDict = DATA['channelDict']
+        assert(channelDict[0]['channel_owner'] == [1,2,3,4])
+        assert(channelDict[0]['channel_member'] == [])
+def test_channel_removeowner_1():
+        global token2
+        with pytest.raises(AccessError, match=r".*"):
+                channel_removeowner(token2,1,4)
+def test_channel_removeowner_2():
+        global token1
+        with pytest.raises(AccessError, match=r".*"):
+                channel_removeowner(token1,1,5)
+def test_channel_removeowner_3():
+        global token1
+        channel_removeowner(token1,1,4)
+        DATA = load()
+        channelDict = DATA['channelDict']
+        assert(channelDict[0]['channel_owner'] == [1,2,3])
+        assert(channelDict[0]['channel_member'] == [4])
 def test_channel_listall():
         global token1
         print(channels_listall(token1))
-'''
+
 '''
 def test_channel_invite_1():
         with pytest.raises(ValueError, match=r".*"):
