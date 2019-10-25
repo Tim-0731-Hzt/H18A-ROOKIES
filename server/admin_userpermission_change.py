@@ -21,11 +21,12 @@ def admin_userpermission_change(token, u_id, permission_id):
                 raise AccessError('Permission Denied: Trying to give owner by admin')
             if user['permission_id'] == 3:
                 raise AccessError('Permission Denied : member can not do this')
-            for sb in userDict:
-                if sb['u_id'] == u_id:
-                    if sb['permission_id'] == 1:
-                        raise AccessError('Permission Denied: Trying to change owner permission')
-                    sb['permission_id'] == permission_id
+    for sb in userDict:
+        if sb['u_id'] == u_id:
+            if sb['permission_id'] == 1:
+                raise AccessError('Permission Denied: Trying to change owner permission')
+            sb['permission_id'] = permission_id
+    data['userDict'] = userDict
     save(data)
     pass
   
