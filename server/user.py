@@ -4,33 +4,7 @@
 from Error import AccessError
 from auth import *
 import pickle_unpickle
-userDict = [
-    {
-        'first_name' : 56,
-        'last_name' : 1,
-        'email' : 1 ,
-        'u_id' : 1,
-        'handle' : 1,
-        'password' : 244,
-        'token' : 1,
-        'online' : True,
-        
-    } ,
-    {
-        'first_name' : 2,
-        'last_name' : 2,
-        'email' : 2,
-        'u_id' : 2,
-        'handle' : 2,
-    },
-    {
-        'first_name' : 3,
-        'last_name' : 3,
-        'email' : 3,
-        'u_id' : 3,
-        'handle' : 3,
-    }
-]
+
 
 def user_profile(token, u_id):
     opid = getUserFromToken(token)
@@ -46,6 +20,7 @@ def user_profile(token, u_id):
                 'handle': user['handle']
             }
     raise ValueError('u_id was incorrect')
+    pass
     
 # returned: { email, name_first, name_last, handle_str }
 
@@ -54,21 +29,23 @@ def user_profile_setemail(token, email):
     
     data = load()
     userDict = data['userDict']
-
+    regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
+    if (re.search(regex, email)):
+        pass
+    else:
+        raise ValueError("Invalid Email")
     
-
-    if email == 'bademail' :
-        raise ValueError('Invalid email')
-    if email == 'usedemail' :
-        raise ValueError('Used email')
+    for user in userDict:
+        if user['email'] == email:
+            raise ValueError("Email address is already used bt another user.")
     '''if token == uid'''
     for user in userDict:
         if opid == user['u_id']:
             user['email'] = email
             save(userDict)
             return
-    raise ValueError('incorrect token')
-    return 'incorrect_token'
+    pass
+     
 
 
 
