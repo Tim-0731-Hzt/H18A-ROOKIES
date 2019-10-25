@@ -359,6 +359,7 @@ def message_unpin(token, message_id):
     DATA = load()
     messDict = DATA['messDict']
     channelDict = DATA['channelDict']
+    userDict = DATA['userDict']
 
     found = False
     for mess in messDict:
@@ -371,13 +372,22 @@ def message_unpin(token, message_id):
             break
     if not found:
         raise ValueError("Invalid message_id")
+    is_admin = False
+    for user in userDict:
+        if user['u_id'] == uID:
+            if user['permission_id'] == 1 or user['permission_id'] == 2:
+                is_admin = True
+    if not is_admin:
+        raise ValueError('The authorised user is not an admin')
+
     for chan in channelDict:
         if chan['channel_id'] == channelID:
-            if int(uID) not in chan['channel_member']:
-                # raise ValueError('message_id:{message_id} is not a valid message within a channel that the authorised user has joined')
+            if int(uID) in chan['channel_member']:
+                pass
+            elif uID in chan['channel_owner']:
+                pass
+            else:
                 raise AccessError('message_id is not a valid message within a channel that the authorised user has joined')
-            if int(uID) not in chan['channel_owner']:
-                raise ValueError('The authorised user is not an admin')
     message['is_pinned'] = False
     DATA['messDict'] = messDict
     DATA['channelDict'] = channelDict

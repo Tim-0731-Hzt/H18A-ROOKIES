@@ -469,9 +469,10 @@ def test_message_pin_notinchannel():
     # testing
     with pytest.raises(AccessError, match = r".*"):
         message_pin(token3, messID)
-'''
+
 def test_message_unpin_invalidmessid():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -481,20 +482,19 @@ def test_message_unpin_invalidmessid():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     message_pin(token, messID)
     # testing
-    with pytest.raises(ValueError, match = r"*"):
+    with pytest.raises(ValueError, match = r".*"):
         message_unpin(token, -1)
 
 def test_message_unpin_unauthoriseduser():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -504,20 +504,19 @@ def test_message_unpin_unauthoriseduser():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     message_pin(token, messID)
     # testing
-    with pytest.raises(ValueError, match = r"*"):
+    with pytest.raises(ValueError, match = r".*"):
         message_unpin(token3, messID)
 
 def test_message_unpin_alreadyunpinned():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -527,21 +526,20 @@ def test_message_unpin_alreadyunpinned():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     message_pin(token, messID)
     message_unpin(token, messID)
     # testing
-    with pytest.raises(ValueError, match = r"*"):
+    with pytest.raises(ValueError, match = r".*"):
         message_unpin(token, messID)
 
 def test_message_unpin_notinchannel():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -549,19 +547,17 @@ def test_message_unpin_notinchannel():
     token2 = authRegisterDict2['token']
 
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
-    token3 = authRegisterDict2['token']
-
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    token3 = authRegisterDict3['token']
+    u_id3 = authRegisterDict3['u_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
-    channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     message_pin(token, messID)
-    channel_leave(token, channelID)
-    # testing
-    with pytest.raises(AccessError, match = r"*"):
-        message_unpin(token, messID)'''
+    admin_userpermission_change(token, u_id3, 2)
 
-#restart()
+    # testing
+    with pytest.raises(AccessError, match = r".*"):
+        message_unpin(token3, messID)
+
+restart()
