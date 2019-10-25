@@ -35,7 +35,8 @@ userDict = [
 def user_profile(token, u_id):
     opid = getUserFromToken(token)
     
-    global userDict
+    data = load()
+    userDict = data['userDict']
     for user in userDict:
         if user['u_id'] == opid:
             return {
@@ -51,7 +52,9 @@ def user_profile(token, u_id):
 def user_profile_setemail(token, email):
     opid = getUserFromToken(token)
     
-    global userdict
+    data = load()
+    userDict = data['userDict']
+
     
 
     if email == 'bademail' :
@@ -62,6 +65,7 @@ def user_profile_setemail(token, email):
     for user in userDict:
         if opid == user['u_id']:
             user['email'] = email
+            save(userDict)
             return
     raise ValueError('incorrect token')
     return 'incorrect_token'
@@ -71,12 +75,14 @@ def user_profile_setemail(token, email):
 
 def user_profile_sethandle(token,handle_str):
     opid = getUserFromToken(token)
-    
+    data = load()
+    userDict = data['userDict']
     if len(handle_str) <= 20 :
         raise ValueError('handle too short')
     for user in userDict:
         if opid == user['u_id']:
             user['handle'] = handle_str
+            save(userDict)
             return
     raise ValueError('incorrect token')
     return 'incorrect_token'
@@ -87,7 +93,8 @@ def user_profile_sethandle(token,handle_str):
 
 def user_profile_setname(token, name_first, name_last):
     opid = getUserFromToken(token)
-    
+    data = load()
+    userDict = data['userDict']
     if len(name_first) > 50 :
         raise ValueError('First name too long')
     if len(name_last) > 50 :
@@ -97,6 +104,7 @@ def user_profile_setname(token, name_first, name_last):
         if opid == user['u_id']:
             user['firstname'] = name_first
             user['lastname'] = name_last
+            save(userDict)
             return
 
     raise ValueError('incorrect token')
