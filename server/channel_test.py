@@ -4,22 +4,63 @@ from channel import *
 from auth import *
 import pytest
 from Error import AccessError
+from pickle_unpickle import *
 
-authRegisterDict = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
-token = authRegisterDict["token"]
+restart()
+
+# first user
+authRegisterDict1 = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
+token1 = authRegisterDict1["token"]
+# second user
+authRegisterDict2 = auth_register("HaydenSmith@gmail.com","1we33456","Hayden","Smith")
+token2 = authRegisterDict2["token"]
+# third user
+authRegisterDict3 = auth_register("Luhaodong@gmail.com","1we33ee456","Jeff","Lu")
+token3 = authRegisterDict3["token"]
+
+authRegisterDict4 = auth_register("Chenkai@gmail.com","1we33ee456","bbeff","lv")
+token4 = authRegisterDict4["token"]
 def test_channels_create():
-        global token
+        global token1
         with pytest.raises(ValueError,match = r".*"):
-                channel_id = channels_create(token,"meet updscsdcdscdscsdcdsdscscddsc",True)
+                channel_id = channels_create(token1,"meet updscsdcdscdscsdcdsdscscddsc",True)
 
 def test_channel_create_1():
-        global token
-        print(token)
-        # assert(channels_create(token, "COMP1531", True) == 1)
-'''def test_channel_create_2():
-        global token
-        assert(channels_create(token, "COMP1531", True) == 2)'''
-
+        global token1
+        assert(channels_create(token1, "COMP1531", True) == 1)
+def test_channel_create_2():
+        global token1
+        assert(channels_create(token1, "COMP2521", True) == 2)
+def test_channel_invite_1():
+        global token1
+        with pytest.raises(ValueError, match=r".*"):
+                channel_invite(token1,4,2)
+def test_channel_invite_2():
+        global token1
+        with pytest.raises(ValueError, match=r".*"):
+                channel_invite(token1,1,400)
+def test_channel_invite_3():
+        global token_2
+        with pytest.raises(AccessError, match=r".*"):
+                channel_invite(token2,1,1)
+def test_channel_invite_4():
+        global token1
+        channel_invite(token1,1,2)
+        DATA = load()
+        channelDict = DATA['channelDict']
+        assert (channelDict[0]['channel_owner'] == [1,2])
+def test_channel_invite_5():
+        global token2
+        channel_invite(token2,1,3)
+        DATA = load()
+        channelDict = DATA['channelDict']
+        assert (channelDict[0]['channel_member'] == [3])
+def test_channel_invite_6():
+        global token3
+        channel_invite(token2,1,4)
+        DATA = load()
+        channelDict = DATA['channelDict']
+        assert (channelDict[0]['channel_member'] == [3,4])    
 
 '''
 def test_channel_invite_1():

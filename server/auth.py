@@ -5,9 +5,11 @@ import jwt
 # import user
 import random
 
-from json import dumps
-from flask import Flask, request
+# from json import dumps
+# from flask import Flask, request
 from Error import AccessError
+from pickle_unpickle import *
+#from data import *
 
 
 SECRET = 'ROOKIES'
@@ -15,7 +17,7 @@ SECRET = 'ROOKIES'
 #memberDict = []
 #channelDict = []
 #messDict = [] 
-userDict = []
+# userDict = []
 
 def sendSuccess(userDict):
     return dumps(userDict)
@@ -106,7 +108,9 @@ def auth_logout(token):
 # password entered less than 6 words
 # name_first and name_last is between 1 and 50 characters
 def auth_register(email, password, name_first, name_last):
-    global userDict
+    DATA = load()
+    userDict = DATA['userDict']
+    #global userDict
     #check email
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
     if (re.search(regex, email)):
@@ -180,7 +184,8 @@ def auth_register(email, password, name_first, name_last):
         'u_id': newUser['u_id'],
         'token': generateToken(newUser['u_id'])
     }
-
+    DATA['userDict'] = userDict
+    save(DATA)
     return returned
 
 # Given an email address, if the user is a registered user, send's them a an email containing a specific secret code, that when entered in auth_passwordreset_reset, shows that the user trying to reset the password is the one who got sent this email.
