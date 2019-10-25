@@ -5,6 +5,7 @@ from auth import auth_register
 import pytest
 from Error import AccessError
 from pickle_unpickle import *
+from admin_userpermission_change import *
 
 #from data import userDict, messDict
 
@@ -380,9 +381,10 @@ def test_message_unreact_notreacted():
     # testing
     with pytest.raises(ValueError, match = r".*"):
         message_unreact(token2, messID, 1)
-'''
+
 def test_message_pin_invalidmessid():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -392,19 +394,18 @@ def test_message_pin_invalidmessid():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     # testing
-    with pytest.raises(ValueError, match = r"*"):
+    with pytest.raises(ValueError, match = r".*"):
         message_pin(token, -1)
 
 def test_message_pin_unauthoriseduser():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -414,19 +415,18 @@ def test_message_pin_unauthoriseduser():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     # testing
-    with pytest.raises(ValueError, match = r"*"):
+    with pytest.raises(ValueError, match = r".*"):
         message_pin(token3, messID)
 
 def test_message_pin_alreadypinned():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -436,20 +436,19 @@ def test_message_pin_alreadypinned():
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
+    messID = message_send(token, channelID, "Hello")
     message_pin(token, messID)
     # testing
-    with pytest.raises(ValueError, match = r"*"):
+    with pytest.raises(ValueError, match = r".*"):
         message_pin(token, messID)
 
 def test_message_pin_notinchannel():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
 
@@ -457,20 +456,20 @@ def test_message_pin_notinchannel():
     token2 = authRegisterDict2['token']
 
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
-    token3 = authRegisterDict2['token']
+    token3 = authRegisterDict3['token']
+    u_id3 = authRegisterDict3['u_id']
 
-    channelsCreateDict = channels_create(token, "Channel 1", True)
-    channelID = channelsCreateDict['channel_id']
+    channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
-    channel_join(token3, channelID)
 
-    messDict = message_send(token, channelID, "Hello")
-    messID = messDict['message_id']
-    channel_leave(token, channelID)
+    messID = message_send(token, channelID, "Hello")
+
+    admin_userpermission_change(token, u_id3, 2)
+
     # testing
-    with pytest.raises(AccessError, match = r"*"):
-        message_pin(token, messID)
-
+    with pytest.raises(AccessError, match = r".*"):
+        message_pin(token3, messID)
+'''
 def test_message_unpin_invalidmessid():
     # set up
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
