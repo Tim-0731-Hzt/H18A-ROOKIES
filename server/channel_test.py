@@ -91,6 +91,12 @@ def test_channel_join_private():
         DATA = load()
         channelDict = DATA['channelDict']
         assert (channelDict[2]['channel_owner'] == [1,2])    
+def test_channel_leave_1():
+        with pytest.raises(ValueError, match=r".*"):
+                
+def test_fcf():
+        global token1
+        print(channels_listall(token1))
 '''
 def test_channel_invite_1():
         with pytest.raises(ValueError, match=r".*"):
