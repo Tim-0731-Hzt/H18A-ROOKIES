@@ -181,7 +181,7 @@ def channel_leave(token, channel_id):
    
     for parts in channelDict:
         if id in parts['channel_member']:
-            parts['channel_member'].remove(parts)
+            parts['channel_member'].remove(id)
         # check user is a member of channel
         else:
             raise ValueError("user is not a member of channel")
