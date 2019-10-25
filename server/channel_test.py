@@ -4,6 +4,9 @@ from channel import *
 from auth import *
 import pytest
 from Error import AccessError
+from pickle_unpickle import *
+
+restart()
 
 # first user
 authRegisterDict1 = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
@@ -13,7 +16,7 @@ authRegisterDict2 = auth_register("HaydenSmith@gmail.com","1we33456","Hayden","S
 token2 = authRegisterDict2["token"]
 # third user
 authRegisterDict3 = auth_register("Luhaodong@gmail.com","1we33ee456","Jeff","Lu")
-token3 = authRegisterDict2["token"]
+token3 = authRegisterDict3["token"]
 
 def test_channels_create():
         global token1
@@ -33,7 +36,7 @@ def test_channel_invite_1():
 def test_channel_invite_2():
         global token1
         with pytest.raises(ValueError, match=r".*"):
-                channel_invite(token1,1,3)
+                channel_invite(token1,1,4)
 def test_channel_invite_3():
         global token_2
         with pytest.raises(AccessError, match=r".*"):
@@ -43,7 +46,7 @@ def test_channel_invite_4():
         global channelDict
         channel_invite(token1,1,2)
         assert (channelDict[0]['channel_owner'] == [1,2])
-def test_channel_invite_5():
+
 
 '''
 def test_channel_invite_1():
