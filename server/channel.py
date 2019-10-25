@@ -111,7 +111,7 @@ def channel_invite (token, channel_id, u_id):
             if if_User_Owner(token,channel_id) == True:
                 parts['channel_owner'].append(u_id)
             else:
-                if (parts['channel_member'] == None):
+                if (parts['channel_member'] == []):
                     parts['channel_member'] = [u_id]
                 else:
                     parts['channel_member'].append(u_id)
@@ -180,16 +180,16 @@ def channel_leave(token, channel_id):
     id = getUserFromToken(token)
     
     channel = channelDict[channel_id - 1]
-    if channel['channel_owner'] != None:
+    if channel['channel_owner'] != []:
         if id in channel['channel_owner']:
             channel['channel_owner'].remove(id)
         else:
-            if (channel['channel_member'] == None or id not in channel['channel_member']):
+            if (channel['channel_member'] == [] or id not in channel['channel_member']):
                 raise ValueError("user is not a member of channel")
             else:
                 parts['channel_member'].remove(id)
     else:
-        if (channel['channel_member'] == None or id not in channel['channel_member']):
+        if (channel['channel_member'] == [] or id not in channel['channel_member']):
             raise ValueError("user is not a member of channel")
         else:
             parts['channel_member'].remove(id)
@@ -216,7 +216,7 @@ def channel_join(token, channel_id):
         for parts in channelDict:
             if (parts['channel_id'] == channel_id):
                 if channel_admin_check(token) == False:
-                    if (parts['channel_member'] == None):
+                    if (parts['channel_member'] == []):
                         parts['channel_member'] = [id]
                     else:
                         parts['channel_member'].append(id)
@@ -266,7 +266,7 @@ def channels_list(token):
     L = []
     id = getUserFromToken(token)
     for parts in channelDict:
-        if (parts['channel_member'] == None):
+        if (parts['channel_member'] == []):
             if id in parts['channel_owner']:
                 L.append(parts)
         else:
@@ -290,7 +290,7 @@ def channels_create(token, name, is_public):
             'channel_id': 1,
             'name': name,
             'channel_creater': id,
-            'channel_member': None,
+            'channel_member': [],
             'channel_owner':[id],
             'is_public': is_public,
             'standUp':0
@@ -309,7 +309,7 @@ def channels_create(token, name, is_public):
             'channel_id': count,
             'name': name,
             'channel_creater': id,
-            'channel_member': None,
+            'channel_member': [],
             'channel_owner':[id],
             'is_public': is_public,
             'standUp':0
