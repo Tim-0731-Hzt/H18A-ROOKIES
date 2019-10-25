@@ -18,6 +18,8 @@ token2 = authRegisterDict2["token"]
 authRegisterDict3 = auth_register("Luhaodong@gmail.com","1we33ee456","Jeff","Lu")
 token3 = authRegisterDict3["token"]
 
+authRegisterDict4 = auth_register("Chenkai@gmail.com","1we33ee456","bbeff","lv")
+token4 = authRegisterDict4["token"]
 def test_channels_create():
         global token1
         with pytest.raises(ValueError,match = r".*"):
@@ -36,17 +38,29 @@ def test_channel_invite_1():
 def test_channel_invite_2():
         global token1
         with pytest.raises(ValueError, match=r".*"):
-                channel_invite(token1,1,4)
+                channel_invite(token1,1,400)
 def test_channel_invite_3():
         global token_2
         with pytest.raises(AccessError, match=r".*"):
                 channel_invite(token2,1,1)
 def test_channel_invite_4():
         global token1
-        global channelDict
         channel_invite(token1,1,2)
+        DATA = load()
+        channelDict = DATA['channelDict']
         assert (channelDict[0]['channel_owner'] == [1,2])
-
+def test_channel_invite_5():
+        global token2
+        channel_invite(token2,1,3)
+        DATA = load()
+        channelDict = DATA['channelDict']
+        assert (channelDict[0]['channel_member'] == [3])
+def test_channel_invite_6():
+        global token3
+        channel_invite(token2,1,4)
+        DATA = load()
+        channelDict = DATA['channelDict']
+        assert (channelDict[0]['channel_member'] == [3,4])    
 
 '''
 def test_channel_invite_1():

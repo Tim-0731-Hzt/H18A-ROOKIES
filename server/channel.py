@@ -115,7 +115,10 @@ def channel_invite (token, channel_id, u_id):
             if if_User_Owner(token,channel_id) == True:
                 parts['channel_owner'].append(u_id)
             else:
-                parts['channel_member'].append(u_id)
+                if (parts['channel_member'] == None):
+                    parts['channel_member'] = [u_id]
+                else:
+                    parts['channel_member'].append(u_id)
     DATA['channelDict'] = channelDict
     save(DATA)
 
