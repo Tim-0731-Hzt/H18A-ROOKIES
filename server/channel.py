@@ -44,7 +44,7 @@ def if_User_Owner(token,channel_id):
     # find the channel and serach the owner
     for elements in channelDict:
         if (elements['channel_id'] == channel_id):
-            if (elements['channel_owner'][0] == id):
+            if (elements['channel_creater'] == id):
                 return True
     return False
 
