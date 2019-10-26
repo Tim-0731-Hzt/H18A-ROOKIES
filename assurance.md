@@ -26,4 +26,4 @@ search :  waiting for more message to be tested , have already 3 test  to be don
 
 
 change admin : having 3 normal test and 7 exception like : giving others owners premission as an admin, member can not access
-owner can not demote other owners and admins can not demote other admins
+owner can not demote other owners and admins can not demote other admins.
