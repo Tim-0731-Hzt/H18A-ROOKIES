@@ -10,8 +10,8 @@ import re
 def user_profile(token, u_id):
     opid = getUserFromToken(token)
     
-    data = load()
-    userDict = data['userDict']
+    DATA = load()
+    userDict = DATA['userDict']
     for user in userDict:
         if user['u_id'] == u_id:
             return {
@@ -28,8 +28,8 @@ def user_profile(token, u_id):
 def user_profile_setemail(token, email):
     opid = getUserFromToken(token)
     
-    data = load()
-    userDict = data['userDict']
+    DATA = load()
+    userDict = DATA['userDict']
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
     if (re.search(regex, email)):
         pass
@@ -53,8 +53,8 @@ def user_profile_setemail(token, email):
 
 def user_profile_sethandle(token,handle_str):
     opid = getUserFromToken(token)
-    data = load()
-    userDict = data['userDict']
+    DATA = load()
+    userDict = DATA['userDict']
     if len(handle_str) <= 3 :
         raise ValueError('handle too short')
     if len(handle_str) >= 20:
@@ -77,8 +77,8 @@ def user_profile_sethandle(token,handle_str):
 
 def user_profile_setname(token, name_first, name_last):
     opid = getUserFromToken(token)
-    data = load()
-    userDict = data['userDict']
+    DATA = load()
+    userDict = DATA['userDict']
     if len(name_first) > 50 :
         raise ValueError('First name too long')
     if len(name_last) > 50 :

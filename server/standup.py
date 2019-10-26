@@ -14,11 +14,11 @@ def standup_start(token, channel_id):
     opid = getUserFromToken(token)
     for ch in channelDict:
         if channel_id == ch['channel_id']:
-            if opid not in ch['channelmember'] and opid not in ch['channelowner']:
+            if opid not in ch['channel_member'] and opid not in ch['channel_owner']:
                 raise AccessError('You are not a member of this channel')
-            if ch['standup'] == 1:
+            if ch['standUp'] == 1:
                 raise ValueError('this channel is already in standup')
-            ch['standup'] == 1
+            ch['standUp'] == 1
             save(channelDict)
             t_end = time.time() + 60*15
             while time.time() < t_end:
@@ -28,7 +28,7 @@ def standup_start(token, channel_id):
             channelDt = load()['channelDict']
             for channel in channelDt:
                 if channel_id == channel['channel_id']:
-                    channel['standup'] == 0
+                    channel['standUp'] == 0
                     message_send(token, channel_id, channel['standlist'])
                     channel['standlist'] == ''
                     save(channelDict)            
@@ -50,9 +50,9 @@ def standup_send(token, channel_id, message):
         raise ValueError("Message too long")
     for ch in channelDict:
         if channel_id == ch['channel_id']:
-            if opid not in ch['channelmember'] and opid not in ch['channelowner']:
+            if opid not in ch['channel_member'] and opid not in ch['channel_owner']:
                 raise AccessError('You are not a member of this channel')
-            if ch['standup'] != 1:
+            if ch['standUp'] != 1:
                 raise ValueError(
                     'An active standup is not currently running in this channel')
             if ch['standlist'] == "":

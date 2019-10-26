@@ -34,8 +34,8 @@ def test_user_profile_functional():
     # testing
     userDict = user_profile(token, UID)
     mail = userDict['email']
-    fname = userDict['name_first']
-    lname = userDict['name_last']
+    fname = userDict['first_name']
+    lname = userDict['last_name']
     hd = userDict['handle']
     assert mail == "haodong@gmail.com"
     assert fname == "haodong"
@@ -43,14 +43,15 @@ def test_user_profile_functional():
     assert hd == "haodonglu"
 
     user2 = user_profile(token2,UID2)
+   
     user3 = user_profile(token3,UID3)
     assert user2['email'] == "jeff@gmail.com"
-    assert user2['name_first'] == "lu"
-    assert user2['name_last'] == "jeff"
+    assert user2['first_name'] == "lu"
+    assert user2['last_name'] == "jeff"
     assert user2['handle'] == "jefflu"
     assert user3['email'] == "normaluser@gmail.com"
-    assert user3['name_first'] == "normal"
-    assert user3['name_last'] == "user"
+    assert user3['first_name'] == "normal"
+    assert user3['last_name'] == "user"
     assert user3['handle'] == "normaluser"
     with pytest.raises(ValueError,match = r".*"):
         user_profile(token, 12345)
