@@ -301,8 +301,8 @@ def channels_create(token, name, is_public):
             'channel_member': [],
             'channel_owner':[id],
             'is_public': is_public,
-            'standUp':0
-            'standlist' : ''
+            'standUp':0,
+            'standlist': ''
         }
         channelDict.append(d)
         DATA['channelDict'] = channelDict
@@ -321,7 +321,8 @@ def channels_create(token, name, is_public):
             'channel_member': [],
             'channel_owner':[id],
             'is_public': is_public,
-            'standUp':0
+            'standUp':0,
+            'standlist':''
         }
         channelDict.append(d)
         DATA['channelDict'] = channelDict
