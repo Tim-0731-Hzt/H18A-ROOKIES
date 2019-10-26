@@ -1,8 +1,8 @@
-from error import AccessError
+from Error import AccessError
 from channel import *
-from message import *
-from auth import *
-from data import *
+from message_pickle import *
+from auth_pickle import *
+
 import time
 from datetime import datetime, timedelta
 import pickle_unpickle
@@ -17,15 +17,15 @@ def standup_start(token, channel_id):
             if opid not in ch['channelmember'] and opid not in ch['channelowner']:
                 raise AccessError('You are not a member of this channel')
             if ch['standup'] == 1:
-                raise AccessError('this channel is already in standup')
+                raise ValueError('this channel is already in standup')
             ch['standup'] == 1
             save(channelDict)
             t_end = time.time() + 60*15
             while time.time() < t_end:
+                a = 3
 
-
-            '''time out'''
-            channelDt = load().['channelDict']
+            
+            channelDt = load()['channelDict']
             for channel in channelDt:
                 if channel_id == channel['channel_id']:
                     channel['standup'] == 0
@@ -45,7 +45,7 @@ def showtime():
 def standup_send(token, channel_id, message):
     data = load()
     channelDict = data['channelDict']
-    
+    opid = getUserFromToken(token)
     if len(message) > 1000 :
         raise ValueError("Message too long")
     for ch in channelDict:
