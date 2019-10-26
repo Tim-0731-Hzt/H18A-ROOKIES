@@ -4,13 +4,7 @@ from auth import *
 from pickle_unpickle import *
 # global varaibles:
 
-def channel_handle_check(handle):
-    DATA = load()
-    userDict = DATA['userDict']
-    for parts in userDict:
-        if (parts['handle'] == handle):
-            return True
-    return False
+
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
 def channel_id_check(channel_id):
@@ -67,11 +61,8 @@ def auth_id_check(token,channel_id):
     new.append(mem)
     new.append(owner)
     for parts in new:
-        if (parts == None):
-            continue
-        else:
-            if (id in parts):
-                return True
+        if (id in parts):
+            return True
     return False
 
 def channel_property_check(channel_id):
@@ -111,10 +102,7 @@ def channel_invite (token, channel_id, u_id):
             if if_User_Owner(token,channel_id) == True:
                 parts['channel_owner'].append(u_id)
             else:
-                if (parts['channel_member'] == []):
-                    parts['channel_member'] = [u_id]
-                else:
-                    parts['channel_member'].append(u_id)
+                parts['channel_member'].append(u_id)
     DATA['channelDict'] = channelDict
     save(DATA)
 
@@ -157,6 +145,8 @@ def channel_messages (token, channel_id, start):
     for parts in messDict:
         if (parts['channel_id'] == channel_id):
             L.append(parts['message'])
+    if L == []:
+        raise AccessError("no message send")
     L = L[::-1]
     if len(L) <= start:
         raise ValueError("start is greater than or equal to the total number of messages in the channel")
@@ -167,10 +157,7 @@ def channel_messages (token, channel_id, start):
         dic['end'] = -1
     else:
         for parts in L[start:start + 50]:
-            if (dic['messages'] == None):
-                dic['messages'] = [parts]
-            else:
-                dic['messages'].append(parts)
+            dic['messages'].append(parts)
         dic['end'] = start + 50
     return dic
 
@@ -195,7 +182,7 @@ def channel_leave(token, channel_id):
         if (channel['channel_member'] == [] or id not in channel['channel_member']):
             raise ValueError("user is not a member of channel")
         else:
-            parts['channel_member'].remove(id)
+            channel['channel_member'].remove(id)
     DATA['channelDict'] = channelDict
     save(DATA)
 
@@ -274,12 +261,10 @@ def channels_list(token):
     L = []
     id = getUserFromToken(token)
     for parts in channelDict:
-        if (parts['channel_member'] == []):
-            if id in parts['channel_owner']:
+        if (id in parts['channel_member'] or id in parts['channel_owner']):
                 L.append(parts)
-        else:
-            if (id in parts['channel_member'] or id in parts['channel_owner']):
-                L.append(parts)
+    if L == []:
+        raise AccessError("the authorised user does not belong to any channel")
     return L
 # Provide a list of all channels (and their associated details) 
 def channels_listall(token):
