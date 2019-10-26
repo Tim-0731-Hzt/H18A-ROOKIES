@@ -7,7 +7,8 @@ import auth
 import pytest
 from Error import AccessError
 from pickle_unpickle import restart
-from auth import refresh, userDict
+from auth import refresh
+from auth import userDict
 from user import user_profile
 ##
 def test_auth_login_1():

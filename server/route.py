@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 from message import clear_backup, message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
 from Error import AccessError
 from flask import Flask, request
@@ -347,14 +347,6 @@ def admin():
     admin_userpermission_change(token,u_id,premission_id)
     return dumps({})
 
-if __name__ == '__main__':
-    APP.run()
-=======
-from flask import Flask,request
-from json import dumps
-from channel import *
-from auth import *
-APP = Flask(__name__)
 
 
 @APP.route('/user/create',methods = ['POST'])
@@ -396,4 +388,4 @@ def test_channel_invite():
     return dumps(channels_listall(token))
 if __name__ == '__main__':
     APP.run()
->>>>>>> Tim
+
