@@ -1,20 +1,10 @@
 # channel
 from Error import AccessError
-import jwt
-from data import *
 from auth import *
-from pickle_unpickle import *
-import re
 from pickle_unpickle import *
 # global varaibles:
 
-def channel_handle_check(handle):
-    DATA = load()
-    userDict = DATA['userDict']
-    for parts in userDict:
-        if (parts['handle'] == handle):
-            return True
-    return False
+
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
 def channel_id_check(channel_id):
@@ -48,7 +38,7 @@ def if_User_Owner(token,channel_id):
     # find the channel and serach the owner
     for elements in channelDict:
         if (elements['channel_id'] == channel_id):
-            if (elements['channel_owner'][0] == id):
+            if (elements['channel_creater'] == id):
                 return True
     return False
 
@@ -71,11 +61,8 @@ def auth_id_check(token,channel_id):
     new.append(mem)
     new.append(owner)
     for parts in new:
-        if (parts == None):
-            continue
-        else:
-            if (id in parts):
-                return True
+        if (id in parts):
+            return True
     return False
 
 def channel_property_check(channel_id):
@@ -94,7 +81,7 @@ def channel_admin_check(token):
     id = getUserFromToken(token)
     # if the user is slacker owner or admin
     for parts in userDict:
-        if (parts[u_id] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
+        if (parts['u_id'] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
             return True
     return False       
 # Invites a user (with user id u_id) to join a channel with ID channel_id. 
@@ -115,10 +102,7 @@ def channel_invite (token, channel_id, u_id):
             if if_User_Owner(token,channel_id) == True:
                 parts['channel_owner'].append(u_id)
             else:
-                if (parts['channel_member'] == None):
-                    parts['channel_member'] = [u_id]
-                else:
-                    parts['channel_member'].append(u_id)
+                parts['channel_member'].append(u_id)
     DATA['channelDict'] = channelDict
     save(DATA)
 
@@ -148,19 +132,21 @@ def channel_details (token, channel_id):
 
 def channel_messages (token, channel_id, start):
     DATA = load()
-    channelDict = DATA['messDict']
+    messDict = DATA['messDict']
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     if auth_id_check(token,channel_id) == False:
         raise AccessError("Auth user is not a member of channnel")
-    dic = {'messages':None,
+    dic = {'messages':[],
             'start':start,
             'end':None
     }
     L = []
     for parts in messDict:
-        if (parts[channel_id] == channel_id):
+        if (parts['channel_id'] == channel_id):
             L.append(parts['message'])
+    if L == []:
+        raise AccessError("no message send")
     L = L[::-1]
     if len(L) <= start:
         raise ValueError("start is greater than or equal to the total number of messages in the channel")
@@ -182,13 +168,21 @@ def channel_leave(token, channel_id):
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     id = getUserFromToken(token)
-   
-    for parts in channelDict:
-        if id in parts['channel_member']:
-            parts['channel_member'].remove(parts)
-        # check user is a member of channel
+    
+    channel = channelDict[channel_id - 1]
+    if channel['channel_owner'] != []:
+        if id in channel['channel_owner']:
+            channel['channel_owner'].remove(id)
         else:
+            if (channel['channel_member'] == [] or id not in channel['channel_member']):
+                raise ValueError("user is not a member of channel")
+            else:
+                channel['channel_member'].remove(id)
+    else:
+        if (channel['channel_member'] == [] or id not in channel['channel_member']):
             raise ValueError("user is not a member of channel")
+        else:
+            channel['channel_member'].remove(id)
     DATA['channelDict'] = channelDict
     save(DATA)
 
@@ -211,7 +205,13 @@ def channel_join(token, channel_id):
     else:
         for parts in channelDict:
             if (parts['channel_id'] == channel_id):
-                parts['channel_member'].append(id)
+                if channel_admin_check(token) == False:
+                    if (parts['channel_member'] == []):
+                        parts['channel_member'] = [id]
+                    else:
+                        parts['channel_member'].append(id)
+                else:
+                    parts['channel_owner'].append(id)
     
     DATA['channelDict'] = channelDict
     save(DATA)
@@ -224,28 +224,33 @@ def channel_addowner(token, channel_id, u_id):
     # already an owner
     id = getUserFromToken(token)
     for parts in channelDict:
-        if parts['channel_id'] == channel_id and id in parts['channel_owner']:
+        if parts['channel_id'] == channel_id and u_id in parts['channel_owner']:
             raise ValueError("user is already an owner in the channel")    
     if if_User_Owner(token,channel_id) == False:
         raise AccessError("the authorised user is not an owner of the slackr, or an owner of this channel")
+    if u_id not in channelDict[channel_id - 1]['channel_member']:
+        raise AccessError("the user is not a member of this channel")
     for parts in channelDict:
         if (parts['channel_id'] == channel_id):
             parts['channel_owner'].append(u_id)
+            parts['channel_member'].remove(u_id)
     DATA['channelDict'] = channelDict
     save(DATA)
 # Remove user with user id u_id an owner of this channel
 def channel_removeowner(token, channel_id, u_id):
     DATA = load()
     channelDict = DATA['channelDict']   
+    id = getUserFromToken(token)
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
-    if channel_admin_check(token) == False:
+    if if_User_Owner(token,channel_id) == False: 
         raise AccessError("the authorised user is not an owner of the slackr, or an owner of this channel")
-    if if_User_Owner(token,channel_id) == False:
+    if u_id not in channelDict[channel_id - 1]['channel_owner']:
         raise AccessError("user with user id u_id is not an owner of the channel")
     for parts in channelDict:
         if (parts['channel_id'] == channel_id):
             parts['channel_owner'].remove(u_id)
+            parts['channel_member'].append(u_id)
     DATA['channelDict'] = channelDict
     save(DATA)
 # Provide a list of all channels (and their associated details) that 
@@ -256,12 +261,10 @@ def channels_list(token):
     L = []
     id = getUserFromToken(token)
     for parts in channelDict:
-        if (parts['channel_member'] == None):
-            if id in parts['channel_owner']:
+        if (id in parts['channel_member'] or id in parts['channel_owner']):
                 L.append(parts)
-        else:
-            if (id in parts['channel_member'] or id in parts['channel_owner']):
-                L.append(parts)
+    if L == []:
+        raise AccessError("the authorised user does not belong to any channel")
     return L
 # Provide a list of all channels (and their associated details) 
 def channels_listall(token):
@@ -279,10 +282,12 @@ def channels_create(token, name, is_public):
         d = {
             'channel_id': 1,
             'name': name,
-            'channel_member': None,
+            'channel_creater': id,
+            'channel_member': [],
             'channel_owner':[id],
             'is_public': is_public,
-            'standUp':0
+            'standUp':0,
+            'standlist': ''
         }
         channelDict.append(d)
         DATA['channelDict'] = channelDict
@@ -297,10 +302,12 @@ def channels_create(token, name, is_public):
         d = {
             'channel_id': count,
             'name': name,
-            'channel_member': None,
+            'channel_creater': id,
+            'channel_member': [],
             'channel_owner':[id],
             'is_public': is_public,
-            'standUp':0
+            'standUp':0,
+            'standlist':''
         }
         channelDict.append(d)
         DATA['channelDict'] = channelDict

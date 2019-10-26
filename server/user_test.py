@@ -1,23 +1,24 @@
-from auth import auth_register
-import pytest
-from user import user_profile
-from user import user_profile_setname
-from user import user_profile_sethandle 
-from user import user_profile_setemail
-from user import user_profiles_uploadphoto
 
+import pytest
+import re
+from auth_pickle import *
+from message_pickle import *
+from channel import *
+from user import *
 
 
 # For a valid user, returns information about their email, first name, last name, and handle
 # ValueError when:
 # User with u_id is not a valid user
 
-def user_profile(token, u_id):
-    pass
+
+    
+
 # returned: { email, name_first, name_last, handle_str }
 
 def test_user_profile_functional():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
     UID = authRegisterDict['u_id']
@@ -26,7 +27,6 @@ def test_user_profile_functional():
     token2 = authRegisterDict2['token']
     UID2 = authRegisterDict['u_id']
 
-
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
     token3 = authRegisterDict2['token']
     UID3 = authRegisterDict['u_id']
@@ -34,12 +34,27 @@ def test_user_profile_functional():
     # testing
     userDict = user_profile(token, UID)
     mail = userDict['email']
-    fname = userDict['name_first']
-    lname = userDict['name_last']
-
+    fname = userDict['first_name']
+    lname = userDict['last_name']
+    hd = userDict['handle']
     assert mail == "haodong@gmail.com"
     assert fname == "haodong"
     assert lname == "lu"
+    assert hd == "haodonglu"
+
+    user2 = user_profile(token2,UID2)
+   
+    user3 = user_profile(token3,UID3)
+    assert user2['email'] == "jeff@gmail.com"
+    assert user2['first_name'] == "lu"
+    assert user2['last_name'] == "jeff"
+    assert user2['handle'] == "jefflu"
+    assert user3['email'] == "normaluser@gmail.com"
+    assert user3['first_name'] == "normal"
+    assert user3['last_name'] == "user"
+    assert user3['handle'] == "normaluser"
+    with pytest.raises(ValueError,match = r".*"):
+        user_profile(token, 12345)
 
 def test_user_profile_invaliduid():
     # set up
@@ -52,26 +67,122 @@ def test_user_profile_invaliduid():
         userDict = user_profile(token, -1)
 
 def test1_user_profile_setname():
-    user_profile_setname(123,'Daniel', 'Quin')
-def test2_user_profile_setname():
-    user_profile_setname(123,'Daniel','bgyerfhuqwdcfcfcfcfcfcfcfafffffffffffffffafafaiffffffffffffffffifififififififififififififi')
-def test3_user_profile_setname():
-    user_profile_setname(123,'fyhuiawseoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyooooooooooso','Quin')
+    restart()
+    authRegisterDict = auth_register(
+        "haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    UID = authRegisterDict['u_id']
+    user_profile_setname(token,'daniel','quin')
+    user = user_profile(token, UID)
+    assert 'daniel' == user['name_first']
+    assert 'quin' == user['name_last']
 
-def test1_user_profile_sethandle():
-    user_profile_sethandle(123,'sgfdyasgdasygdyuasgdyuasgdugasudguasd')
-def test2_user_profile_sethandle():
-    user_profile_sethandle(123,'ahsduasd')
+
+def test2_user_profile_setname():
+    restart()
+    authRegisterDict = auth_register(
+        "haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    UID = authRegisterDict['u_id']
+    with pytest.raises(ValueError, match=r".*"):
+        user_profile_setname(token, '', 'quin')
+    with pytest.raises(ValueError, match=r".*"):
+        user_profile_setname(token, 'daniel', '')
+    with pytest.raises(ValueError, match=r".*"):
+        user_profile_setname(token, 'dhasgbdhbashjdbjhasbdhjasgbdhjasgbhjcxbashjbdhjasvgbdyhuasgdyuagsyxgvuasgvduasgbduasg', 'quin')
+    with pytest.raises(ValueError, match=r".*"):
+        user_profile_setname(token, 'daniel', 'sgbhdyhugausydghuasjdgbyhujasgdyuagyudgasyugdyuqawgyuegawyhughuagshjdgvbhjasvdjhasv')
+    
+
+def test1_user_profile_sethandle_normalCases():
+    restart()
+    authRegisterDict = auth_register(
+        "haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    UID = authRegisterDict['u_id']
+
+    authRegisterDict2 = auth_register(
+        "jeff@gmail.com", "123456789", "jeffsb", "lu")
+    token2 = authRegisterDict2['token']
+    UID2 = authRegisterDict['u_id']
+
+    user_profile_sethandle(token, "jeffisnumb")
+    user1 = user_profile(token, UID)
+
+    assert "jeffisnumb" == user1['handle']
+
+    user_profile_sethandle(token2,"jeffisdumb")
+    user2 = user_profile(token2, UID2)
+
+    assert "jeffisdumb" == user2['handle']
+   
+def test2_user_profile_sethandle_badhandle():
+    restart()
+    authRegisterDict = auth_register(
+        "haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    UID = authRegisterDict['u_id']
+    with pytest.raises(ValueError, match = r".*"):
+        user_profile_sethandle(token,"sb")
+    with pytest.raises(ValueError, match=r".*"):
+        user_profile_sethandle(token, "sbsbsbsbsbsbsbsbsbsbsbssbbsbsbsbsbsbbsbsbsbsbsbsbsbb")
+
+
+def test3_user_profile_sethandle_usedhandle():
+    restart()
+    authRegisterDict = auth_register(
+        "haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    UID = authRegisterDict['u_id']
+
+    authRegisterDict2 = auth_register(
+        "jeff@gmail.com", "123456789", "jeffsb", "lu")
+    token2 = authRegisterDict2['token']
+    UID2 = authRegisterDict['u_id']
+
+    authRegisterDict3 = auth_register(
+        "normaluser@gmail.com", "123456789", "normal", "user")
+    token3 = authRegisterDict2['token']
+    UID3 = authRegisterDict['u_id']
+    with pytest.raises(ValueError, match = r".*"):
+        user_profile_sethandle(token, "jeffsblu")
+    with pytest.raises(ValueError, match=r".*"):
+        user_profile_sethandle(token, "normaluser")
 
 def test1_user_profile_setemail():
-    user_profile_setemail(123,'goodemail')
-def test2_user_profile_setemail():
-    user_profile_setemail(123,'bademail')
+    restart()
+    authRegisterDict = auth_register(
+        "haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    UID = authRegisterDict['u_id']
+    user_profile_setemail(token,"daniel@gmail.com")
+    
+def test2_user_profile_setemail_usedEmail():
+    restart()
+    authRegisterDict = auth_register(
+        "haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    UID = authRegisterDict['u_id']
+
+    authRegisterDict2 = auth_register(
+        "jeff@gmail.com", "123456789", "jeff", "lu")
+    token2 = authRegisterDict2['token']
+    UID2 = authRegisterDict['u_id']
+
+    with pytest.raises(ValueError, match = r".*"):
+        user_profile_setemail(token,"jeff@gmail.com")
+    
 def test3_user_profile_setemail():
-    user_profile_setemail(123,'usedemail')
+    restart()
+    authRegisterDict = auth_register(
+        "haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    UID = authRegisterDict['u_id']
 
+    with pytest.raises(ValueError, match = r".*"):
+        user_profile_setemail(token, "sahduyhasdh**(())")
 
-
+'''
 def test1_user_profiles_uploadphoto():
     user_profiles_uploadphoto(123,200,2,2,2,2)
 def test2_user_profiles_uploadphoto():
@@ -81,4 +192,4 @@ def test3_user_profiles_uploadphoto():
 def test4_user_profiles_uploadphoto():
     user_profiles_uploadphoto(123,200,600,5,5,5)
 def test5_user_profiles_uploadphoto():
-    user_profiles_uploadphoto(123,200,3,456,-1,-1)
+    user_profiles_uploadphoto(123,200,3,456,-1,-1)'''

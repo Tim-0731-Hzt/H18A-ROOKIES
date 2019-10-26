@@ -181,6 +181,7 @@ def auth_register(email, password, name_first, name_last):
     newUser['last_name'] = name_last
     newUser['email'] = email
     newUser['u_id'] = len(userDict) + 1
+    
     newUser['permission_id'] = 3
     newUser['password'] = hashPassword(password)
     userDict.append(newUser)

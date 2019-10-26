@@ -1,30 +1,40 @@
-from error import AccessError
+from Error import AccessError
 from channel import *
-from message import *
-from auth import *
-from data import *
+from message_pickle import *
+from auth_pickle import *
+
 import time
 from datetime import datetime, timedelta
+import pickle_unpickle
 def standup_start(token, channel_id):
-    global channelDict
-    global standlist
+   
+    data = load()
+    channelDict = data['channelDict']
+
     opid = getUserFromToken(token)
     for ch in channelDict:
         if channel_id == ch['channel_id']:
-            if opid not in ch['channelmember'] and opid not in ch['channelowner']:
+            if opid not in ch['channel_member'] and opid not in ch['channel_owner']:
                 raise AccessError('You are not a member of this channel')
-            if ch['standup'] == 1:
-                raise AccessError('this channel is already in standup')
-            ch['standup'] == 1
+            if ch['standUp'] == 1:
+                raise ValueError('this channel is already in standup')
+            ch['standUp'] == 1
+            save(channelDict)
             t_end = time.time() + 60*15
             while time.time() < t_end:
+                a = 3
 
-
-            '''time out'''
-            ch['standup'] == 0
-            message_send(token, channel_id, standlist)
+            
+            channelDt = load()['channelDict']
+            for channel in channelDt:
+                if channel_id == channel['channel_id']:
+                    channel['standUp'] == 0
+                    message_send(token, channel_id, channel['standlist'])
+                    channel['standlist'] == ''
+                    save(channelDict)            
             return
     raise ValueError('incorrect channel id')
+    pass
             
 
 def showtime():
@@ -33,23 +43,26 @@ def showtime():
     return now_15
 
 def standup_send(token, channel_id, message):
-    global channelDict
-    global standlist
-    
+    data = load()
+    channelDict = data['channelDict']
+    opid = getUserFromToken(token)
     if len(message) > 1000 :
         raise ValueError("Message too long")
     for ch in channelDict:
         if channel_id == ch['channel_id']:
-            if opid not in ch['channelmember'] and opid not in ch['channelowner']:
+            if opid not in ch['channel_member'] and opid not in ch['channel_owner']:
                 raise AccessError('You are not a member of this channel')
-            if ch['standup'] != 1:
+            if ch['standUp'] != 1:
                 raise ValueError(
                     'An active standup is not currently running in this channel')
-            if standlist == "":
-                standlist = message
+            if ch['standlist'] == "":
+                ch['standlist'] = message
+                save(channelDict)
                 return
-            else: standlist = standlist + ": " + message
+            else:
+                ch['standlist'] = ch['standlist'] + ": " + message
+                save(channelDict)
                 return
     raise ValueError('Channel ID is not a valid channel')
-
+    pass
     

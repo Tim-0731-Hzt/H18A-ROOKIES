@@ -174,3 +174,5 @@ def test_reset_code():
     restart()
     reset_code = generateResetCode()
     assert len(reset_code) == 6
+
+    restart()
