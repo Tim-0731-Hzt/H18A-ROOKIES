@@ -248,7 +248,7 @@ def test_channel_listall():
 def test_channel_list():
     token = request.args.get("token")
     return dumps(channels_list(token))
-
+#Jankie
 @APP.route('/auth/login', methods=['POST'])
 def login():
     email = request.form.get('email')
