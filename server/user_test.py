@@ -11,7 +11,7 @@ from user import *
 # ValueError when:
 # User with u_id is not a valid user
 
-def user_profile(token, u_id):
+
     
 
 # returned: { email, name_first, name_last, handle_str }
@@ -91,8 +91,6 @@ def test2_user_profile_setname():
         user_profile_setname(token, 'dhasgbdhbashjdbjhasbdhjasgbdhjasgbhjcxbashjbdhjasvgbdyhuasgdyuagsyxgvuasgvduasgbduasg', 'quin')
     with pytest.raises(ValueError, match=r".*"):
         user_profile_setname(token, 'daniel', 'sgbhdyhugausydghuasjdgbyhujasgdyuagyudgasyugdyuqawgyuegawyhughuagshjdgvbhjasvdjhasv')
-
-def test3_user_profile_setname():
     
 
 def test1_user_profile_sethandle_normalCases():
