@@ -2,7 +2,7 @@
 ##CHANNEL TEST
 from channel import *
 from auth import *
-from message_pickle import *
+from message import *
 import pytest
 from Error import AccessError
 from pickle_unpickle import *

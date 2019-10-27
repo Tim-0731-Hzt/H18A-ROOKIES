@@ -1,7 +1,7 @@
 ##AUTH TEST
 import channel
 import pytest
-from auth_pickle import *
+from auth import *
 from Error import AccessError
 from pickle_unpickle import *
 #from auth import userDict

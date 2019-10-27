@@ -1,8 +1,6 @@
 import pytest
-
-import pytest
 import Error
-from auth_pickle import *
+from auth import *
 import pickle_unpickle
 from channel import *
 

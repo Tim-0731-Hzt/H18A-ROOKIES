@@ -1,6 +1,6 @@
 
 from Error import AccessError
-from auth_pickle import *
+from auth import *
 import pickle_unpickle
 from channel import *
 

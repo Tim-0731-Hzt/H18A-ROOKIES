@@ -1,7 +1,7 @@
 from Error import AccessError
 from channel import *
-from message_pickle import *
-from auth_pickle import *
+from message import *
+from auth import *
 import pickle_unpickle
 from standup import *
 import pytest

@@ -1,8 +1,8 @@
 from Error import AccessError
 from channel import *
-from message_pickle import *
+from message import *
 import threading
-from auth_pickle import *
+from auth import *
 
 import time
 from datetime import datetime, timedelta

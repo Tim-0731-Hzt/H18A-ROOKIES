@@ -1,5 +1,5 @@
 # MESSAGE TEST
-from message_pickle import *
+from message import *
 from channel import channels_create, channel_join
 from auth import auth_register
 import pytest

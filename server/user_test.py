@@ -1,8 +1,8 @@
 
 import pytest
 import re
-from auth_pickle import *
-from message_pickle import *
+from auth import *
+from message import *
 from channel import *
 from user import *
 

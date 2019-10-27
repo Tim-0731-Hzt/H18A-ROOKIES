@@ -2,36 +2,40 @@
 import re
 import hashlib
 import jwt
-# import user
+
 import random
-
-# from json import dumps
-# from flask import Flask, request
+from random import randrange
+from json import dumps
+from flask import Flask, request
 from Error import AccessError
-from pickle_unpickle import *
-#from data import *
-
+from pickle_unpickle import save, load
 
 SECRET = 'ROOKIES'
 # Global variable
 #memberDict = []
 #channelDict = []
 #messDict = [] 
-# userDict = []
+#userDict = []
+def digit_check(number):
+    count = 0
+    while (number > 0):
+        number = number // 10
+        count = count + 1
+    return count
 
-def sendSuccess(userDict):
-    return dumps(userDict)
+def handle_check(handle):
+    DATA = load()
+    userDict = DATA['userDict']
+    for user in userDict:
+        if user['handle'] == handle:
+            return True
+    return False
 
-def sendError(message):
-    return dumps({
-        '_error':message,
-    })
-
-
+#random.randint(1,10)
 def generateResetCode():
     num = []
     for i in range(6):
-         num.append(random.randint(1,10))
+         num.append(randrange(10))
     reset_code = ''.join(map(str,num))
     
     return reset_code
@@ -62,19 +66,18 @@ def hashPassword(password):
 # Given aregisterd user' email and password and generates a valid token for the user to remain authenticated.
 # ValueError when:
 # Email entered is not a valid email
-    # Email entered does not belong to a user
+# Email entered does not belong to a user
 # password is not correct
 def auth_login (email, password):
-    global userDict
+    DATA = load()
+    userDict = DATA['userDict']
     #check email
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
     if ( re.search(regex, email)):
         pass
     else:
         raise ValueError("Invalid Email")
-    #incorrect password
-    if (len(password) < 5):
-        raise ValueError("Password is not correct")
+    
     for user in userDict:
         if user['email'] == email:
             break
@@ -82,22 +85,29 @@ def auth_login (email, password):
              raise ValueError("Email entered doesn't belong to a user")
     for user in userDict:     
         if user['email'] == email and user['password'] == hashPassword(password):
-            return {
-                'u_id': user['u_id'],
-                'token': generateToken(user['u_id'])
-            }
+            if user['online'] == True:
+                raise ValueError("Already login")
+            else:
+                return {
+                    'u_id': user['u_id'],
+                    'token': generateToken(user['u_id'])
+                }
     raise ValueError("Username or password incorrect")
-    return sendError('Username or password incorrect')
+    
 
 
 # Given an active token, invalidates the taken to log the user out. If a valid token is given, and the user is successfully logged out, it returns true, otherwise false.
 def auth_logout(token):
-    global userDict
+    DATA = load()
+    userDict = DATA['userDict']
+
     u_id = getUserFromToken(token)
     #print(u_id)
     for user in userDict:
-        if user['u_id'] == u_id:
+        if user['u_id'] == u_id and user['online'] == True:
             user['online'] = False
+            DATA['userDict'] = userDict
+            save(DATA)
             return True
     return False
 
@@ -110,7 +120,6 @@ def auth_logout(token):
 def auth_register(email, password, name_first, name_last):
     DATA = load()
     userDict = DATA['userDict']
-    #global userDict
     #check email
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
     if (re.search(regex, email)):
@@ -149,30 +158,41 @@ def auth_register(email, password, name_first, name_last):
         handle = handle[:20]
 
     newUser['handle'] = handle
-    if (len(handle) < 20):
-        for user in userDict:
-            if user['handle'] is handle:
-                for i in range(0,9999):
-                    if user['handle'] is not handle + str(i) and (len(handle + str(i)) < 20):
-                        newUser['handle'] = handle + str(i)
-                        break
-            else:
-                pass
+ 
+
+    if handle_check(handle) == True:
+        handle = handle[3:len(handle)]
+       #s print(handle)
+        for i in range (1,999):
+            #print (digit_check(i))
+            if digit_check(i) == 1:
+                new = "00"+str(i)
+                if handle_check(new + handle) == False:
+                    newUser['handle'] = new + handle
+                    break
+
+            elif digit_check(i) == 2:
+                new = "0"+str(i) 
+                if handle_check(new + handle) == False:
+                    newUser['handle'] = new + handle
+                    break
+
+            elif digit_check(i) == 3:
+                new = str(i)
+                if handle_check(new + handle) == False:
+                    newUser['handle'] = new + handle
+                    break
+        else:
+            pass
     else:
-        for user in userDict:
-            if user['handle'] is handle:
-                for i in range (0,10):
-                    if  user['handle'] is not (i + handle[1:20]):
-                        handle[0] = i
-            else:
-                pass
+        pass
 
     if (len(userDict) == 0):
         newUser['permission_id'] = 1
+    elif (len(userDict) == 1):
+        newUser['permission_id'] = 2
     else:
         newUser['permission_id'] = 3
-
-
     
     newUser['first_name'] = name_first
     newUser['last_name'] = name_last
@@ -191,10 +211,13 @@ def auth_register(email, password, name_first, name_last):
 
 # Given an email address, if the user is a registered user, send's them a an email containing a specific secret code, that when entered in auth_passwordreset_reset, shows that the user trying to reset the password is the one who got sent this email.
 def auth_passwordreset_request(email):
-    global userDict
+    DATA = load()
+    userDict = DATA['userDict']
     for user in userDict:
         if user['email'] == email:
             user['reset_code'] = generateResetCode()
+            DATA['userDict'] = userDict
+            save(DATA)
             return user['reset_code']
             
 
@@ -203,7 +226,8 @@ def auth_passwordreset_request(email):
 # reset_code is not valid reset code
 # password entered is not valid
 def auth_passwordreset_reset(reset_code, new_password):
-    global userDict
+    DATA = load()
+    userDict = DATA['userDict']
     #incorrect password
     if (len(new_password) < 5):
         raise ValueError("New password is not valid")
@@ -214,13 +238,9 @@ def auth_passwordreset_reset(reset_code, new_password):
         if user['reset_code'] == reset_code:
             user['password'] = hashPassword(new_password)
             user['reset_code'] = None
+            DATA['userDict'] = userDict
+            save(DATA)
             return {}
-    raise ValueError("reset_code is not valid")
+    
 
 
-def refresh():
-    global userDict
-
-    userDict.clear()
-
-    return {}
