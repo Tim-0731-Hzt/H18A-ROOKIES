@@ -27,11 +27,60 @@ Assurance
 
 ## Channel:
 
+Reached 98% coverage for all message functions.
+
 **channel_invite:** 
-* provided five tests to test the the invite to channel owner, and channel member, and ValueError and AccessError
+* five test cases 
+* ValueError when:
+* channel_id does not refer to a valid channel that the authorised user is part of.
+* u_id does not refer to a valid user
+* AccessError when the authorised user is not already a member of the channel
 
 **channel_details:**
+* Used 3 test cases. Covered 
+* ValueError when:
+* Channel ID is not a valid channel
+* AccessError when Authorised user is not a member of channel with channel_id
 
+**channel_messages:**
+* five test cases
+* ValueError when:
+* Channel ID is not a valid channel
+* start is greater than the total number of messages in the channel
+* AccessError when Authorised user is not a member of channel with channel_id
+
+**channel_leave:**
+* five test cases
+* ValueError when:Channel ID is not a valid channel
+
+**channel_join:**
+* five test cases
+* ValueError when:Channel ID is not a valid channel
+* AccessError whenchannel_id refers to a channel that is private (when the authorised user is not an admin)
+
+**channel_addowner:**
+* five test cases
+* ValueError when:
+* Channel ID is not a valid channel
+* When user with user id u_id is already an owner of the channel
+* AccessError when the authorised user is not an owner of the slackr, or an owner of this channel
+
+**channel_removeowner:**
+* five test cases
+* ValueError when:
+* Channel ID is not a valid channel
+* When user with user id u_id is not an owner of the channel
+* AccessError when the authorised user is not an owner of the slackr, or an owner of this channel
+
+**channels_list:**
+* five test cases
+
+**channels_listall:**
+* five test cases
+
+**channels_create:**
+* five test cases
+* ValueError when:Name is more than 20 characters long
 ## Message:
 Reached 100% coverage for all message functions.
 
