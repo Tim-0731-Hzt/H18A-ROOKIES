@@ -5,7 +5,7 @@ from flask import Flask, request
 from flask_mail import Mail, Message
 from json import dumps
 from channel import *
-from auth import *
+from auth_pickle import *
 from user import *
 from search import search
 from admin_userpermission_change import admin_userpermission_change
