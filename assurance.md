@@ -2,6 +2,28 @@ Assurance
 ======
 
 ## Auth:
+**auth_login:**
+* Used 6 test cases. Covered
+* ValueError when email in not a valid email, email entered is not belong to a user, and password is not correct
+* 
+**auth_logout:**
+* Used 2 test cases. Covered
+* User's online status will be false after logout.
+
+**auth_register:**
+* Used 13 test cases. Covered
+* ValueError when email is not a valid email,  email address is already used by other users, password is less than 6 characters and firstname, lastname are more than 50 characters
+* When the same handle occur, function will change the first 3 chararters into numbers, add one more when the second same handle occur.
+
+**auth_passwordreset_request:**
+* Used 1 test cases. Covered
+* Provide test to test a reset_code will be sent successfully to the user email
+* make sure every reset_code is made up by random number to ensure the security
+
+**auth_passwordreset_reset:**
+* Used 4 test cases. Covered
+* ValueError when invalid reset_code and new_password
+* After using the reset_code, reset_code will be null
 
 ## Channel:
 

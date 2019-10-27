@@ -195,7 +195,6 @@ def test_auth_passwordreset_request_1():
     auth_passwordreset_request('jankie@gmail.com')
     DATA = load()
     userDict = DATA['userDict']
-
     reset_code = userDict[0]['reset_code']
     assert len(reset_code) == 6
 
