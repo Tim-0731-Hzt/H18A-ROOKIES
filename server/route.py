@@ -245,55 +245,7 @@ def test_channel_listall():
 def test_channel_list():
     token = request.args.get("token")
     return dumps(channels_list(token))
-<<<<<<< HEAD
-
-@APP.route('/channel/invite',methods = ['POST'])
-def test_channel_invite():
-    token = request.form.get("token")
-    channel_id = request.form.get("channel_id")
-    u_id = request.form.get("u_id")
-    channel_invite(token, channel_id, u_id)
-
-@APP.route('/channel/details',methods = ['GET'])
-def test_channel_details():
-    token = request.args.get("token")
-    channel_id = request.args.get("channel_id")
-    return dumps(channel_details(token, channel_id))
-
-@APP.route('/channel/messages',methods = ['GET'])
-def test_channel_messages():
-    token = request.args.get("token")
-    channel_id = request.args.get("channel_id")
-    start = request.args.get('start')
-    return dumps(channel_messages(token, channel_id))
-
-@APP.route('/channel/leave',methods = ['POST'])
-def test_channel_leave():
-    token = request.form.get("token")
-    channel_id = request.form.get("channel_id")
-    channel_leave(token, channel_id)
-@APP.route('/channel/join',methods = ['POST']) 
-def test_channel_join():
-    token = request.form.get("token")
-    channel_id = request.form.get("channel_id")
-    channel_join(token,channel_id)
-
-@APP.route('/channel/addowner',methods = ['POST'])
-def test_channel_addowner():
-    token = request.form.get("token")
-    channel_id = request.form.get("channel_id") 
-    u_id = request.form.get("u_id") 
-    channel_addowner(token, channel_id, u_id)
-
-@APP.route('/channel/removeowner',methods = ['POST'])
-def test_channel_removeowner():
-    token = request.form.get("token")
-    channel_id = request.form.get("channel_id") 
-    u_id = request.form.get("u_id") 
-    channel_removeowner(token, channel_id, u_id)
-=======
 #Jankie
->>>>>>> ed1d83c3c272bf43024134a52342866c8f774b45
 @APP.route('/auth/login', methods=['POST'])
 def login():
     email = request.form.get('email')
@@ -342,7 +294,7 @@ def user2():
     name_last = request.form.get('name_last')
     user_profile_setname(token,name_first, name_last)
     return dumps({})
-'''
+
 @APP.route('/user/profile/setemail', method = ['PUT'])
 def user3():
     token = request.form.get('token')
@@ -391,7 +343,7 @@ def admin():
     permission_id = request.form.get('premission_id')
     admin_userpermission_change(token,u_id,premission_id)
     return dumps({})
-'''
+
 
 
 
@@ -434,7 +386,3 @@ def test_channel_invite():
     return dumps(channels_listall(token))
 if __name__ == '__main__':
     APP.run()
-<<<<<<< HEAD
-=======
-
->>>>>>> ed1d83c3c272bf43024134a52342866c8f774b45

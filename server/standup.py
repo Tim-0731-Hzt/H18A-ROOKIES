@@ -47,7 +47,12 @@ def showtime():
 def standup_send(token, channel_id, message):
     data = load()
     channelDict = data['channelDict']
+    userDict = data['userDict']
+    
     opid = getUserFromToken(token)
+    for user in userDict:
+        if user['u_id'] == opid:
+            name = user['first_name']
     if len(message) > 1000 :
         raise ValueError("Message too long")
     for ch in channelDict:
@@ -57,13 +62,14 @@ def standup_send(token, channel_id, message):
             if ch['standUp'] != 1:
                 raise ValueError(
                     'An active standup is not currently running in this channel')
+            append = name + ': ' + message
             if ch['standlist'] == "":
-                ch['standlist'] = message
+                ch['standlist'] = append
                 data['channelDict'] = channelDict
                 save(DATA)
                 return
             else:
-                ch['standlist'] = ch['standlist'] + ": " + message
+                ch['standlist'] = ch['standlist'] + ' ' + append
                 data['channelDict'] = channelDict
                 save(DATA)
                 return
