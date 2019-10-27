@@ -1,5 +1,5 @@
 from channel import *
-from auth import *
+from auth_pickle import *
 from message_pickle import *
 import pytest
 from Error import AccessError
