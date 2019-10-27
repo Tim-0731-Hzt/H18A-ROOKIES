@@ -220,12 +220,12 @@ def test_channels_list_1():
                 'channel_creater': 1, 
                 'channel_member': [4], 
                 'channel_owner': [1, 2, 3], 
-                'is_public': True, 'standUp': 0
+                'is_public': True, 'standUp': 0,'standlist': ''
                 }, 
                 {'channel_id': 2, 'name': 'COMP2521', 
                 'channel_creater': 1, 
                 'channel_member': [5, 2], 'channel_owner': [1], 
-                'is_public': True, 'standUp': 0
+                'is_public': True, 'standUp': 0, 'standlist': ''
                 }
         ]
         assert(channels_list(token2) == l)
@@ -235,21 +235,21 @@ def test_channels_list_2():
                 {
                 'channel_id': 1, 'name': 'COMP1531', 'channel_creater': 1, 
                 'channel_member': [4], 'channel_owner': [1, 2, 3], 
-                'is_public': True, 'standUp': 0
+                'is_public': True, 'standUp': 0,'standlist': ''
                 }, 
                 {
                 'channel_id': 2, 'name': 'COMP2521', 'channel_creater': 1, 
                 'channel_member': [5, 2], 'channel_owner': [1], 'is_public': True, 
-                'standUp': 0
+                'standUp': 0,'standlist': ''
                 }, 
                 {'channel_id': 3, 'name': 'COMP1521', 
                 'channel_creater': 1, 'channel_member': [], 
-                'channel_owner': [1], 'is_public': False, 'standUp': 0
+                'channel_owner': [1], 'is_public': False, 'standUp': 0,'standlist': ''
                 },
                 {
                 'channel_id': 4, 'name': 'COMP2121', 
                 'channel_creater': 7, 'channel_member': [], 
-                'channel_owner': [7,1], 'is_public': False, 'standUp': 0
+                'channel_owner': [7,1], 'is_public': False, 'standUp': 0,'standlist': ''
                 }
         ]
         assert(channels_list(token1) == l)
@@ -263,21 +263,21 @@ def test_channel_listall():
                 {
                 'channel_id': 1, 'name': 'COMP1531', 'channel_creater': 1, 
                 'channel_member': [4], 'channel_owner': [1, 2, 3], 
-                'is_public': True, 'standUp': 0
+                'is_public': True, 'standUp': 0,'standlist': ''
                 }, 
                 {
                 'channel_id': 2, 'name': 'COMP2521', 'channel_creater': 1, 
                 'channel_member': [5, 2], 'channel_owner': [1], 'is_public': True, 
-                'standUp': 0
+                'standUp': 0,'standlist' : ''
                 }, 
                 {'channel_id': 3, 'name': 'COMP1521', 
                 'channel_creater': 1, 'channel_member': [], 
-                'channel_owner': [1], 'is_public': False, 'standUp': 0
+                'channel_owner': [1], 'is_public': False, 'standUp': 0,'standlist' : ''
                 },
                 {
                 'channel_id': 4, 'name': 'COMP2121', 
                 'channel_creater': 7, 'channel_member': [], 
-                'channel_owner': [7,1], 'is_public': False, 'standUp': 0
+                'channel_owner': [7,1], 'is_public': False, 'standUp': 0,'standlist' : ''
                 }
         ]
         assert(channels_listall(token1) == l)
