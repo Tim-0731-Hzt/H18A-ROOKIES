@@ -1,7 +1,7 @@
 
 from flask import Flask
 from flask_mail import Mail, Message
-from auth import *
+from auth_pickle import *
 
 APP = Flask(__name__)
 APP.config.update(

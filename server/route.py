@@ -1,5 +1,5 @@
 
-from message import message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin, message_sendlater
+from message_pickle import message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
 from Error import AccessError
 from flask import Flask, request
 from flask_mail import Mail, Message
@@ -40,7 +40,7 @@ def sendlater():
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
     time_sent = request.form.get('time_sent')
-    return dumps(message_sendlater(token,channel_id,message))
+    return dumps(message_send(token,channel_id,message))
 
 @APP.route('/message/send', methods=['POST'])
 def send():

@@ -1,6 +1,6 @@
 from channel import *
-from message import *
-from auth import *
+from message_pickle import *
+from auth_pickle import *
 
 import pickle_unpickle
 def search(token, query_str): 
