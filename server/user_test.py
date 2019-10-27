@@ -25,17 +25,17 @@ def test_user_profile_functional():
 
     authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
     token2 = authRegisterDict2['token']
-    UID2 = authRegisterDict['u_id']
+    UID2 = authRegisterDict2['u_id']
 
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
-    token3 = authRegisterDict2['token']
-    UID3 = authRegisterDict['u_id']
+    token3 = authRegisterDict3['token']
+    UID3 = authRegisterDict3['u_id']
 
     # testing
     userDict = user_profile(token, UID)
     mail = userDict['email']
-    fname = userDict['name_first']
-    lname = userDict['name_last']
+    fname = userDict['first_name']
+    lname = userDict['last_name']
     hd = userDict['handle']
     assert mail == "haodong@gmail.com"
     assert fname == "haodong"
@@ -43,20 +43,22 @@ def test_user_profile_functional():
     assert hd == "haodonglu"
 
     user2 = user_profile(token2,UID2)
+   
     user3 = user_profile(token3,UID3)
     assert user2['email'] == "jeff@gmail.com"
-    assert user2['name_first'] == "lu"
-    assert user2['name_last'] == "jeff"
+    assert user2['first_name'] == "jeff"
+    assert user2['last_name'] == "lu"
     assert user2['handle'] == "jefflu"
     assert user3['email'] == "normaluser@gmail.com"
-    assert user3['name_first'] == "normal"
-    assert user3['name_last'] == "user"
+    assert user3['first_name'] == "normal"
+    assert user3['last_name'] == "user"
     assert user3['handle'] == "normaluser"
     with pytest.raises(ValueError,match = r".*"):
         user_profile(token, 12345)
 
 def test_user_profile_invaliduid():
     # set up
+    restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
     UID = authRegisterDict['u_id']
@@ -73,8 +75,8 @@ def test1_user_profile_setname():
     UID = authRegisterDict['u_id']
     user_profile_setname(token,'daniel','quin')
     user = user_profile(token, UID)
-    assert 'daniel' == user['name_first']
-    assert 'quin' == user['name_last']
+    assert 'daniel' == user['first_name']
+    assert 'quin' == user['last_name']
 
 
 def test2_user_profile_setname():
@@ -103,7 +105,7 @@ def test1_user_profile_sethandle_normalCases():
     authRegisterDict2 = auth_register(
         "jeff@gmail.com", "123456789", "jeffsb", "lu")
     token2 = authRegisterDict2['token']
-    UID2 = authRegisterDict['u_id']
+    UID2 = authRegisterDict2['u_id']
 
     user_profile_sethandle(token, "jeffisnumb")
     user1 = user_profile(token, UID)

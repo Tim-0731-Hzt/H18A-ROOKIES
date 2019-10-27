@@ -1,7 +1,9 @@
-import pytest
+
 import Error
-from auth import *
+from auth_pickle import *
 import pickle_unpickle
+from channel import *
+
 def admin_userpermission_change(token, u_id, permission_id):
     fl = 1
     data = load()
@@ -11,7 +13,7 @@ def admin_userpermission_change(token, u_id, permission_id):
             fl = 0
     if fl == 1:
         raise ValueError('Wrong user id')
-    if permission_id not in range(1,3):
+    if permission_id not in range(1,4):
         raise ValueError('Unmatch permission id')
     
     opid = getUserFromToken(token)

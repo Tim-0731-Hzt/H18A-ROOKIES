@@ -2,17 +2,17 @@
 # ValueError when:
 # User with u_id is not a valid user
 from Error import AccessError
-from auth import *
-import pickle_unpickle
+from auth import getUserFromToken
+from pickle_unpickle import *
 import re
 
 
 def user_profile(token, u_id):
     opid = getUserFromToken(token)
     
-    data = load()
-    userDict = data['userDict']
-    for user in userDict:
+    DATA = load()
+    userdict = DATA['userDict']
+    for user in userdict:
         if user['u_id'] == u_id:
             return {
                 'email': user['email'], 
@@ -28,8 +28,8 @@ def user_profile(token, u_id):
 def user_profile_setemail(token, email):
     opid = getUserFromToken(token)
     
-    data = load()
-    userDict = data['userDict']
+    DATA = load()
+    userDict = DATA['userDict']
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
     if (re.search(regex, email)):
         pass
@@ -43,7 +43,8 @@ def user_profile_setemail(token, email):
     for user in userDict:
         if opid == user['u_id']:
             user['email'] = email
-            save(userDict)
+            DATA['userDict'] = userDict
+            save(DATA)
             return
     pass
      
@@ -53,8 +54,8 @@ def user_profile_setemail(token, email):
 
 def user_profile_sethandle(token,handle_str):
     opid = getUserFromToken(token)
-    data = load()
-    userDict = data['userDict']
+    DATA = load()
+    userDict = DATA['userDict']
     if len(handle_str) <= 3 :
         raise ValueError('handle too short')
     if len(handle_str) >= 20:
@@ -66,7 +67,8 @@ def user_profile_sethandle(token,handle_str):
     for user in userDict:
         if opid == user['u_id']:
             user['handle'] = handle_str
-            save(userDict)
+            DATA['userDict'] = userDict
+            save(DATA)
             return
     
     pass
@@ -77,8 +79,8 @@ def user_profile_sethandle(token,handle_str):
 
 def user_profile_setname(token, name_first, name_last):
     opid = getUserFromToken(token)
-    data = load()
-    userDict = data['userDict']
+    DATA = load()
+    userDict = DATA['userDict']
     if len(name_first) > 50 :
         raise ValueError('First name too long')
     if len(name_last) > 50 :
@@ -90,9 +92,10 @@ def user_profile_setname(token, name_first, name_last):
     
     for user in userDict:
         if opid == user['u_id']:
-            user['firstname'] = name_first
-            user['lastname'] = name_last
-            save(userDict)
+            user['first_name'] = name_first
+            user['last_name'] = name_last
+            DATA['userDict'] = userDict
+            save(DATA)
             return
     pass
 

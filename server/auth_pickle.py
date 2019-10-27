@@ -4,7 +4,7 @@ import hashlib
 import jwt
 # import user
 import random
-
+from random import randrange
 from json import dumps
 from flask import Flask, request
 from Error import AccessError
@@ -25,11 +25,11 @@ def sendError(message):
         '_error':message,
     })
 
-
+#random.randint(1,10)
 def generateResetCode():
     num = []
     for i in range(6):
-         num.append(random.randint(1,10))
+         num.append(randrange(10))
     reset_code = ''.join(map(str,num))
     
     return reset_code
@@ -81,12 +81,15 @@ def auth_login (email, password):
              raise ValueError("Email entered doesn't belong to a user")
     for user in userDict:     
         if user['email'] == email and user['password'] == hashPassword(password):
-            return {
-                'u_id': user['u_id'],
-                'token': generateToken(user['u_id'])
-            }
+            if user['online'] == True:
+                raise ValueError("Already login")
+            else:
+                return {
+                    'u_id': user['u_id'],
+                    'token': generateToken(user['u_id'])
+                }
     raise ValueError("Username or password incorrect")
-    return sendError('Username or password incorrect')
+    
 
 
 # Given an active token, invalidates the taken to log the user out. If a valid token is given, and the user is successfully logged out, it returns true, otherwise false.
@@ -173,12 +176,13 @@ def auth_register(email, password, name_first, name_last):
         newUser['permission_id'] = 1
     elif (len(userDict) == 1):
         newUser['permission_id'] = 2
+    else:
+        newUser['permission_id'] = 3
     
     newUser['first_name'] = name_first
     newUser['last_name'] = name_last
     newUser['email'] = email
     newUser['u_id'] = len(userDict) + 1
-    newUser['permission_id'] = 3
     newUser['password'] = hashPassword(password)
     userDict.append(newUser)
     
@@ -187,6 +191,7 @@ def auth_register(email, password, name_first, name_last):
         'token': generateToken(newUser['u_id'])
     }
     DATA['userDict'] = userDict
+    save(DATA)
     return returned
 
 # Given an email address, if the user is a registered user, send's them a an email containing a specific secret code, that when entered in auth_passwordreset_reset, shows that the user trying to reset the password is the one who got sent this email.
@@ -197,6 +202,7 @@ def auth_passwordreset_request(email):
         if user['email'] == email:
             user['reset_code'] = generateResetCode()
             DATA['userDict'] = userDict
+            save(DATA)
             return user['reset_code']
             
 
@@ -218,6 +224,7 @@ def auth_passwordreset_reset(reset_code, new_password):
             user['password'] = hashPassword(new_password)
             user['reset_code'] = None
             DATA['userDict'] = userDict
+            save(DATA)
             return {}
     raise ValueError("reset_code is not valid")
 

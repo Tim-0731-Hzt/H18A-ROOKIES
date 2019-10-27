@@ -1,7 +1,7 @@
 from channel import *
-from message import *
-from auth import *
-from data import *
+from message_pickle import *
+from auth_pickle import *
+
 import pickle_unpickle
 def search(token, query_str): 
     data = load()
@@ -12,6 +12,6 @@ def search(token, query_str):
         for channel in it :
             if channel['channel_id'] == meg['channel_id']:
                 if query_str == meg['message']:
-                    result.append(meg)
+                    result.append(meg['message'])
     return result
     
