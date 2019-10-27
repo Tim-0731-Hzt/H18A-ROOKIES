@@ -2,7 +2,7 @@
 # ValueError when:
 # User with u_id is not a valid user
 from Error import AccessError
-from auth import getUserFromToken
+from auth_pickle import getUserFromToken
 from pickle_unpickle import *
 import re
 
