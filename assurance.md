@@ -1,7 +1,18 @@
 Assurance
 ======
 
-## user:
+## Auth:
+
+## Channel:
+
+**channel_invite:** 
+* provided five tests to test the the invite to channel owner, and channel member, and ValueError and AccessError
+
+**channel_details:**
+
+## Message:
+
+## User:
 
 **User profile:**
 * provided 3 normal tests to test the performance of the function and raise 2 
@@ -29,10 +40,4 @@ Assurance
 **change admin :** 
 * having 3 normal test and 7 exception like : giving others owners premission as an admin, member can not access owner can not demote other owners and admins can not demote other admins.
 
-## channel:
-
-**channel_invite:** 
-* provided five tests to test the the invite to channel owner, and channel member, and ValueError and AccessError
-
-**channel_details:**
 
