@@ -19,19 +19,21 @@ def standup_start(token, channel_id):
             if ch['standUp'] == 1:
                 raise ValueError('this channel is already in standup')
             ch['standUp'] == 1
-            save(channelDict)
-            t_end = time.time() + 60*15
+            data['channelDict'] = channelDict
+            save(data)
+            t_end = time.time() + 15
             while time.time() < t_end:
                 a = 3
 
-            
-            channelDt = load()['channelDict']
+            data = load()
+            channelDict = data['channelDict']
             for channel in channelDt:
                 if channel_id == channel['channel_id']:
                     channel['standUp'] == 0
                     message_send(token, channel_id, channel['standlist'])
                     channel['standlist'] == ''
-                    save(channelDict)            
+                    data['channelDict'] = channelDict
+                    save(DATA)            
             return
     raise ValueError('incorrect channel id')
     pass
@@ -57,11 +59,13 @@ def standup_send(token, channel_id, message):
                     'An active standup is not currently running in this channel')
             if ch['standlist'] == "":
                 ch['standlist'] = message
-                save(channelDict)
+                data['channelDict'] = channelDict
+                save(DATA)
                 return
             else:
                 ch['standlist'] = ch['standlist'] + ": " + message
-                save(channelDict)
+                data['channelDict'] = channelDict
+                save(DATA)
                 return
     raise ValueError('Channel ID is not a valid channel')
     pass
