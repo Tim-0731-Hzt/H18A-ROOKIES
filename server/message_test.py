@@ -1,7 +1,7 @@
 # MESSAGE TEST
 from message_pickle import *
 from channel import channels_create, channel_join
-from auth import auth_register
+from auth_pickle import auth_register
 import pytest
 from Error import AccessError
 from pickle_unpickle import *
