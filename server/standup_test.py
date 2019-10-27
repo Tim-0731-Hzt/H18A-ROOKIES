@@ -58,5 +58,5 @@ def test_standup_all():
     channelDict = load()['channelDict']
     for ch in channelDict:
         if channel_id == ch['channel_id']:
-            assert 'hello: daniel :quin' == ch['standlist']
+            assert 'Hayden: hello Jeff: daniel Hayden: quin' == ch['standlist']
     pass
