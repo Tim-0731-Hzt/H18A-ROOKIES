@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-from message_pickle import message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
-=======
 
 from message import clear_backup, message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
->>>>>>> ed1d83c3c272bf43024134a52342866c8f774b45
 from Error import AccessError
 from flask import Flask, request
 from json import dumps
