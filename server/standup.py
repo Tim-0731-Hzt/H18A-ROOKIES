@@ -26,7 +26,7 @@ def standup_start(token, channel_id):
             '''t_end = time.time() + 2
             while time.time() < t_end:
                 a = 3'''
-            timer = threading.Timer(20,send,[channel_id,token])
+            timer = threading.Timer(900,send,[channel_id,token])
             timer.start()
             '''data = load()
             channelDict = data['channelDict']
