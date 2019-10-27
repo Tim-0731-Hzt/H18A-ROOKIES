@@ -2,6 +2,7 @@
 from message import clear_backup, message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
 from Error import AccessError
 from flask import Flask, request
+from flask_mail import Mail, Message
 from json import dumps
 from channel import *
 from auth import *
@@ -9,7 +10,26 @@ from user import *
 
 
 APP = Flask(__name__)
-APP.debug = True
+APP.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME = 'ROOKIESTHEBEST@gmail.com',
+    MAIL_PASSWORD = "lvchenkai"
+)
+
+@APP.route('/send-mail/')
+def send_mail():
+    mail = Mail(APP)
+    try:
+        msg = Message("Send Mail Test!",
+            sender="ROOKIESTHEBEST@gmail.com",
+            recipients=["person.sending.to@gmail.com"])
+        msg.body = generateResetCode()
+        mail.send(msg)
+        return 'Mail sent!'
+    except Exception as e:
+        return (str(e))
 
 
 @APP.route('/message/sendlater', methods=['POST'])
@@ -274,7 +294,18 @@ def register():
 @APP.route('/auth/passwordreset/request', methods=['POST'])
 def password_request():
     email = request.form.get('email')
-    return dumps(auth_passwordreset_request(email))
+    mail = Mail(APP)
+    try:
+        msg = Message("Send Mail Test!",
+            sender="ROOKIESTHEBEST@gmail.com",
+            recipients=[email])
+        msg.body = generateResetCode()
+        mail.send(msg)
+        return 'Mail sent!'
+    except Exception as e:
+        return (str(e))
+    
+   # return dumps(auth_passwordreset_request(email))
 
 @APP.route('/auth/passwordreset/reset', methods=['POST'])
 def password_reset():
