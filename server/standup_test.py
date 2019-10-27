@@ -6,6 +6,8 @@ import pickle_unpickle
 from standup import *
 import pytest
 
+restart()
+
 def test_standup_all():
     restart()
     authRegisterDict1 = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
@@ -60,3 +62,5 @@ def test_standup_all():
         if channel_id == ch['channel_id']:
             assert 'Hayden: hello Jeff: daniel Hayden: quin' == ch['standlist']
     pass
+
+restart()

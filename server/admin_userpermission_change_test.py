@@ -59,3 +59,5 @@ def test6():
     assert userDict[1]['permission_id'] == 1
     assert userDict[2]['permission_id'] == 2
     assert userDict[3]['permission_id'] == 1
+
+restart()

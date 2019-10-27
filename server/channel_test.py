@@ -7,7 +7,8 @@ import pytest
 from Error import AccessError
 from pickle_unpickle import *
 
-restart()
+def test_restart1():
+        restart()
 
 # first user
 authRegisterDict1 = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
@@ -322,3 +323,6 @@ def test_invite():
         DATA = load()
         channelDict = DATA['channelDict']
         assert (channelDict[3]['channel_owner'] == [7,1,2])
+
+def test_restart2():
+        restart()

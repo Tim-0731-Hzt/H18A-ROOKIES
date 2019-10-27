@@ -49,3 +49,5 @@ def test2():
 def test3():
     result = search(token3, 'numb')
     assert ['numb'] == result
+
+restart()
