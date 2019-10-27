@@ -1,5 +1,0 @@
-userDict = []
-channelDict = []
-messDict = []
-reactDict = []
-standDict = []
