@@ -5,7 +5,7 @@ Assurance
 **auth_login:**
 * Used 6 test cases. Covered
 * ValueError when email in not a valid email, email entered is not belong to a user, and password is not correct
-* 
+
 **auth_logout:**
 * Used 2 test cases. Covered
 * User's online status will be false after logout.
