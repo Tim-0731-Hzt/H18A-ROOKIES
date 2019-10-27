@@ -1,6 +1,6 @@
 # channel
 from Error import AccessError
-from auth import *
+from auth_pickle import *
 from pickle_unpickle import *
 # global varaibles:
 
