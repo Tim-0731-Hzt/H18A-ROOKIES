@@ -33,6 +33,7 @@ def test_standup_all():
         standup_send(token2, channel_id, 'hello')
 
     standup_start(token1,channel_id)
+    
     with pytest.raises(ValueError, match = r".*"):
         standup_start(token2, channel_id)
 

@@ -6,6 +6,8 @@ from json import dumps
 from channel import *
 from auth import *
 from user import *
+from search import search
+from admin_userpermission_change import admin_userpermission_change
 
 
 APP = Flask(__name__)

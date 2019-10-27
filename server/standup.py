@@ -21,19 +21,19 @@ def standup_start(token, channel_id):
             ch['standUp'] == 1
             data['channelDict'] = channelDict
             save(data)
-            t_end = time.time() + 15
+            t_end = time.time() + 2
             while time.time() < t_end:
                 a = 3
 
             data = load()
             channelDict = data['channelDict']
-            for channel in channelDt:
+            for channel in channelDict:
                 if channel_id == channel['channel_id']:
                     channel['standUp'] == 0
                     message_send(token, channel_id, channel['standlist'])
                     channel['standlist'] == ''
                     data['channelDict'] = channelDict
-                    save(DATA)            
+                    save(data)            
             return
     raise ValueError('incorrect channel id')
     pass
