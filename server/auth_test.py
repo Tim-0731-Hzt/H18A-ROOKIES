@@ -6,7 +6,9 @@ from Error import AccessError
 from pickle_unpickle import *
 #from auth import userDict
 from user import user_profile
+
 ##
+restart()
 def test_auth_login_1():
     restart()
     registerDict = auth_register('goodemail@gmail.com', '123456789', 'hayden', 'smith')
@@ -175,4 +177,4 @@ def test_reset_code():
     reset_code = generateResetCode()
     assert len(reset_code) == 6
 
-    restart()
+restart()

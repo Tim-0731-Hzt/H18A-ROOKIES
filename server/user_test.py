@@ -15,6 +15,7 @@ from user import *
     
 
 # returned: { email, name_first, name_last, handle_str }
+restart()
 
 def test_user_profile_functional():
     # set up
@@ -182,6 +183,9 @@ def test3_user_profile_setemail():
 
     with pytest.raises(ValueError, match = r".*"):
         user_profile_setemail(token, "sahduyhasdh**(())")
+    restart()
+
+restart()
 
 '''
 def test1_user_profiles_uploadphoto():

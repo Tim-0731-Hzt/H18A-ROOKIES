@@ -21,7 +21,7 @@ def user_profile(token, u_id):
                 'handle': user['handle']
             }
     raise ValueError('u_id was incorrect')
-    pass
+    
     
 # returned: { email, name_first, name_last, handle_str }
 
@@ -46,7 +46,7 @@ def user_profile_setemail(token, email):
             DATA['userDict'] = userDict
             save(DATA)
             return
-    pass
+   
      
 
 
@@ -71,7 +71,7 @@ def user_profile_sethandle(token,handle_str):
             save(DATA)
             return
     
-    pass
+    
 
 
 
@@ -97,14 +97,14 @@ def user_profile_setname(token, name_first, name_last):
             DATA['userDict'] = userDict
             save(DATA)
             return
-    pass
+    
 
 
 
 
 
 
-def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
+'''def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     if img_url != 200:
         raise ValueError('url corrupted')
     size = 400
@@ -112,4 +112,4 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
         raise ValueError('Out of bound')
     if x_end < 0 or y_end < 0 or x_start < 0 or y_start < 0:
         raise ValueError('Out of bound')
-    pass
+    pass'''
