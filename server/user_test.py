@@ -182,6 +182,7 @@ def test3_user_profile_setemail():
 
     with pytest.raises(ValueError, match = r".*"):
         user_profile_setemail(token, "sahduyhasdh**(())")
+    restart()
 
 '''
 def test1_user_profiles_uploadphoto():
