@@ -210,7 +210,6 @@ def test_auth_passwordreset_reset_1():
     auth_passwordreset_reset(reset_code,'000000')
     DATA = load()
     userDict = DATA['userDict']
-    #print(userDict[0]['password'])
     assert userDict[0]['password'] == hashPassword('000000')
     assert userDict[0]['reset_code'] == None
 
