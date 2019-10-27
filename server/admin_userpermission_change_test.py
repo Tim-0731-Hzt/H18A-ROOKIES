@@ -81,6 +81,7 @@ def test3_admin_userpermission_change():
     token4 = authRegisterDict4["token"]
 
     UID4 = authRegisterDict4['u_id']
+    admin_userpermission_change(token1,2,2)
     with pytest.raises(AccessError, match=r".*"):
 
         admin_userpermission_change(token2, 3, 1)
@@ -129,6 +130,7 @@ def test5_admin_userpermission_change():
     token4 = authRegisterDict4["token"]
 
     UID4 = authRegisterDict4['u_id']
+    admin_userpermission_change(token1,2,2)
     with pytest.raises(AccessError, match=r".*"):
 
         admin_userpermission_change(token2, 1, 2)

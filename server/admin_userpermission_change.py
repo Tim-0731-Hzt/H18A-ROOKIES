@@ -1,5 +1,5 @@
 
-import Error
+from Error import AccessError
 from auth_pickle import *
 import pickle_unpickle
 from channel import *

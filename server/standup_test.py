@@ -31,6 +31,8 @@ def test_standup_all():
     channel_invite(token1,channel_id,UID2)
     channel_invite(token1,channel_id,UID3)
 
+    showtime()
+
     with pytest.raises(ValueError, match=r".*"):
         standup_send(token2, channel_id, 'hello')
 
