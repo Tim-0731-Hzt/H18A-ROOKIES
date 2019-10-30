@@ -6,7 +6,6 @@ import jwt
 import random
 from random import randrange
 from json import dumps
-from flask import Flask, request
 from Error import AccessError
 from pickle_unpickle import save, load
 
