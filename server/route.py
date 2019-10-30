@@ -271,6 +271,55 @@ def test_channel_listall():
 def test_channel_list():
     token = request.args.get("token")
     return dumps(channels_list(token))
+
+@APP.route('/channel/invite',methods = ['POST'])
+def test_channel_invite():
+    token = request.form.get('token')
+    channel_id = request.form.get('channel_id')
+    #return dumps(channel_id)
+    u_id = request.form.get('u_id')
+    return dumps(channel_invite (token, channel_id, u_id))
+
+@APP.route('/channel/details',methods = ['GET'])
+def test_channel_details():
+    token = request.args.get('token')
+    channel_id = request.args.get('channel_id')
+    #return dumps(channel_id)
+    return dumps(channel_details(token, channel_id))
+
+@APP.route('/channel/messages',methods = ['GET'])
+def test_channel_messages():
+    token = request.args.get('token')
+    channel_id = request.args.get('channel_id')
+    start = request.args.get('start')
+    return dumps(channel_messages(token, channel_id,start))
+
+@APP.route('/channel/leave',methods = ['POST'])
+def test_channel_leave():
+    token = request.form.get('token')
+    channel_id = request.form.get('channel_id')
+    return dumps(channel_leave(token, channel_id))
+
+@APP.route('/channel/join',methods = ['POST '])
+def test_channel_join():
+    token = request.form.get('token')
+    channel_id = request.form.get('channel_id')
+    return dumps(channel_join(token, channel_id))
+
+@APP.route('/channel/addowner',methods = ['POST '])
+def test_channel_addowner():
+    token = request.form.get('token')
+    channel_id = request.form.get('channel_id')
+    u_id = request.form.get('u_id')
+    return dumps(channel_addowner(token, channel_id,u_id))
+
+@APP.route('/channel/removeowner',methods = ['POST '])
+def test_channel_removeowner():
+    token = request.form.get('token')
+    channel_id = request.form.get('channel_id')
+    u_id = request.form.get('u_id')
+    return dumps(channel_removeowner(token, channel_id,u_id))
+
 #Jankie
 @APP.route('/auth/login', methods=['POST'])
 def login():
@@ -382,45 +431,6 @@ def admin():
     return dumps({})
 
 
-
-'''
-@APP.route('/user/create',methods = ['POST'])
-def test_channel_create():
-    email = request.form.get("email")
-    password = request.form.get("password")
-    name_first = request.form.get("name_first")
-    name_last = request.form.get("name_last")
-    dic = {}
-    dic = auth_register(email, password, name_first, name_last)
-    token = dic['token']
-    token = token[2:len(token) - 1]
-    return dumps(token)
-
-@APP.route('/channel/create',methods = ['POST'])
-def test_channel_create_1():
-    token = request.form.get("token")
-    name = request.form.get("name")
-    is_public = request.form.get("is_public")
-    return dumps(channels_create(token, name, is_public))
-
-@APP.route('/channel/listall',methods = ['GET'])
-def test_channel_listall():
-    token = request.args.get("token")
-    return dumps(channels_listall(token))
-
-@APP.route('/channel/list',methods = ['GET'])
-def test_channel_list():
-    token = request.args.get("token")
-    return dumps(channels_list(token))
-
-@APP.route('/channel/invite',methods = ['POST'])
-def test_channel_invite():
-    token = request.form.get('token')
-    channel_id = request.form.get('channel_id')
-    #return dumps(channel_id)
-    u_id = request.form.get('u_id')
-    channel_invite (token, channel_id, u_id)
-    return dumps(channels_listall(token))
-'''
 if __name__ == '__main__':
     APP.run()
+2
