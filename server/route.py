@@ -347,7 +347,8 @@ def user4():
     return dumps({})
 
 @APP.route('/user/profiles/uploadphoto', methods = ['POST'])
-
+def upload_photo():
+    pass
 
 
 @APP.route('/standup/start', methods = ['POST'])
