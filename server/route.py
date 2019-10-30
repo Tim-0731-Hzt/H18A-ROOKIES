@@ -9,6 +9,7 @@ from auth_pickle import *
 from user import *
 from search import search
 from admin_userpermission_change import admin_userpermission_change
+from pickle_unpickle import restart
 
 
 APP = Flask(__name__)
@@ -19,6 +20,11 @@ APP.config.update(
     MAIL_USERNAME = 'ROOKIESTHEBEST@gmail.com',
     MAIL_PASSWORD = "lvchenkai"
 )
+
+@APP.route('/restart', methods = ['POST'])
+def begin():
+    restart()
+    return "restarted"
 
 @APP.route('/send-mail/')
 def send_mail():
@@ -326,25 +332,25 @@ def user2():
     user_profile_setname(token,name_first, name_last)
     return dumps({})
 
-@APP.route('/user/profile/setemail', method = ['PUT'])
+@APP.route('/user/profile/setemail', methods = ['PUT'])
 def user3():
     token = request.form.get('token')
     email = request.form.get('email')
     user_profile_setmail(token,email)
     return dumps({})
 
-@APP.route('/user/profile/sethandle', method = ['PUT'])
+@APP.route('/user/profile/sethandle', methods = ['PUT'])
 def user4():
     token = request.form.get('token')
     handle_str = request.form.get('handle_str')
     user_profile_sethandle(token,handle_str)
     return dumps({})
 
-@APP.route('/user/profiles/uploadphoto', method = ['POST'])
+@APP.route('/user/profiles/uploadphoto', methods = ['POST'])
 
 
 
-@APP.route('/standup/start', method = ['POST'])
+@APP.route('/standup/start', methods = ['POST'])
 def standup1():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
@@ -352,7 +358,7 @@ def standup1():
     time = showtime()
     return dumps(time)
 
-@APP.route('/standup/send', method = ['POST'])
+@APP.route('/standup/send', methods = ['POST'])
 def standup2():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
@@ -360,14 +366,14 @@ def standup2():
     standup_send(token,channel_id, message)
     return dumps({})
 
-@APP.route('/search', method = ['GET'])
+@APP.route('/search', methods = ['GET'])
 def se():
     token = request.args.get('token')
     query_str = request.args.get('query_str')
     result = search(token, query_str)
     return dumps(result)
 
-@APP.route('/admin/userpermission/change', method = ['POST'])
+@APP.route('/admin/userpermission/change', methods = ['POST'])
 def admin():
     token = request.form.get('token')
     u_id = request.form.get('premission_id')

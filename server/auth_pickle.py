@@ -6,7 +6,6 @@ import jwt
 import random
 from random import randrange
 from json import dumps
-from flask import Flask, request
 from Error import AccessError
 from pickle_unpickle import save, load
 
@@ -48,7 +47,7 @@ def generateToken(username):
 
 def getUserFromToken(token):
     global SECRET
-    decoded = jwt.decode(token[2:len(token) - 1],SECRET, algorithms=['HS256'])
+    decoded = jwt.decode(token,SECRET, algorithms=['HS256'])
     u_id = decoded['u_id']
     
     return u_id
@@ -78,16 +77,21 @@ def auth_login (email, password):
     else:
         raise ValueError("Invalid Email")
     
+    found = False
     for user in userDict:
         if user['email'] == email:
+            found = True
             break
-        else:
-             raise ValueError("Email entered doesn't belong to a user")
+    if not found:
+        raise ValueError("Email entered doesn't belong to a user")
     for user in userDict:     
         if user['email'] == email and user['password'] == hashPassword(password):
             if user['online'] == True:
                 raise ValueError("Already login")
             else:
+                user['online'] = True
+                DATA['userDict'] = userDict
+                save(DATA)
                 return {
                     'u_id': user['u_id'],
                     'token': generateToken(user['u_id'])
