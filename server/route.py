@@ -255,19 +255,19 @@ def test_user_register():
     token = dic['token']
     return dumps(token)
 
-@APP.route('/channel/create',methods = ['POST'])
+@APP.route('/channels/create',methods = ['POST'])
 def test_channel_create_1():
     token = request.form.get("token")
     name = request.form.get("name")
     is_public = request.form.get("is_public")
     return dumps(channels_create(token, name, is_public))
 
-@APP.route('/channel/listall',methods = ['GET'])
+@APP.route('/channels/listall',methods = ['GET'])
 def test_channel_listall():
     token = request.args.get("token")
     return dumps(channels_listall(token))
 
-@APP.route('/channel/list',methods = ['GET'])
+@APP.route('/channels/list',methods = ['GET'])
 def test_channel_list():
     token = request.args.get("token")
     return dumps(channels_list(token))
@@ -396,7 +396,8 @@ def user4():
     return dumps({})
 
 @APP.route('/user/profiles/uploadphoto', methods = ['POST'])
-
+def upload_photo():
+    pass
 
 
 @APP.route('/standup/start', methods = ['POST'])
