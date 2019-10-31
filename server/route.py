@@ -256,7 +256,7 @@ def test_user_register():
     return dumps(token)
 
 @APP.route('/channels/create',methods = ['POST'])
-def test_channel_create_1():
+def test_channel_create():
     token = request.form.get("token")
     name = request.form.get("name")
     is_public = request.form.get("is_public")
