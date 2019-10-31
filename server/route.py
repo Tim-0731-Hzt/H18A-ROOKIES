@@ -333,15 +333,11 @@ def test_channel_invite():
     channel_id = request.form.get('channel_id')
     #return dumps(channel_id)
     u_id = request.form.get('u_id')
-<<<<<<< HEAD
     try:
         return dumps(channel_invite (token, channel_id, u_id))
     except:
         raise ValueError(description="VAlueError !")
 
-=======
-    return "invite success"
->>>>>>> 8f1ff20401f2b1693ac4e4c35d73281e211dba00
 
 @APP.route('/channel/details',methods = ['GET'])
 def test_channel_details():
@@ -369,60 +365,44 @@ def test_channel_messages():
 def test_channel_leave():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
-<<<<<<< HEAD
     try:
         return dumps(channel_leave(token, channel_id))
     except:
         raise ValueError(description="VAlueError !")
 
-=======
-    return "leave success"
->>>>>>> 8f1ff20401f2b1693ac4e4c35d73281e211dba00
 
 @APP.route('/channel/join',methods = ['POST '])
 def test_channel_join():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
-<<<<<<< HEAD
     try:
         return dumps(channel_join(token, channel_id))
     except:
         raise ValueError(description="VAlueError !")
 
-=======
-    return "join success"
->>>>>>> 8f1ff20401f2b1693ac4e4c35d73281e211dba00
 
 @APP.route('/channel/addowner',methods = ['POST '])
 def test_channel_addowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
-<<<<<<< HEAD
     try:
         return dumps(channel_addowner(token, channel_id,u_id))
     except:
         raise ValueError(description="VAlueError !")
 
-=======
-    return "addowner success"
->>>>>>> 8f1ff20401f2b1693ac4e4c35d73281e211dba00
 
 @APP.route('/channel/removeowner',methods = ['POST '])
 def test_channel_removeowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
-<<<<<<< HEAD
     try:
         return dumps(channel_removeowner(token, channel_id,u_id))
     except:
         raise ValueError(description="VAlueError !")
 
     
-=======
-    return "remvoeowner success"
->>>>>>> 8f1ff20401f2b1693ac4e4c35d73281e211dba00
 
 #Jankie
 @APP.route('/auth/login', methods=['POST'])
