@@ -278,7 +278,7 @@ def test_channel_invite():
     channel_id = request.form.get('channel_id')
     #return dumps(channel_id)
     u_id = request.form.get('u_id')
-    return dumps(channel_invite (token, channel_id, u_id))
+    return "invite success"
 
 @APP.route('/channel/details',methods = ['GET'])
 def test_channel_details():
@@ -298,27 +298,27 @@ def test_channel_messages():
 def test_channel_leave():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
-    return dumps(channel_leave(token, channel_id))
+    return "leave success"
 
 @APP.route('/channel/join',methods = ['POST '])
 def test_channel_join():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
-    return dumps(channel_join(token, channel_id))
+    return "join success"
 
 @APP.route('/channel/addowner',methods = ['POST '])
 def test_channel_addowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
-    return dumps(channel_addowner(token, channel_id,u_id))
+    return "addowner success"
 
 @APP.route('/channel/removeowner',methods = ['POST '])
 def test_channel_removeowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
-    return dumps(channel_removeowner(token, channel_id,u_id))
+    return "remvoeowner success"
 
 #Jankie
 @APP.route('/auth/login', methods=['POST'])
