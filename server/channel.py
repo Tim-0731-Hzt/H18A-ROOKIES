@@ -169,7 +169,14 @@ def channel_leave(token, channel_id):
         raise ValueError("channel_id is invalid")
     id = getUserFromToken(token)
     
-    channel = channelDict[channel_id - 1]
+    '''channel = None
+    for cha in channelDict:
+        if cha['channel_id'] == channel_id:
+            channel = cha
+            break
+    if channel == None:
+        raise ValueError("invalid channel_id")'''
+    channel = channelDict[int(channel_id) - 1]
     if channel['channel_owner'] != []:
         if id in channel['channel_owner']:
             channel['channel_owner'].remove(id)

@@ -100,7 +100,6 @@ def test_message_remove_valerr1():
         message_remove(token, messID)
 
 def test_message_remove_valerr2():
-
     # set up
     restart()
     authRegisterDict = auth_register("hao123dong@gmail.com", "12345", "haodong", "lu")
@@ -115,8 +114,6 @@ def test_message_remove_valerr2():
     # testing (try to remove a message with message_id -1)
     with pytest.raises(ValueError, match = r".*"):
         message_remove(token, -1)
-
-
 
 def test_message_remove_accerr1():
 
