@@ -43,7 +43,7 @@ def generateResetCode():
 def generateToken(username):
     global SECRET
     encoded = jwt.encode({'u_id':username},SECRET, algorithm='HS256')
-    encoded = encoded[2:len(token) - 1]
+    encoded = encoded[2:len(encoded) - 1]
     return str(encoded)
 
 def getUserFromToken(token):
