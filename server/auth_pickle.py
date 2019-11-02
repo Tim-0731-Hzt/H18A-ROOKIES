@@ -80,7 +80,7 @@ def auth_login (email, password):
     
     found = False
     for user in userDict:
-        if user['email'] == email:
+        if user['email'] == str(email):
             found = True
             break
     if not found:

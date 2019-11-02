@@ -71,21 +71,14 @@ def sendlater():
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
     time_sent = request.form.get('time_sent')
-    try:
-        return dumps(message_sendlater(token,channel_id,message, time_sent))
-    except:
-        raise ValueError(description="VAlueError !")
+    return dumps(message_send(token,channel_id,message))
 
 @APP.route('/message/send', methods=['POST'])
 def send():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
-    try:
-        return dumps(message_send(token,channel_id,message))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(message_send(token,channel_id,message))
 
 '''@APP.route('/message/send/test', methods=['POST'])
 def send_test_error():
@@ -99,12 +92,7 @@ def send_test_error():
 def remove():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
-    try:
-        return dumps(message_remove(token,int(message_id)))
-    except:
-        raise ValueError(description="VAlueError !")
-
-
+    return dumps(message_remove(token,int(message_id)))
 
 '''@APP.route('/message/remove/test/value', methods=['DELETE'])
 def remove_test1():
@@ -131,11 +119,7 @@ def edit():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
     message = request.form.get('message')
-    try:
-        return dumps(message_edit(token, int(message_id), message))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(message_edit(token, int(message_id), message))
 
 '''@APP.route('/message/edit/test', methods=['PUT'])
 def edit_test():
@@ -153,11 +137,7 @@ def react():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
     react_id = request.form.get('react_id')
-    try:
-        return dumps(message_react(int(token), int(message_id), int(react_id)))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(message_react(int(token), int(message_id), int(react_id)))
 
 '''@APP.route('/message/react/test1', methods=['POST'])
 def react_test1():
@@ -195,11 +175,7 @@ def unreact():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
     react_id = request.form.get('react_id')
-    try:
-        return dumps(message_unreact(int(token), int(message_id), int(react_id)))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(message_unreact(int(token), int(message_id), int(react_id)))
 
 '''@APP.route('/message/unreact/test1', methods=['POST'])
 def unreact_test1():
@@ -246,11 +222,7 @@ def unreact_test4():
 def unpin():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
-    try:
-        return dumps(message_unpin(int(token), int(message_id)))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(message_unpin(int(token), int(message_id)))
 
 '''@APP.route('/message/unpin/test1', methods=['POST'])
 def unpin_test1():
@@ -297,34 +269,33 @@ def unpin_test4():
         return "The authorised user is not a member of the channel that the message is within"'''
 
 
-@APP.route('/channels/create',methods = ['POST'])
+@APP.route('/user/create',methods = ['POST'])
+def test_user_register():
+    email = request.form.get("email")
+    password = request.form.get("password")
+    name_first = request.form.get("name_first")
+    name_last = request.form.get("name_last")
+    dic = {}
+    dic = auth_register(email, password, name_first, name_last)
+    token = dic['token']
+    return dumps(token)
+
+@APP.route('/channel/create',methods = ['POST'])
 def test_channel_create_1():
     token = request.form.get("token")
     name = request.form.get("name")
     is_public = request.form.get("is_public")
-    try:
-        return dumps(channels_create(token, name, is_public))
-    except:
-        raise ValueError(description="VAlueError !")
+    return dumps(channels_create(token, name, is_public))
 
-
-@APP.route('/channels/listall',methods = ['GET'])
+@APP.route('/channel/listall',methods = ['GET'])
 def test_channel_listall():
     token = request.args.get("token")
-    try:
-        return dumps(channels_listall(token))
-    except:
-        raise ValueError(description="VAlueError !")
+    return dumps(channels_listall(token))
 
-
-@APP.route('/channels/list',methods = ['GET'])
+@APP.route('/channel/list',methods = ['GET'])
 def test_channel_list():
     token = request.args.get("token")
-    try:
-        return dumps(channels_list(token))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(channels_list(token))
 
 @APP.route('/channel/invite',methods = ['POST'])
 def test_channel_invite():
@@ -332,76 +303,47 @@ def test_channel_invite():
     channel_id = request.form.get('channel_id')
     #return dumps(channel_id)
     u_id = request.form.get('u_id')
-    try:
-        return dumps(channel_invite (token, channel_id, u_id))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(channel_invite (token, channel_id, u_id))
 
 @APP.route('/channel/details',methods = ['GET'])
 def test_channel_details():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
     #return dumps(channel_id)
-    try:
-        return dumps(channel_details(token, channel_id))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(channel_details(token, channel_id))
 
 @APP.route('/channel/messages',methods = ['GET'])
 def test_channel_messages():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
     start = request.args.get('start')
-    try:
-        return dumps(channel_messages(token, channel_id,start))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(channel_messages(token, channel_id,start))
 
 @APP.route('/channel/leave',methods = ['POST'])
 def test_channel_leave():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
-    try:
-        return dumps(channel_leave(token, channel_id))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(channel_leave(token, channel_id))
 
 @APP.route('/channel/join',methods = ['POST '])
 def test_channel_join():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
-    try:
-        return dumps(channel_join(token, channel_id))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(channel_join(token, channel_id))
 
 @APP.route('/channel/addowner',methods = ['POST '])
 def test_channel_addowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
-    try:
-        return dumps(channel_addowner(token, channel_id,u_id))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(channel_addowner(token, channel_id,u_id))
 
 @APP.route('/channel/removeowner',methods = ['POST '])
 def test_channel_removeowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
-    try:
-        return dumps(channel_removeowner(token, channel_id,u_id))
-    except:
-        raise ValueError(description="VAlueError !")
-
-    
+    return dumps(channel_removeowner(token, channel_id,u_id))
 
 #Jankie
 @APP.route('/auth/login', methods=['POST'])
@@ -409,20 +351,12 @@ def login():
     email = request.form.get('email')
     password = request.form.get('password')
     #after_hash_password = hashPassword(password)
-    try:
-        return dumps(auth_login(email, password))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(auth_login(email, password))
 
 @APP.route('/auth/logout', methods=['POST'])
 def logout():
     token = request.form.get('token')
-    try:
-        return dumps(auth_logout(token))
-    except:
-        raise ValueError(description="VAlueError !")
-
+    return dumps(auth_logout(token))
 
 @APP.route('/auth/register', methods=['POST'])
 def register():
@@ -430,12 +364,8 @@ def register():
     password = request.form.get('password')
     name_first = request.form.get('name_first')
     name_last = request.form.get('name_last')
-    #user = auth_register(email, password, name_first, name_last)
-    '''try:
-        return dumps(auth_register(email, password, name_first, name_last))
-    except:
-        raise ValueError(description="ValueError ! ")'''
-    return dumps(auth_register(email, password, name_first, name_last))
+    user = auth_register(email, password, name_first, name_last)
+    return dumps(user)
     
 
 @APP.route('/auth/passwordreset/request', methods=['POST'])
@@ -458,23 +388,15 @@ def password_request():
 def password_reset():
     reset_code = request.form.get('reset_code')
     new_password = request.form.get('new_password')
-    try:
-        return dumps(auth_passwordreset_reset(reset_code, new_password))
-    except:
-        raise ValueError(description="ValueError ! ")
-
+    return dumps(auth_passwordreset_reset(reset_code, new_password))
 
 '''Dan'''
 @APP.route('/user/profile', methods = ['GET'])
 def user1():
     token = request.args.get('token')
     u_id = request.args.get('u_id')
-    try:
-        return dumps(user_profile(token,u_id))
-    except:
-        raise ValueError(description="ValueError ! ")
-
-
+    profile = user_profile(token,u_id)
+    return dumps(profile)
 
 @APP.route('/user/profile/setname', methods = ['PUT'])
 def user2():
@@ -499,8 +421,7 @@ def user4():
     return dumps({})
 
 @APP.route('/user/profiles/uploadphoto', methods = ['POST'])
-def upload_photo():
-    pass
+
 
 
 @APP.route('/standup/start', methods = ['POST'])
@@ -536,4 +457,5 @@ def admin():
 
 
 if __name__ == '__main__':
-    APP.run(debug=True)
+    APP.run()
+

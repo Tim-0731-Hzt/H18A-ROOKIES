@@ -1,10 +1,10 @@
 
 import pytest
 import re
-from auth_pickle import *
-from message_pickle import *
-from channel import *
-from user import *
+from server.auth_pickle import *
+from server.message_pickle import *
+from server.channel import *
+from server.user import *
 
 
 # For a valid user, returns information about their email, first name, last name, and handle

@@ -1,7 +1,7 @@
 import pickle
 
 def save(DATA):
-    with open('../datastore.p', 'wb') as FILE:
+    with open('datastore.p', 'wb') as FILE:
         pickle.dump(DATA, FILE)
 
 def load():
@@ -16,5 +16,5 @@ def restart():
         'channelDict': [],
         'userDict': []
     }
-    with open('../datastore.p', 'wb') as FILE:
+    with open('datastore.p', 'wb') as FILE:
         pickle.dump(DATA, FILE)
