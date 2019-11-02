@@ -1,9 +1,9 @@
 # For a valid user, returns information about their email, first name, last name, and handle
 # ValueError when:
 # User with u_id is not a valid user
-from Error import AccessError
-from auth_pickle import getUserFromToken
-from pickle_unpickle import *
+from server.Error import AccessError
+from server.auth_pickle import getUserFromToken
+from server.pickle_unpickle import *
 import re
 
 

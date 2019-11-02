@@ -1,7 +1,7 @@
 # channel
-from Error import AccessError
-from auth_pickle import *
-from pickle_unpickle import *
+from server.Error import AccessError
+from server.auth_pickle import *
+from server.pickle_unpickle import *
 # global varaibles:
 
 

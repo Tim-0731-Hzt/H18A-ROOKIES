@@ -6,8 +6,8 @@ import jwt
 import random
 from random import randrange
 from json import dumps
-from Error import AccessError
-from pickle_unpickle import save, load
+from server.Error import AccessError
+from server.pickle_unpickle import save, load
 
 SECRET = 'ROOKIES'
 # Global variable

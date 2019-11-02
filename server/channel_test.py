@@ -1,9 +1,9 @@
-from channel import *
-from auth_pickle import *
-from message_pickle import *
+from server.channel import *
+from server.auth_pickle import *
+from server.message_pickle import *
 import pytest
-from Error import AccessError
-from pickle_unpickle import *
+from server.Error import AccessError
+from server.pickle_unpickle import *
 
 def test_channels_create_1():
         restart()

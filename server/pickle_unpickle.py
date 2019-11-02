@@ -5,7 +5,7 @@ def save(DATA):
         pickle.dump(DATA, FILE)
 
 def load():
-    DATA = pickle.load(open("../datastore.p", "rb"))
+    DATA = pickle.load(open("datastore.p", "rb"))
     return DATA
 
 def restart():

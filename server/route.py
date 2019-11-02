@@ -1,15 +1,14 @@
-
-from message_pickle import message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
-from Error import AccessError
+from server.message_pickle import message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
+from server.Error import AccessError
 from flask import Flask, request, jsonify
 from flask_mail import Mail, Message
 from json import dumps
-from channel import *
-from auth_pickle import *
-from user import *
-from search import search
-from admin_userpermission_change import admin_userpermission_change
-from pickle_unpickle import restart
+from server.channel import *
+from server.auth_pickle import *
+from server.user import *
+from server.search import search
+from server.admin_userpermission_change import admin_userpermission_change
+from server.pickle_unpickle import restart
 from werkzeug.exceptions import HTTPException
 from flask_cors import CORS
 
@@ -432,10 +431,11 @@ def register():
     name_first = request.form.get('name_first')
     name_last = request.form.get('name_last')
     #user = auth_register(email, password, name_first, name_last)
-    try:
+    '''try:
         return dumps(auth_register(email, password, name_first, name_last))
     except:
-        raise ValueError(description="ValueError ! ")
+        raise ValueError(description="ValueError ! ")'''
+    return dumps(auth_register(email, password, name_first, name_last))
     
 
 @APP.route('/auth/passwordreset/request', methods=['POST'])
