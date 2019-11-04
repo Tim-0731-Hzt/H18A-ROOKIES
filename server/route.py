@@ -280,24 +280,24 @@ def test_user_register():
     token = dic['token']
     return dumps(token)
 
-@APP.route('/channel/create',methods = ['POST'])
+@APP.route('/channels/create',methods = ['POST'])
 def test_channel_create_1():
     token = request.form.get("token")
     name = request.form.get("name")
     is_public = request.form.get("is_public")
     return dumps(channels_create(token, name, is_public))
 
-@APP.route('/channel/listall',methods = ['GET'])
+@APP.route('/channels/listall',methods = ['GET'])
 def test_channel_listall():
     token = request.args.get("token")
     return dumps(channels_listall(token))
 
-@APP.route('/channel/list',methods = ['GET'])
+@APP.route('/channels/list',methods = ['GET'])
 def test_channel_list():
     token = request.args.get("token")
     return dumps(channels_list(token))
 
-@APP.route('/channel/invite',methods = ['POST'])
+@APP.route('/channels/invite',methods = ['POST'])
 def test_channel_invite():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
@@ -305,40 +305,40 @@ def test_channel_invite():
     u_id = request.form.get('u_id')
     return dumps(channel_invite (token, channel_id, u_id))
 
-@APP.route('/channel/details',methods = ['GET'])
+@APP.route('/channels/details',methods = ['GET'])
 def test_channel_details():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
     #return dumps(channel_id)
     return dumps(channel_details(token, channel_id))
 
-@APP.route('/channel/messages',methods = ['GET'])
+@APP.route('/channels/messages',methods = ['GET'])
 def test_channel_messages():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
     start = request.args.get('start')
     return dumps(channel_messages(token, channel_id,start))
 
-@APP.route('/channel/leave',methods = ['POST'])
+@APP.route('/channels/leave',methods = ['POST'])
 def test_channel_leave():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     return dumps(channel_leave(token, channel_id))
 
-@APP.route('/channel/join',methods = ['POST '])
+@APP.route('/channels/join',methods = ['POST '])
 def test_channel_join():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     return dumps(channel_join(token, channel_id))
 
-@APP.route('/channel/addowner',methods = ['POST '])
+@APP.route('/channels/addowner',methods = ['POST '])
 def test_channel_addowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
     return dumps(channel_addowner(token, channel_id,u_id))
 
-@APP.route('/channel/removeowner',methods = ['POST '])
+@APP.route('/channels/removeowner',methods = ['POST '])
 def test_channel_removeowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
@@ -391,14 +391,14 @@ def password_reset():
     return dumps(auth_passwordreset_reset(reset_code, new_password))
 
 '''Dan'''
-@APP.route('/user/profile', methods = ['GET'])
+@APP.route('/users/profile', methods = ['GET'])
 def user1():
     token = request.args.get('token')
     u_id = request.args.get('u_id')
     profile = user_profile(token,u_id)
     return dumps(profile)
 
-@APP.route('/user/profile/setname', methods = ['PUT'])
+@APP.route('/users/profile/setname', methods = ['PUT'])
 def user2():
     token = request.form.get('token')
     name_first = request.form.get('name_first')
@@ -406,21 +406,21 @@ def user2():
     user_profile_setname(token,name_first, name_last)
     return dumps({})
 
-@APP.route('/user/profile/setemail', methods = ['PUT'])
+@APP.route('/users/profile/setemail', methods = ['PUT'])
 def user3():
     token = request.form.get('token')
     email = request.form.get('email')
     user_profile_setmail(token,email)
     return dumps({})
 
-@APP.route('/user/profile/sethandle', methods = ['PUT'])
+@APP.route('/users/profile/sethandle', methods = ['PUT'])
 def user4():
     token = request.form.get('token')
     handle_str = request.form.get('handle_str')
     user_profile_sethandle(token,handle_str)
     return dumps({})
 
-@APP.route('/user/profiles/uploadphoto', methods = ['POST'])
+@APP.route('/users/profiles/uploadphoto', methods = ['POST'])
 
 
 
