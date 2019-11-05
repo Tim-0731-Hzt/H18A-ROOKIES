@@ -1,11 +1,12 @@
 import pickle
-
+import os
+f = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'datastore.p')
 def save(DATA):
-    with open('datastore.p', 'wb') as FILE:
+    with open(str(f), 'wb') as FILE:
         pickle.dump(DATA, FILE)
 
 def load():
-    DATA = pickle.load(open("datastore.p", "rb"))
+    DATA = pickle.load(open(str(f), "rb"))
     return DATA
 
 def restart():
@@ -16,5 +17,5 @@ def restart():
         'channelDict': [],
         'userDict': []
     }
-    with open('datastore.p', 'wb') as FILE:
+    with open(str(f), 'wb') as FILE:
         pickle.dump(DATA, FILE)

@@ -8,10 +8,18 @@ from PIL import Image
 import requests
 import urllib.request
 import mimetypes
-import urllib2
+# import urllib2
 import sys
 import re
 
+def users_all(token):
+    uid = getUserFromToken(token)
+    data = load()
+    user = data['userDict']
+    user = list(user)
+    return {
+        'users': user
+    }
 
 def user_profile(token, u_id):
     opid = getUserFromToken(token)
@@ -54,9 +62,6 @@ def user_profile_setemail(token, email):
             return
    
      
-
-
-
 
 def user_profile_sethandle(token,handle_str):
     opid = getUserFromToken(token)
@@ -130,7 +135,7 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     if get_type(img_url) == False:
         raise ValueError("Image uploaded is not a JPG")
     cropped = image.crop(x_start, y_start, x_end, y_end)
-    cropped.save(sys."/user/photo.jpg")
+    cropped.save("/user/photo.jpg")
     DATA = load()
     userDict = DATA['userDict']
     userDict["profile_img_url"] = "/user/photo.jpg"
