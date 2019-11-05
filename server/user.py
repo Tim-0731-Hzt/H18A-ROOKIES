@@ -9,6 +9,7 @@ import requests
 import urllib.request
 import mimetypes
 import urllib2
+import sys
 import re
 
 
@@ -129,8 +130,9 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     if get_type(img_url) == False:
         raise ValueError("Image uploaded is not a JPG")
     cropped = image.crop(x_start, y_start, x_end, y_end)
+    cropped.save(sys."/user/photo.jpg")
     DATA = load()
     userDict = DATA['userDict']
-    userDict["profile_img_url"] = cropped
+    userDict["profile_img_url"] = "/user/photo.jpg"
     DATA['userDict'] = userDict
     save(DATA)
