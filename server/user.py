@@ -4,7 +4,7 @@
 from server.Error import AccessError
 from server.auth_pickle import getUserFromToken
 from server.pickle_unpickle import *
-from PIL import image
+from PIL import Image
 import requests
 import urllib.request
 import mimetypes
