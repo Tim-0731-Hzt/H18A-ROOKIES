@@ -309,15 +309,19 @@ def channel_invite():
 def channel_details():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
-    #return dumps(channel_id)
-    return dumps(channel_details(token, channel_id))
+    # return dumps(channel_details(token, channel_id))
+    return dumps({
+        'name': "haha",
+        'all_members': [],
+        'owner_members': []
+    })
 
 @APP.route('/channel/messages',methods = ['GET'])
 def channel_messages():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
     start = request.args.get('start')
-    return dumps(channel_messages(token, channel_id,start))
+    return dumps(channels_messages(token, channel_id,start))
 
 @APP.route('/channels/leave',methods = ['POST'])
 def channel_leave():
