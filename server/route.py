@@ -287,17 +287,17 @@ def channel_create():
     is_public = request.form.get("is_public")
     return dumps(channels_create(token, name, is_public))
 
-@APP.route('/channels/listall',methods = ['GET'])
+@APP.route('/channels/listall', methods = ['GET'])
 def channel_listall():
     token = request.args.get("token")
     return dumps(channels_listall(token))
 
-@APP.route('/channels/list',methods = ['GET'])
+@APP.route('/channels/list', methods = ['GET'])
 def channel_list():
     token = request.args.get("token")
     return dumps(channels_list(token))
 
-@APP.route('/channels/invite',methods = ['POST'])
+@APP.route('/channels/invite', methods = ['POST'])
 def channel_invite():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
@@ -305,38 +305,39 @@ def channel_invite():
     u_id = request.form.get('u_id')
     return dumps(channel_invite (token, channel_id, u_id))
 
-@APP.route('/channel/details',methods = ['GET'])
-def channel_details():
+@APP.route('/channel/details', methods = ['GET'])
+def channels_details():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
-    # return dumps(channel_details(token, channel_id))
+    return dumps(channel_details(token, channel_id))
+    '''print(channel_details(token, channel_id))
     return dumps({
         'name': "haha",
         'all_members': [],
         'owner_members': []
-    })
+    })'''
 
-@APP.route('/channel/messages',methods = ['GET'])
+@APP.route('/channel/messages', methods = ['GET'])
 def channel_messages():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
     start = request.args.get('start')
     return dumps(channels_messages(token, channel_id,start))
 
-@APP.route('/channels/leave',methods = ['POST'])
-def channel_leave():
+@APP.route('/channels/leave', methods = ['POST'])
+def channels_leave():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     return dumps(channel_leave(token, channel_id))
 
-@APP.route('/channels/join',methods = ['POST '])
-def channel_join():
+@APP.route('/channels/join', methods = ['POST '])
+def channels_join():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     return dumps(channel_join(token, channel_id))
 
 @APP.route('/channels/addowner',methods = ['POST '])
-def channel_addowner():
+def channels_addowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')

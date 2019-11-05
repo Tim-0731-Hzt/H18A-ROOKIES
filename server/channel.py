@@ -12,12 +12,12 @@ def get_members(uids):
     memDict = []
     for uid in uids:
         for user in userDict:
-            if userDict['u_id'] == uid:
+            if int(user['u_id']) == int(uid):
                 d = {
                     'u_id': uid,
-                    'name_first': userDict['first_name'],
-                    'name_last': userDict['last_name'],
-                    'profile_img_url': userDict['profile_img_url']
+                    'name_first': user['first_name'],
+                    'name_last': user['last_name'],
+                    'profile_img_url': user['profile_img_url']
                 }
                 memDict.append(d)
                 break
@@ -69,10 +69,10 @@ def auth_id_check(token,channel_id):
     uid = getUserFromToken(token)
     # if the user is slacker owner or admin
     for parts in userDict:
-        if (parts['u_id'] == uid and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
+        if (int(parts['u_id']) == uid and (int(parts['permission_id']) == 1 or int(parts['permission_id']) == 2)):
             return True
     for elements in channelDict:
-        if (elements['channel_id'] == channel_id):
+        if (int(elements['channel_id']) == int(channel_id)):
             if uid in elements['channel_member'] or uid in elements['channel_owner']:
                 return True
             else:
@@ -87,7 +87,7 @@ def auth_id_check(token,channel_id):
         if (uid in parts):
             return True
     return False'''
-
+    return False
 def channel_property_check(channel_id):
     DATA = load()
     channelDict = DATA['channelDict']
@@ -133,22 +133,27 @@ def channel_invite (token, channel_id, u_id):
 # provide basic details about the channel
 def channel_details (token, channel_id):
     DATA = load()
+
+    # return DATA
+
+
     channelDict = DATA['channelDict']
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     if auth_id_check(token,channel_id) == False:
         raise AccessError("Auth user is not a member of channel")
-    detail = {
+    '''detail = {
         'name': None,
         'all_members': [],
         'owner_members': []
-    }
+    }'''
+    detail = {}
     for parts in channelDict:
-        if (parts['channel_id'] == channel_id):
+        if (int(parts['channel_id']) == int(channel_id)):
             detail['name'] = parts['name']
-            detail['all_members'] = list(get_members(parts['channel_member']))
-            detail['owner_members'] = list(get_members(parts['channel_owner']))
-    return detail
+            detail['all_members'] = list(get_members(list(parts['channel_member'])))
+            detail['owner_members'] = list(get_members(list(parts['channel_owner'])))
+    return dict(detail)
 
 # Given a Channel with ID channel_id that the authorised user is part of, 
 # return up to 50 messages between index "start" and "start + 50". 
@@ -334,7 +339,7 @@ def channels_create(token, name, is_public):
                 raise ValueError("this name was already used")
         count = len(channelDict) + 1
         d = {
-            'channel_id': count,
+            'channel_id': int(count),
             'name': name,
             'channel_creater': id,
             'channel_member': [],
@@ -347,3 +352,4 @@ def channels_create(token, name, is_public):
         DATA['channelDict'] = channelDict
         save(DATA)
         return d['channel_id']
+        # return {'channel_id': d['channel_id']}
