@@ -1,7 +1,7 @@
 # channel
-from Error import AccessError
-from auth_pickle import *
-from pickle_unpickle import *
+from server.Error import AccessError
+from server.auth_pickle import *
+from server.pickle_unpickle import *
 # global varaibles:
 
 
@@ -272,12 +272,12 @@ def channels_list(token):
                 L.append(parts)
     if L == []:
         raise AccessError("the authorised user does not belong to any channel")
-    return L
+    return {'channels': L}
 # Provide a list of all channels (and their associated details) 
 def channels_listall(token):
     DATA = load()
     channelDict = DATA['channelDict'] 
-    return channelDict
+    return {'channels': channelDict}
 # Creates a new channel with that name that is either a public or private channel
 def channels_create(token, name, is_public):
     DATA = load()

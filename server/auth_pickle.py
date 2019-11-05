@@ -6,8 +6,8 @@ import jwt
 import random
 from random import randrange
 from json import dumps
-from Error import AccessError
-from pickle_unpickle import save, load
+from server.Error import AccessError
+from server.pickle_unpickle import save, load
 
 SECRET = 'ROOKIES'
 # Global variable
@@ -80,7 +80,7 @@ def auth_login (email, password):
     
     found = False
     for user in userDict:
-        if user['email'] == email:
+        if user['email'] == str(email):
             found = True
             break
     if not found:

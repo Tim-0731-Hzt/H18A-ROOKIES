@@ -1,9 +1,14 @@
 # For a valid user, returns information about their email, first name, last name, and handle
 # ValueError when:
 # User with u_id is not a valid user
-from Error import AccessError
-from auth_pickle import getUserFromToken
-from pickle_unpickle import *
+from server.Error import AccessError
+from server.auth_pickle import getUserFromToken
+from server.pickle_unpickle import *
+from PIL import image
+import requests
+import urllib.request
+import mimetypes
+import urllib2
 import re
 
 
@@ -101,15 +106,31 @@ def user_profile_setname(token, name_first, name_last):
 
 
 
+def get_type(img_url):
+    valid_types = ('image/jpg')
+    content_type = get_contenttype(img_url)
+    mimetypes = get_mimetype(img_url)
+    if content_type or mimetypes in valid_types:
+        return True
+    else:
+        return False
 
 
-
-'''def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
-    if img_url != 200:
+def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
+    response = requests.get(img_url)
+    if response.status_code != 200:
         raise ValueError('url corrupted')
-    size = 400
-    if x_end > 400 or y_end >400 or x_start > 400 or y_start > 400:
+    image = image.open(urllib.request.urlopen(img_url))
+    width, height = image.size
+    if x_end > width or y_end > height or x_start < width or y_start > height:
         raise ValueError('Out of bound')
     if x_end < 0 or y_end < 0 or x_start < 0 or y_start < 0:
         raise ValueError('Out of bound')
-    pass'''
+    if get_type(img_url) == False:
+        raise ValueError("Image uploaded is not a JPG")
+    cropped = image.crop(x_start, y_start, x_end, y_end)
+    DATA = load()
+    userDict = DATA['userDict']
+    userDict["profile_img_url"] = cropped
+    DATA['userDict'] = userDict
+    save(DATA)

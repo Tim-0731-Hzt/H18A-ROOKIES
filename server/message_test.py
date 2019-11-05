@@ -1,11 +1,11 @@
 # MESSAGE TEST
-from message_pickle import *
-from channel import channels_create, channel_join
-from auth_pickle import auth_register
+from server.message_pickle import *
+from server.channel import channels_create, channel_join
+from server.auth_pickle import auth_register
 import pytest
-from Error import AccessError
-from pickle_unpickle import *
-from admin_userpermission_change import *
+from server.Error import AccessError
+from server.pickle_unpickle import *
+from server.admin_userpermission_change import *
 
 def test_message_sendlater_valerr():
     # set up

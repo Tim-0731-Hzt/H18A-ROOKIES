@@ -1,9 +1,9 @@
 # MESSAGE
 import time
-from auth_pickle import getUserFromToken
+from server.auth_pickle import getUserFromToken
 
-from Error import AccessError
-from pickle_unpickle import *
+from server.Error import AccessError
+from server.pickle_unpickle import *
 
 # Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future
 # ValueError when:

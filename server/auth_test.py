@@ -1,11 +1,11 @@
 ##AUTH TEST
-import channel
+import server.channel
 import pytest
-from auth_pickle import *
-from Error import AccessError
-from pickle_unpickle import *
+from server.auth_pickle import *
+from server.Error import AccessError
+from server.pickle_unpickle import *
 #from auth import userDict
-from user import user_profile
+from server.user import user_profile
 
 ##
 restart()
