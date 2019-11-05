@@ -157,7 +157,7 @@ def channel_details (token, channel_id):
 # or, if this function has returned the least recent messages in the channel, 
 # returns -1 in "end" to indicate there are no more messages to load after this return.
 
-def channel_messages (token, channel_id, start):
+def channels_messages (token, channel_id, start):
     DATA = load()
     messDict = DATA['messDict']
     if channel_id_check(channel_id) == False:
