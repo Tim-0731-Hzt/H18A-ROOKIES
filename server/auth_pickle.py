@@ -88,7 +88,8 @@ def auth_login (email, password):
     for user in userDict:     
         if user['email'] == email and user['password'] == hashPassword(password):
             if user['online'] == True:
-                raise ValueError("Already login")
+                pass
+                # raise ValueError("Already login")
             else:
                 user['online'] = True
                 DATA['userDict'] = userDict

@@ -330,7 +330,7 @@ def channels_leave():
     channel_id = request.form.get('channel_id')
     return dumps(channel_leave(token, channel_id))
 
-@APP.route('/channels/join', methods = ['POST '])
+@APP.route('/channel/join', methods = ['POST'])
 def channels_join():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
@@ -396,11 +396,11 @@ def password_reset():
     return dumps(auth_passwordreset_reset(reset_code, new_password))
 
 '''Dan'''
-@APP.route('/users/profile', methods = ['GET'])
+@APP.route('/user/profile', methods = ['GET'])
 def user1():
     token = request.args.get('token')
     u_id = request.args.get('u_id')
-    profile = user_profile(token,u_id)
+    profile = user_profile(token, u_id)
     return dumps(profile)
 
 @APP.route('/users/profile/setname', methods = ['PUT'])

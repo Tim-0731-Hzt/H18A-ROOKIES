@@ -24,6 +24,40 @@ def get_members(uids):
 
     return memDict
 
+def get_channels(channel_ids):
+    data = load()
+    channelDict = data['channelDict']
+    channel = []
+    for cid in channel_ids:
+        for cha in channelDict:
+            if int(cid) == int(cha['channel_id']):
+                c = {
+                    'channel_id': int(cid),
+                    'name': cha['name'] 
+                }
+                channel.append(c)
+                break
+    return channel
+
+def get_messages(message_ids):
+    data = load()
+    messDict = data['messDict']
+    mess = []
+    for mID in list(message_ids):
+        for message in messDict:
+            if message['message_id'] == int(mID):
+                m = {
+                    'message_id': message['message_id'],
+                    'u_id': message['u_id'],
+                    'message': message['message'],
+                    'time_created': message['time_created'],
+                    'reacts': message['reacts'],
+                    'is_pinned': message['is_pinned']
+                }
+                mess.append(m)
+                break
+    return list(mess)
+
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
 def channel_id_check(channel_id):
@@ -165,21 +199,24 @@ def channel_details (token, channel_id):
 def channels_messages (token, channel_id, start):
     DATA = load()
     messDict = DATA['messDict']
+    start = int(start)
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     if auth_id_check(token,channel_id) == False:
         raise AccessError("Auth user is not a member of channnel")
-    dic = {'messages':[],
-            'start':start,
-            'end':None
+    dic = {
+        'messages':[],
+        'start':start,
+        'end':None
     }
     L = []
     for parts in messDict:
-        if (parts['channel_id'] == channel_id):
-            L.append(parts)
+        if int(parts['channel_id']) == int(channel_id):
+            L.append(parts['message_id'])
     if L == []:
         raise AccessError("no message send")
     L = L[::-1]
+    L = get_messages(L)
     if len(L) <= start:
         raise ValueError("start is greater than or equal to the total number of messages in the channel")
 
@@ -298,18 +335,29 @@ def channels_list(token):
     DATA = load()
     channelDict = DATA['channelDict'] 
     L = []
-    id = getUserFromToken(token)
+    uid = getUserFromToken(token)
     for parts in channelDict:
-        if (id in parts['channel_member'] or id in parts['channel_owner']):
-                L.append(parts)
+        if (uid in parts['channel_member'] or uid in parts['channel_owner']):
+            L.append(parts['channel_id'])
     if L == []:
         raise AccessError("the authorised user does not belong to any channel")
+    # return  channel_id, name 
+    L = get_channels(L)
     return {'channels': L}
+
 # Provide a list of all channels (and their associated details) 
 def channels_listall(token):
     DATA = load()
-    channelDict = DATA['channelDict'] 
-    return {'channels': channelDict}
+    channelDict = DATA['channelDict']
+    channel = []
+    for cha in channelDict:
+        c = {
+            'channel_id': int(cha['channel_id']),
+            'name': cha['name'] 
+        }
+        channel.append(c)
+
+    return {'channels': channel}
 # Creates a new channel with that name that is either a public or private channel
 def channels_create(token, name, is_public):
     DATA = load()

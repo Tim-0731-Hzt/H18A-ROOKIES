@@ -27,13 +27,23 @@ def user_profile(token, u_id):
     DATA = load()
     userdict = DATA['userDict']
     for user in userdict:
-        if user['u_id'] == u_id:
-            return {
-                'email': user['email'], 
-                'first_name': user['first_name'],
-                'last_name': user['last_name'],
-                'handle': user['handle']
+        if int(user['u_id']) == int(u_id):
+            d = {
+                'u_id': int(u_id),
+                #'profile_img_url': user['profile_img_url'],
+                'profile_img_url': None,
+                'email': str(user['email']), 
+                'name_first': str(user['first_name']),
+                'name_last': str(user['last_name']),
+                'handle_str': str(user['handle'])
             }
+            '''d = {
+                'email': "lhd1234567@gmail.com", 
+                'name_first': "haodong",
+                'name_last': 'lu',
+                'handle_str': 'haodonglu'
+            }'''
+            return dict(d)
     raise ValueError('u_id was incorrect')
     
     
