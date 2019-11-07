@@ -42,6 +42,7 @@ def standup_start(token, channel_id):
   
             
 def send(channel_id,token):
+    
     data = load()
     channelDict = data['channelDict']
     for channel in channelDict:
@@ -51,6 +52,7 @@ def send(channel_id,token):
             channel['standlist'] == ''
             data['channelDict'] = channelDict
             save(data)
+            
             return
 
 def showtime():
