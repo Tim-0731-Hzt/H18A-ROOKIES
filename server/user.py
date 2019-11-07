@@ -4,11 +4,10 @@
 from server.Error import AccessError
 from server.auth_pickle import getUserFromToken
 from server.pickle_unpickle import *
-from PIL import image
+from PIL import Image
 import requests
 import urllib.request
 import mimetypes
-import urllib2
 import sys
 import re
 
@@ -121,16 +120,16 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     response = requests.get(img_url)
     if response.status_code != 200:
         raise ValueError('url corrupted')
-    image = image.open(urllib.request.urlopen(img_url))
-    width, height = image.size
+    image = Image.open(urllib.request.urlopen(img_url))
+    width, height = Image.size
     if x_end > width or y_end > height or x_start < width or y_start > height:
         raise ValueError('Out of bound')
     if x_end < 0 or y_end < 0 or x_start < 0 or y_start < 0:
         raise ValueError('Out of bound')
     if get_type(img_url) == False:
         raise ValueError("Image uploaded is not a JPG")
-    cropped = image.crop(x_start, y_start, x_end, y_end)
-    cropped.save(sys."/user/photo.jpg")
+    cropped = Image.crop(x_start, y_start, x_end, y_end)
+    cropped.save("/user/photo.jpg")
     DATA = load()
     userDict = DATA['userDict']
     userDict["profile_img_url"] = "/user/photo.jpg"
