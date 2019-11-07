@@ -1,9 +1,9 @@
 # MESSAGE
-import time
-from auth import getUserFromToken
+from datetime import datetime
+from server.auth_pickle import getUserFromToken
 
-from Error import AccessError
-from pickle_unpickle import *
+from server.Error import AccessError
+from server.pickle_unpickle import *
 
 # Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future
 # ValueError when:
@@ -31,7 +31,7 @@ def message_sendlater(token, channel_id, message, time_sent):
         'message_id': DATA['messID'],
         'u_id': int(uID),   # fix that later
         'message': message,
-        'time_created': time.ctime(),
+        'time_created': datetime.now(),
         'reacts': None,
         'is_pinned': False
     }
@@ -66,10 +66,10 @@ def message_send(token, channel_id, message):
     DATA['messID'] += 1
     m = {
         'channel_id': int(channel_id),
-        'message_id': DATA['messID'],
+        'message_id': int(DATA['messID']),
         'u_id': int(uID),
         'message': message,
-        'time_created': time.ctime(),
+        'time_created': int(datetime.utcnow().timestamp()),
         'reacts': None,
         'is_pinned': False
     }

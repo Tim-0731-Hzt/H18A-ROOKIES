@@ -1,6 +1,6 @@
 """Flask server"""
 import sys
-from flask_cors import CORS
+'''from flask_cors import CORS
 from json import dumps
 from flask import Flask, request
 
@@ -24,6 +24,9 @@ def echo2():
     return dumps({
         'echo' : request.form.get('echo'),
     })
+'''
 
+#from server import route
+from server.route import *
 if __name__ == '__main__':
     APP.run(port=(sys.argv[1] if len(sys.argv) > 1 else 5000))

@@ -1,11 +1,11 @@
 # MESSAGE TEST
-from message_pickle import *
-from channel import channels_create, channel_join
-from auth import auth_register
+from server.message_pickle import *
+from server.channel import channels_create, channel_join
+from server.auth_pickle import auth_register
 import pytest
-from Error import AccessError
-from pickle_unpickle import *
-from admin_userpermission_change import *
+from server.Error import AccessError
+from server.pickle_unpickle import *
+from server.admin_userpermission_change import *
 
 def test_message_sendlater_valerr():
     # set up
@@ -100,7 +100,6 @@ def test_message_remove_valerr1():
         message_remove(token, messID)
 
 def test_message_remove_valerr2():
-
     # set up
     restart()
     authRegisterDict = auth_register("hao123dong@gmail.com", "12345", "haodong", "lu")
@@ -115,8 +114,6 @@ def test_message_remove_valerr2():
     # testing (try to remove a message with message_id -1)
     with pytest.raises(ValueError, match = r".*"):
         message_remove(token, -1)
-
-
 
 def test_message_remove_accerr1():
 

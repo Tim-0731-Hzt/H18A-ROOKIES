@@ -2,13 +2,12 @@
 import re
 import hashlib
 import jwt
-# import user
+
 import random
 from random import randrange
 from json import dumps
-from flask import Flask, request
-from Error import AccessError
-from pickle_unpickle import save, load
+from server.Error import AccessError
+from server.pickle_unpickle import save, load
 
 SECRET = 'ROOKIES'
 # Global variable
@@ -16,14 +15,20 @@ SECRET = 'ROOKIES'
 #channelDict = []
 #messDict = [] 
 #userDict = []
+def digit_check(number):
+    count = 0
+    while (number > 0):  
+        number = number // 10
+        count = count + 1
+    return count
 
-def sendSuccess(userDict):
-    return dumps(userDict)
-
-def sendError(message):
-    return dumps({
-        '_error':message,
-    })
+def handle_check(handle):
+    DATA = load()
+    userDict = DATA['userDict']
+    for user in userDict:
+        if user['handle'] == handle:
+            return True
+    return False
 
 #random.randint(1,10)
 def generateResetCode():
@@ -38,6 +43,7 @@ def generateResetCode():
 def generateToken(username):
     global SECRET
     encoded = jwt.encode({'u_id':username},SECRET, algorithm='HS256')
+    #encoded = encoded[2:len(encoded) - 1]
     return str(encoded)
 
 def getUserFromToken(token):
@@ -71,19 +77,23 @@ def auth_login (email, password):
         pass
     else:
         raise ValueError("Invalid Email")
-    #incorrect password
-    if (len(password) < 5):
-        raise ValueError("Password is not correct")
+    
+    found = False
     for user in userDict:
-        if user['email'] == email:
+        if user['email'] == str(email):
+            found = True
             break
-        else:
-             raise ValueError("Email entered doesn't belong to a user")
+    if not found:
+        raise ValueError("Email entered doesn't belong to a user")
     for user in userDict:     
         if user['email'] == email and user['password'] == hashPassword(password):
             if user['online'] == True:
-                raise ValueError("Already login")
+                pass
+                # raise ValueError("Already login")
             else:
+                user['online'] = True
+                DATA['userDict'] = userDict
+                save(DATA)
                 return {
                     'u_id': user['u_id'],
                     'token': generateToken(user['u_id'])
@@ -100,7 +110,7 @@ def auth_logout(token):
     u_id = getUserFromToken(token)
     #print(u_id)
     for user in userDict:
-        if user['u_id'] == u_id:
+        if user['u_id'] == u_id and user['online'] == True:
             user['online'] = False
             DATA['userDict'] = userDict
             save(DATA)
@@ -146,6 +156,7 @@ def auth_register(email, password, name_first, name_last):
         'password' : None,
         'online' : True,
         'reset_code': None,
+        'profile_img_url': None
     }
     firstName = name_first.lower()
     lastName = name_last.lower()
@@ -154,28 +165,37 @@ def auth_register(email, password, name_first, name_last):
         handle = handle[:20]
 
     newUser['handle'] = handle
-    if (len(handle) < 20):
-        for user in userDict:
-            if user['handle'] is handle:
-                for i in range(0,9999):
-                    if user['handle'] is not handle + str(i) and (len(handle + str(i)) < 20):
-                        newUser['handle'] = handle + str(i)
-                        break
-            else:
-                pass
+ 
+
+    if handle_check(handle) == True:
+        handle = handle[3:len(handle)]
+       #s print(handle)
+        for i in range (1,999):
+            #print (digit_check(i))
+            if digit_check(i) == 1:
+                new = "00"+str(i)
+                if handle_check(new + handle) == False:
+                    newUser['handle'] = new + handle
+                    break
+
+            elif digit_check(i) == 2:
+                new = "0"+str(i) 
+                if handle_check(new + handle) == False:
+                    newUser['handle'] = new + handle
+                    break
+
+            elif digit_check(i) == 3:
+                new = str(i)
+                if handle_check(new + handle) == False:
+                    newUser['handle'] = new + handle
+                    break
+        else:
+            pass
     else:
-        for user in userDict:
-            if user['handle'] is handle:
-                for i in range (0,10):
-                    if  user['handle'] is not (i + handle[1:20]):
-                        handle[0] = i
-            else:
-                pass
+        pass
 
     if (len(userDict) == 0):
         newUser['permission_id'] = 1
-    elif (len(userDict) == 1):
-        newUser['permission_id'] = 2
     else:
         newUser['permission_id'] = 3
     
@@ -226,6 +246,6 @@ def auth_passwordreset_reset(reset_code, new_password):
             DATA['userDict'] = userDict
             save(DATA)
             return {}
-    raise ValueError("reset_code is not valid")
+    
 
 

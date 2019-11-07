@@ -1,12 +1,12 @@
-from Error import AccessError
-from channel import *
-from message_pickle import *
+from server.Error import AccessError
+from server.channel import *
+from server.message_pickle import *
 import threading
-from auth_pickle import *
+from server.auth_pickle import *
 
 import time
 from datetime import datetime, timedelta
-import pickle_unpickle
+import server.pickle_unpickle
 def standup_start(token, channel_id):
     
     data = load()

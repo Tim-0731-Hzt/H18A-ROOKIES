@@ -1,9 +1,9 @@
-from Error import AccessError
-from channel import *
-from message_pickle import *
-from auth_pickle import *
-import pickle_unpickle
-from standup import *
+from server.Error import AccessError
+from server.channel import *
+from server.message_pickle import *
+from server.auth_pickle import *
+import server.pickle_unpickle
+from server.standup import *
 import pytest
 
 restart()

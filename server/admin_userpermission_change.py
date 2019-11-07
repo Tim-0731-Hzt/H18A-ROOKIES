@@ -1,8 +1,8 @@
 
-from Error import AccessError
-from auth_pickle import *
-import pickle_unpickle
-from channel import *
+from server.Error import AccessError
+from server.auth_pickle import *
+import server.pickle_unpickle
+from server.channel import *
 
 def admin_userpermission_change(token, u_id, permission_id):
     fl = 1

@@ -1,9 +1,9 @@
-from channel import *
-from message_pickle import *
-from auth_pickle import *
+from server.channel import *
+from server.message_pickle import *
+from server.auth_pickle import *
 
-import pickle_unpickle
-from search import *
+import server.pickle_unpickle
+from server.search import *
 import pytest
 
 
