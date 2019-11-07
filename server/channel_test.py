@@ -2,7 +2,7 @@ from server.channel import *
 from server.auth_pickle import *
 from server.message_pickle import *
 import pytest
-from server.Error import AccessError
+from server.Error import AccessError, ValueError
 from server.pickle_unpickle import *
 
 def test_channels_create_1():

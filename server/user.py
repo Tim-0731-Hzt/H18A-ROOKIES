@@ -1,7 +1,7 @@
 # For a valid user, returns information about their email, first name, last name, and handle
 # ValueError when:
 # User with u_id is not a valid user
-from server.Error import AccessError
+from server.Error import AccessError, ValueError
 from server.auth_pickle import getUserFromToken
 from server.pickle_unpickle import *
 from PIL import Image
@@ -22,28 +22,24 @@ def users_all(token):
     }
 
 def user_profile(token, u_id):
-    opid = getUserFromToken(token)
-    
+    try:
+        getUserFromToken(token)
+    except:
+        raise ValueError('u_id was incorrect')
     DATA = load()
     userdict = DATA['userDict']
     for user in userdict:
         if int(user['u_id']) == int(u_id):
             d = {
-                'u_id': int(u_id),
+                'u_id': (u_id),
                 #'profile_img_url': user['profile_img_url'],
                 'profile_img_url': None,
-                'email': str(user['email']), 
-                'name_first': str(user['first_name']),
-                'name_last': str(user['last_name']),
-                'handle_str': str(user['handle'])
+                'email': (user['email']), 
+                'name_first': (user['first_name']),
+                'name_last': (user['last_name']),
+                'handle_str': (user['handle'])
             }
-            '''d = {
-                'email': "lhd1234567@gmail.com", 
-                'name_first': "haodong",
-                'name_last': 'lu',
-                'handle_str': 'haodonglu'
-            }'''
-            return dict(d)
+            return d
     raise ValueError('u_id was incorrect')
     
     

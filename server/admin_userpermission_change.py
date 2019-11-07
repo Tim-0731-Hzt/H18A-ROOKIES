@@ -1,5 +1,5 @@
 
-from server.Error import AccessError
+from server.Error import AccessError, ValueError
 from server.auth_pickle import *
 import server.pickle_unpickle
 from server.channel import *

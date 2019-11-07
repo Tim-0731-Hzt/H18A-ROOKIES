@@ -2,7 +2,7 @@
 import server.channel
 import pytest
 from server.auth_pickle import *
-from server.Error import AccessError
+from server.Error import AccessError, ValueError
 from server.pickle_unpickle import *
 #from auth import userDict
 from server.user import user_profile

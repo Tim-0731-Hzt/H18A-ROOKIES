@@ -1,7 +1,7 @@
 import pytest
 
 import pytest
-import server.Error
+from server.Error import AccessError, ValueError
 from server.auth_pickle import *
 import server.pickle_unpickle
 from server.channel import *
