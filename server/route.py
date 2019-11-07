@@ -438,8 +438,9 @@ def user_all():
 def standup1():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
+    second = request.form.get('length')
     standup_start(token,channel_id)
-    time = showtime()
+    time = showtime(second)
     return dumps(time)
 
 @APP.route('/standup/send', methods = ['POST'])
