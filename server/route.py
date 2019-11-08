@@ -81,7 +81,7 @@ def send():
     return dumps(message_send(token,channel_id,message))
 
 '''@APP.route('/message/send/test', methods=['POST'])
-def send_test_error():
+def send_error():
     try:
         message_send(1,2,"world")
     except AccessError:
@@ -270,7 +270,7 @@ def unpin_test4():
 
 
 @APP.route('/user/create',methods = ['POST'])
-def test_user_register():
+def user_register():
     email = request.form.get("email")
     password = request.form.get("password")
     name_first = request.form.get("name_first")
@@ -281,65 +281,70 @@ def test_user_register():
     return dumps(token)
 
 @APP.route('/channels/create',methods = ['POST'])
-def test_channel_create():
+def channel_create():
     token = request.form.get("token")
     name = request.form.get("name")
     is_public = request.form.get("is_public")
     return dumps(channels_create(token, name, is_public))
 
-@APP.route('/channels/listall',methods = ['GET'])
-def test_channel_listall():
+@APP.route('/channels/listall', methods = ['GET'])
+def channel_listall():
     token = request.args.get("token")
     return dumps(channels_listall(token))
 
-@APP.route('/channels/list',methods = ['GET'])
-def test_channel_list():
+@APP.route('/channels/list', methods = ['GET'])
+def channel_list():
     token = request.args.get("token")
     return dumps(channels_list(token))
 
-@APP.route('/channels/invite',methods = ['POST'])
-def test_channel_invite():
+@APP.route('/channels/invite', methods = ['POST'])
+def channel_invite():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     #return dumps(channel_id)
     u_id = request.form.get('u_id')
     return dumps(channel_invite (token, channel_id, u_id))
 
-@APP.route('/channels/details',methods = ['GET'])
-def test_channel_details():
+@APP.route('/channel/details', methods = ['GET'])
+def channels_details():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
-    #return dumps(channel_id)
     return dumps(channel_details(token, channel_id))
+    '''print(channel_details(token, channel_id))
+    return dumps({
+        'name': "haha",
+        'all_members': [],
+        'owner_members': []
+    })'''
 
-@APP.route('/channels/messages',methods = ['GET'])
-def test_channel_messages():
+@APP.route('/channel/messages', methods = ['GET'])
+def channel_messages():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
     start = request.args.get('start')
-    return dumps(channel_messages(token, channel_id,start))
+    return dumps(channels_messages(token, channel_id,start))
 
-@APP.route('/channels/leave',methods = ['POST'])
-def test_channel_leave():
+@APP.route('/channels/leave', methods = ['POST'])
+def channels_leave():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     return dumps(channel_leave(token, channel_id))
 
-@APP.route('/channels/join',methods = ['POST '])
-def test_channel_join():
+@APP.route('/channel/join', methods = ['POST'])
+def channels_join():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     return dumps(channel_join(token, channel_id))
 
 @APP.route('/channels/addowner',methods = ['POST '])
-def test_channel_addowner():
+def channels_addowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
     return dumps(channel_addowner(token, channel_id,u_id))
 
 @APP.route('/channels/removeowner',methods = ['POST '])
-def test_channel_removeowner():
+def channel_removeowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
@@ -391,11 +396,11 @@ def password_reset():
     return dumps(auth_passwordreset_reset(reset_code, new_password))
 
 '''Dan'''
-@APP.route('/users/profile', methods = ['GET'])
+@APP.route('/user/profile', methods = ['GET'])
 def user1():
     token = request.args.get('token')
     u_id = request.args.get('u_id')
-    profile = user_profile(token,u_id)
+    profile = user_profile(token, u_id)
     return dumps(profile)
 
 @APP.route('/users/profile/setname', methods = ['PUT'])
@@ -421,6 +426,13 @@ def user4():
     return dumps({})
 
 @APP.route('/users/profiles/uploadphoto', methods = ['POST'])
+def uploadphoto():
+    return dumps({})
+
+@APP.route('/users/all', methods = ['GET'])
+def user_all():
+    token = request.args.get('token')
+    return dumps(users_all(token))
 
 
 
@@ -439,6 +451,17 @@ def standup2():
     message = request.form.get('message')
     standup_send(token,channel_id, message)
     return dumps({})
+
+@APP.route('/standup/active', methods = ['GET'])
+def active():
+    token = request.args.get('token')
+    channel_id = request.args.get('channel_id')
+    
+    return dumps({
+        'is_active': False,
+        'time_finish': None
+    })
+
 
 @APP.route('/search', methods = ['GET'])
 def se():
