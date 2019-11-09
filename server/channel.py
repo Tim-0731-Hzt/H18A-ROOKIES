@@ -1,5 +1,5 @@
 # channel
-from server.Error import AccessError
+from server.Error import AccessError, ValueError
 from server.auth_pickle import *
 from server.pickle_unpickle import *
 # global varaibles:
@@ -103,11 +103,11 @@ def auth_id_check(token,channel_id):
     uid = getUserFromToken(token)
     # if the user is slacker owner or admin
     for parts in userDict:
-        if (int(parts['u_id']) == uid and (int(parts['permission_id']) == 1 or int(parts['permission_id']) == 2)):
+        if (int(parts['u_id']) == int(uid) and (int(parts['permission_id']) == 1 or int(parts['permission_id']) == 2)):
             return True
     for elements in channelDict:
         if (int(elements['channel_id']) == int(channel_id)):
-            if uid in elements['channel_member'] or uid in elements['channel_owner']:
+            if int(uid) in elements['channel_member'] or int(uid) in elements['channel_owner']:
                 return True
             else:
                 return False
@@ -126,7 +126,7 @@ def channel_property_check(channel_id):
     DATA = load()
     channelDict = DATA['channelDict']
     for parts in channelDict:
-        if (parts['is_public'] == True and parts['channel_id'] == channel_id):
+        if (bool(parts['is_public']) and int(parts['channel_id']) == int(channel_id)):
             # public
             return True
     # private
@@ -138,7 +138,7 @@ def channel_admin_check(token):
     id = getUserFromToken(token)
     # if the user is slacker owner or admin
     for parts in userDict:
-        if (parts['u_id'] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
+        if (parts['u_id'] == int(id) and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
             return True
     return False       
 # Invites a user (with user id u_id) to join a channel with ID channel_id. 
@@ -174,7 +174,7 @@ def channel_details (token, channel_id):
     channelDict = DATA['channelDict']
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
-    if auth_id_check(token,channel_id) == False:
+    if not auth_id_check(token,channel_id):
         raise AccessError("Auth user is not a member of channel")
     '''detail = {
         'name': None,
@@ -275,12 +275,12 @@ def channel_join(token, channel_id):
             raise AccessError("authorised user is not an admin when channel is private")
         else:
             for parts in channelDict:
-                if (parts['channel_id'] == channel_id):
+                if (parts['channel_id'] == int(channel_id)):
                     parts['channel_owner'].append(id)
     # public channel
     else:
         for parts in channelDict:
-            if (parts['channel_id'] == channel_id):
+            if (parts['channel_id'] == int(channel_id)):
                 if channel_admin_check(token) == False:
                     if (parts['channel_member'] == []):
                         parts['channel_member'] = [id]

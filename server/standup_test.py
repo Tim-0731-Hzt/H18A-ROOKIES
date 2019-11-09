@@ -1,4 +1,4 @@
-from server.Error import AccessError
+from server.Error import AccessError, ValueError
 from server.channel import *
 from server.message_pickle import *
 from server.auth_pickle import *

@@ -1,5 +1,5 @@
 from server.message_pickle import message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
-from server.Error import AccessError
+from server.Error import AccessError, ValueError
 from flask import Flask, request, jsonify
 from flask_mail import Mail, Message
 from json import dumps
@@ -22,15 +22,13 @@ def defaultHandler(err):
     response.content_type = 'application/json'
     return response
 
-
+'''
 class AccessError(HTTPException):
     code = 500
     message = 'AccessError'
+'''
 
 
-class ValueError(HTTPException):
-    code = 400
-    message = 'No message specified'
 
 
 APP = Flask(__name__)
@@ -440,8 +438,9 @@ def user_all():
 def standup1():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
+    second = request.form.get('length')
     standup_start(token,channel_id)
-    time = showtime()
+    time = showtime(second)
     return dumps(time)
 
 @APP.route('/standup/send', methods = ['POST'])

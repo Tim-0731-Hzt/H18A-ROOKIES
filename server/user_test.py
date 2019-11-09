@@ -185,8 +185,11 @@ def test3_user_profile_setemail():
         user_profile_setemail(token, "sahduyhasdh**(())")
     restart()
 
-restart()
-
+def test1_user_profiles_uploadphoto():
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    user_profiles_uploadphoto(token, "https://www.drupal.org/files/drupal-wordmark.svg", 40, 40, 40 , 40)
 '''
 def test1_user_profiles_uploadphoto():
     user_profiles_uploadphoto(123,200,2,2,2,2)

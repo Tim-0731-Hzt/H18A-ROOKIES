@@ -2,7 +2,7 @@
 from datetime import datetime
 from server.auth_pickle import getUserFromToken
 
-from server.Error import AccessError
+from server.Error import AccessError, ValueError
 from server.pickle_unpickle import *
 
 # Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future

@@ -6,7 +6,7 @@ import jwt
 import random
 from random import randrange
 from json import dumps
-from server.Error import AccessError
+from server.Error import AccessError, ValueError
 from server.pickle_unpickle import save, load
 
 SECRET = 'ROOKIES'
