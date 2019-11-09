@@ -128,12 +128,12 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
         raise ValueError("image does not exist")
     if x_end == x_start or y_end == y_start:
         raise ValueError("incorrect range")
-    if x_end > width or y_end > height or x_start > width or y_start > height:
+    if int(x_end) > width or int(y_end) > height or int(x_start) > width or int(y_start) > height:
         raise ValueError('Out of bound')
-    if x_end < 0 or y_end < 0 or x_start < 0 or y_start < 0:
+    if int(x_end) < 0 or int(y_end) < 0 or int(x_start) < 0 or int(y_start) < 0:
         raise ValueError('Out of bound')
     if img.format !=  "JPEG" and img.format != "JPG":
         raise ValueError("Image uploaded is not a JPG")
-    cropped =  img.crop((x_start, y_start, x_end, y_end))
+    cropped =  img.crop((int(x_start), int(y_start), int(x_end), int(y_end)))
     id = getUserFromToken(token)
-    cropped = cropped.save('photo/' + str(id) + '.jpg')
+    cropped = cropped.save('server/photo/' + str(id) + '.jpg')
