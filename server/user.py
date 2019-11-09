@@ -7,7 +7,6 @@ from server.pickle_unpickle import *
 from PIL import Image
 import requests
 import urllib.request
-import mimetypes
 import sys
 import re
 
@@ -127,22 +126,13 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     if img == -1:
         raise ValueError("image does not exist")
     width, height = img.size
+    print(width, height)
     if x_end > width or y_end > height or x_start > width or y_start > height:
         raise ValueError('Out of bound')
     if x_end < 0 or y_end < 0 or x_start < 0 or y_start < 0:
         raise ValueError('Out of bound')
-    print(img.format)
     if img.format !=  "JPEG" and img.format != "JPG":
         raise ValueError("Image uploaded is not a JPG")
-    '''
-    cropped =  PIL.Image.crop(x_start, y_start, x_end, y_end)
+    cropped =  img.crop((x_start, y_start, x_end, y_end))
     id = getUserFromToken(token)
-    cropped.save(str(id) + '.jpg')
-    
-    cropped.save("/user/photo.jpg")
-    DATA = load()
-    userDict = DATA['userDict']
-    userDict["profile_img_url"] = "/user/photo.jpg"
-    DATA['userDict'] = userDict
-    save(DATA)
-    '''
+    cropped = cropped.save(str(id) + '.jpg')

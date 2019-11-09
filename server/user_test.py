@@ -189,7 +189,7 @@ def test1_user_profiles_uploadphoto():
     restart()
     authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
     token = authRegisterDict['token']
-    user_profiles_uploadphoto(token, "https://www.drupal.org/files/drupal-wordmark.svg", 40, 40, 40 , 40)
+    user_profiles_uploadphoto(token, "https://romanroadlondon.com/wp-content/uploads/2019/03/phil-verney-night-sky-bow-1.jpg", 40, 40, 1000 , 600)
 '''
 def test1_user_profiles_uploadphoto():
     user_profiles_uploadphoto(123,200,2,2,2,2)
