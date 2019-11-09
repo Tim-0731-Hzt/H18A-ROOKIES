@@ -123,10 +123,11 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     if response.status_code != 200:
         raise ValueError('url corrupted')
     img = Image. open(urllib. request. urlopen(img_url))
+    width, height = img.size
     if img == -1:
         raise ValueError("image does not exist")
-    width, height = img.size
-    print(width, height)
+    if x_end == x_start or y_end == y_start:
+        raise ValueError("incorrect range")
     if x_end > width or y_end > height or x_start > width or y_start > height:
         raise ValueError('Out of bound')
     if x_end < 0 or y_end < 0 or x_start < 0 or y_start < 0:
@@ -135,4 +136,4 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
         raise ValueError("Image uploaded is not a JPG")
     cropped =  img.crop((x_start, y_start, x_end, y_end))
     id = getUserFromToken(token)
-    cropped = cropped.save(str(id) + '.jpg')
+    cropped = cropped.save('photo/' + str(id) + '.jpg')
