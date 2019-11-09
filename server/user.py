@@ -30,8 +30,7 @@ def user_profile(token, u_id):
         if int(user['u_id']) == int(u_id):
             d = {
                 'u_id': (u_id),
-                #'profile_img_url': user['profile_img_url'],
-                'profile_img_url': None,
+                'profile_img_url': (user['profile_img_url']),
                 'email': (user['email']), 
                 'name_first': (user['first_name']),
                 'name_last': (user['last_name']),
@@ -137,3 +136,10 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     cropped =  img.crop((int(x_start), int(y_start), int(x_end), int(y_end)))
     id = getUserFromToken(token)
     cropped = cropped.save('server/photo/' + str(id) + '.jpg')
+    DATA = load()
+    userDict = DATA['userDict']
+    for user in userDict:
+        if id == user['u_id']:
+            user['profile_img_url'] =  'http://localhost:8001/server/photo/'+ str(id) + '.jpg'
+    DATA['userDict'] = userDict
+    save(DATA)
