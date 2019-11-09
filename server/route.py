@@ -474,7 +474,7 @@ def admin():
     admin_userpermission_change(token,u_id,premission_id)
     return dumps({})
 
-@APP.route('/users/profiles/uploadphoto',methods = ['POST'])
+@APP.route('/user/profiles/uploadphoto',methods = ['POST'])
 def uploadphoto():
     token = request.form.get('token')
     img_url = request.form.get('img_url')
