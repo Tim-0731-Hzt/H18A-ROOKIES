@@ -73,10 +73,12 @@ def message_send(token, channel_id, message):
         'reacts': None,
         'is_pinned': False
     }
+    mID = int(m['message_id'])
     messDict.append(m)
     DATA['messDict'] = messDict
     save(DATA)
-    return m['message_id']
+    print(f'message_id: {mID}')
+    return int(mID)
 
 # Given a message_id for a message, this message is removed from the channel
 # ValueError when
