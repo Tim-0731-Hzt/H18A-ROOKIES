@@ -296,12 +296,12 @@ def channel_list():
     return dumps(channels_list(token))
 
 @APP.route('/channels/invite', methods = ['POST'])
-def channel_invite():
+def channels_invite():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     #return dumps(channel_id)
     u_id = request.form.get('u_id')
-    return dumps(channel_invite (token, channel_id, u_id))
+    return dumps(channel_invite(token, channel_id, u_id))
 
 @APP.route('/channel/details', methods = ['GET'])
 def channels_details():
@@ -342,7 +342,7 @@ def channels_addowner():
     return dumps(channel_addowner(token, channel_id,u_id))
 
 @APP.route('/channels/removeowner',methods = ['POST '])
-def channel_removeowner():
+def channels_removeowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
@@ -399,6 +399,9 @@ def user1():
     token = request.args.get('token')
     u_id = request.args.get('u_id')
     profile = user_profile(token, u_id)
+    #profile['u_id'] = 3
+    #profile['profile_img_url'] = 'https://webcms3.cse.unsw.edu.au/static/uploads/coursepic/COMP1531/19T3/f69768934fc5db2bb478f938db95efe98b02af69adc0d4a9e79545d0aae44908/Screenshot_from_2019-09-10_22-16-33.png'
+    print(profile)
     return dumps(profile)
 
 @APP.route('/users/profile/setname', methods = ['PUT'])
