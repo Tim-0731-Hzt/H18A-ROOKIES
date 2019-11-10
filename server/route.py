@@ -1,6 +1,6 @@
 from server.message_pickle import message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
 from server.Error import AccessError, ValueError
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_mail import Mail, Message
 from json import dumps
 from server.channel import *
@@ -426,9 +426,6 @@ def user4():
     user_profile_sethandle(token,handle_str)
     return dumps({})
 
-@APP.route('/users/profiles/uploadphoto', methods = ['POST'])
-def uploadphoto():
-    return dumps({})
 
 @APP.route('/users/all', methods = ['GET'])
 def user_all():
@@ -480,7 +477,18 @@ def admin():
     admin_userpermission_change(token,u_id,premission_id)
     return dumps({})
 
-
+@APP.route('/user/profiles/uploadphoto',methods = ['POST'])
+def uploadphoto():
+    token = request.form.get('token')
+    img_url = request.form.get('img_url')
+    x_start = request.form.get('x_start')
+    y_start = request.form.get('y_start')
+    x_end = request.form.get('x_end')
+    y_end = request.form.get('y_end')
+    user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end)
+    id = getUserFromToken(token)
+    return send_from_directory("photo/",str(id)+'.jpg')
+    
 if __name__ == '__main__':
     APP.run()
 

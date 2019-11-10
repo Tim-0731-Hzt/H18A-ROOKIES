@@ -7,8 +7,6 @@ from server.pickle_unpickle import *
 from PIL import Image
 import requests
 import urllib.request
-import mimetypes
-# import urllib2
 import sys
 import re
 
@@ -32,8 +30,7 @@ def user_profile(token, u_id):
         if int(user['u_id']) == int(u_id):
             d = {
                 'u_id': (u_id),
-                #'profile_img_url': user['profile_img_url'],
-                'profile_img_url': None,
+                'profile_img_url': (user['profile_img_url']),
                 'email': (user['email']), 
                 'name_first': (user['first_name']),
                 'name_last': (user['last_name']),
@@ -118,32 +115,31 @@ def user_profile_setname(token, name_first, name_last):
 
 
 
-def get_type(img_url):
-    valid_types = ('image/jpg')
-    content_type = get_contenttype(img_url)
-    mimetypes = get_mimetype(img_url)
-    if content_type or mimetypes in valid_types:
-        return True
-    else:
-        return False
 
 
 def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     response = requests.get(img_url)
     if response.status_code != 200:
         raise ValueError('url corrupted')
-    image = image.open(urllib.request.urlopen(img_url))
-    width, height = image.size
-    if x_end > width or y_end > height or x_start < width or y_start > height:
+    img = Image. open(urllib. request. urlopen(img_url))
+    width, height = img.size
+    if img == -1:
+        raise ValueError("image does not exist")
+    if x_end == x_start or y_end == y_start:
+        raise ValueError("incorrect range")
+    if int(x_end) > width or int(y_end) > height or int(x_start) > width or int(y_start) > height:
         raise ValueError('Out of bound')
-    if x_end < 0 or y_end < 0 or x_start < 0 or y_start < 0:
+    if int(x_end) < 0 or int(y_end) < 0 or int(x_start) < 0 or int(y_start) < 0:
         raise ValueError('Out of bound')
-    if get_type(img_url) == False:
+    if img.format !=  "JPEG" and img.format != "JPG":
         raise ValueError("Image uploaded is not a JPG")
-    cropped = image.crop(x_start, y_start, x_end, y_end)
-    cropped.save("/user/photo.jpg")
+    cropped =  img.crop((int(x_start), int(y_start), int(x_end), int(y_end)))
+    id = getUserFromToken(token)
+    cropped = cropped.save('server/photo/' + str(id) + '.jpg')
     DATA = load()
     userDict = DATA['userDict']
-    userDict["profile_img_url"] = "/user/photo.jpg"
+    for user in userDict:
+        if id == user['u_id']:
+            user['profile_img_url'] =  'http://localhost:8001/server/photo/'+ str(id) + '.jpg'
     DATA['userDict'] = userDict
     save(DATA)
