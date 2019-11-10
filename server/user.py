@@ -13,23 +13,37 @@ import re
 def users_all(token):
     uid = getUserFromToken(token)
     data = load()
-    user = data['userDict']
-    user = list(user)
+    userDict = data['userDict']
+    lis = []
+    for user in userDict:
+        d = {
+            'u_id': user['u_id'],
+            'profile_img_url': user['profile_img_url'],
+            # 'profile_img_url': None,
+            'email': (user['email']), 
+            'name_first': (user['first_name']),
+            'name_last': (user['last_name']),
+            'handle_str': (user['handle'])
+        }
+        lis.append(d)
+
     return {
-        'users': user
+        'users': list(lis)
     }
 
 def user_profile(token, u_id):
     try:
-        getUserFromToken(token)
+        ID = getUserFromToken(token)
     except:
-        raise ValueError('u_id was incorrect')
+        raise ValueError('token was incorrect')
+    if int(u_id) != int(ID):
+        raise ValueError('incorrect u_id')
     DATA = load()
     userdict = DATA['userDict']
     for user in userdict:
         if int(user['u_id']) == int(u_id):
             d = {
-                'u_id': (u_id),
+                'u_id': int(u_id),
                 'profile_img_url': (user['profile_img_url']),
                 'email': (user['email']), 
                 'name_first': (user['first_name']),

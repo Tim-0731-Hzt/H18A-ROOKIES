@@ -184,8 +184,9 @@ def channel_details (token, channel_id):
     detail = {}
     for parts in channelDict:
         if (int(parts['channel_id']) == int(channel_id)):
+            all_members = list(parts['channel_member']) + list(parts['channel_owner'])
             detail['name'] = parts['name']
-            detail['all_members'] = list(get_members(list(parts['channel_member'])))
+            detail['all_members'] = list(get_members(all_members))
             detail['owner_members'] = list(get_members(list(parts['channel_owner'])))
     return dict(detail)
 
@@ -205,27 +206,32 @@ def channels_messages (token, channel_id, start):
     if auth_id_check(token,channel_id) == False:
         raise AccessError("Auth user is not a member of channnel")
     dic = {
-        'messages':[],
-        'start':start,
-        'end':None
+        'messages': [],
+        'start': start,
+        'end': None
     }
     L = []
     for parts in messDict:
         if int(parts['channel_id']) == int(channel_id):
-            L.append(parts['message_id'])
+            L.append(int(parts['message_id']))
     if L == []:
-        raise AccessError("no message send")
-    L = L[::-1]
+        raise AccessError("no message sent in this channel")
+    print(L)
+    if len(L) != 1:
+        L = L[::-1]
     L = get_messages(L)
-    if len(L) <= start:
+    print(L)
+
+    if len(L) <= int(start):
         raise ValueError("start is greater than or equal to the total number of messages in the channel")
 
-    if (start + 50 >= len(L)):
-        for parts in L[start:len(L) - 1]:
+    if (int(start) + 50 >= len(L)):
+        for parts in L[int(start):len(L)]:
+        # for parts in L[int(start):len(L) - 1]:
             dic['messages'].append(parts)
         dic['end'] = -1
     else:
-        for parts in L[start:start + 50]:
+        for parts in L[int(start):int(start) + 50]:
             dic['messages'].append(parts)
         dic['end'] = start + 50
     return dic
@@ -399,5 +405,5 @@ def channels_create(token, name, is_public):
         channelDict.append(d)
         DATA['channelDict'] = channelDict
         save(DATA)
-        return d['channel_id']
+        return int(d['channel_id'])
         # return {'channel_id': d['channel_id']}
