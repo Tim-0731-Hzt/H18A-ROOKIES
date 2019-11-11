@@ -55,7 +55,7 @@ def standup_send(token, channel_id, message):
     channelDict = data['channelDict']
     userDict = data['userDict']
     
-    opid = getUserFromToken(t
+    opid = getUserFromToken(token)
     for user in userDict:
         if user['u_id'] == opid:
             name = user['first_name']
