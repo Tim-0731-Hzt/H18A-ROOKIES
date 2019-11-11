@@ -64,7 +64,7 @@ def message_send(token, channel_id, message):
             else:
                 raise AccessError("The authorised user has not joined the channel they are trying to post to")
     DATA['messID'] += 1
-    m = {
+    '''m = {
         'channel_id': int(channel_id),
         'message_id': int(DATA['messID']),
         'u_id': int(uID),
@@ -72,12 +72,32 @@ def message_send(token, channel_id, message):
         'time_created': int(datetime.now().timestamp()),
         'reacts': None,
         'is_pinned': False
+    }'''
+
+
+    m = {
+        'channel_id': int(channel_id),
+        'message_id': int(DATA['messID']),
+        'u_id': int(uID),
+        'message': message,
+        'time_created': int(datetime.now().timestamp()),
+        # 'time_created': 0,
+
+        'reacts': [{
+            'react_id': 1,
+            'u_ids': [],
+            'is_this_user_reacted': False
+        }],
+        'is_pinned': False
     }
+
+
     mID = int(m['message_id'])
     messDict.append(m)
     DATA['messDict'] = messDict
     save(DATA)
     print(f'message_id: {mID}')
+    # return {'message_id': mID}
     return int(mID)
 
 # Given a message_id for a message, this message is removed from the channel

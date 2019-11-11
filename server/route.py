@@ -125,14 +125,12 @@ def channel_create():
 def channel_listall():
     token = request.args.get("token")
     lis = channels_listall(token)
-    print(lis)
     return dumps(lis)
 
 @APP.route('/channels/list', methods = ['GET'])
 def channel_list():
     token = request.args.get("token")
     lis = channels_list(token)
-    print(lis)
     return dumps(lis)
 
 @APP.route('/channels/invite', methods = ['POST'])
@@ -160,8 +158,7 @@ def channel_messages():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
     start = request.args.get('start')
-    messages = channels_messages(token, channel_id,start)
-    print(messages)
+    messages = channels_messages(token, channel_id, start)
     return dumps(messages)
 
 @APP.route('/channels/leave', methods = ['POST'])
@@ -243,7 +240,6 @@ def user1():
     profile = user_profile(token, u_id)
     # profile['u_id'] = 3
     # profile['profile_img_url'] = 'https://webcms3.cse.unsw.edu.au/static/uploads/coursepic/COMP1531/19T3/f69768934fc5db2bb478f938db95efe98b02af69adc0d4a9e79545d0aae44908/Screenshot_from_2019-09-10_22-16-33.png'
-    print(profile)
     return dumps(profile)
 
 @APP.route('/users/profile/setname', methods = ['PUT'])
