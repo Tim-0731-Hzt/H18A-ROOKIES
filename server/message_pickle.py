@@ -69,7 +69,7 @@ def message_send(token, channel_id, message):
         'message_id': int(DATA['messID']),
         'u_id': int(uID),
         'message': message,
-        'time_created': int(datetime.utcnow().timestamp()),
+        'time_created': int(datetime.now().timestamp()),
         'reacts': None,
         'is_pinned': False
     }

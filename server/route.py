@@ -22,14 +22,6 @@ def defaultHandler(err):
     response.content_type = 'application/json'
     return response
 
-'''
-class AccessError(HTTPException):
-    code = 500
-    message = 'AccessError'
-'''
-
-
-
 
 APP = Flask(__name__)
 APP.config.update(
@@ -78,39 +70,11 @@ def send():
     message = request.form.get('message')
     return dumps(message_send(token,channel_id,message))
 
-'''@APP.route('/message/send/test', methods=['POST'])
-def send_error():
-    try:
-        message_send(1,2,"world")
-    except AccessError:
-        return "The authorised user has not joined the channel they are trying to post to"
-'''
-
 @APP.route('/message/remove', methods=['DELETE'])
 def remove():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
     return dumps(message_remove(token,int(message_id)))
-
-'''@APP.route('/message/remove/test/value', methods=['DELETE'])
-def remove_test1():
-    clear_backup()
-    for i in range(5):
-        message_send(1,1,"hello")
-    try:
-        message_remove(3,100)
-    except ValueError:
-        return "message not found"
-
-@APP.route('/message/remove/test/access', methods=['DELETE'])
-def remove_test2():
-    clear_backup()
-    for i in range(5):
-        message_send(1,1,"hello")
-    try:
-        message_remove(1,4)
-    except AccessError:
-        return "Unauthorised remove"'''
 
 @APP.route('/message/edit', methods=['PUT'])
 def edit():
@@ -119,54 +83,12 @@ def edit():
     message = request.form.get('message')
     return dumps(message_edit(token, int(message_id), message))
 
-'''@APP.route('/message/edit/test', methods=['PUT'])
-def edit_test():
-    clear_backup()
-    for i in range(5):
-        message_send(1,1,"hello")
-
-    try:
-        message_edit(1, 4, "jeff is awesome")
-    except AccessError:
-        return "Unauthorised edit"'''
-
 @APP.route('/message/react', methods=['POST'])
 def react():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
     react_id = request.form.get('react_id')
     return dumps(message_react(int(token), int(message_id), int(react_id)))
-
-'''@APP.route('/message/react/test1', methods=['POST'])
-def react_test1():
-    clear_backup()
-    for i in range(5):
-        message_send(1,1,"hello")
-    try:
-        message_react(1, 3, -1)
-    except ValueError:
-        return "invalid react_id"
-
-@APP.route('/message/react/test2', methods=['POST'])
-def react_test2():
-    clear_backup()
-    for i in range(5):
-        message_send(1,1,"hello")
-    try:
-        message_react(9, 3, 1)
-    except ValueError:
-        return "message_id is not a valid message within a channel that the authorised user has joined"
-
-@APP.route('/message/react/test3', methods=['POST'])
-def react_test3():
-    clear_backup()
-    for i in range(5):
-        message_send(1,1,"hello")
-    message_react(2, 3, 1)
-    try:
-        message_react(2, 3, 2)
-    except ValueError:
-        return "Message with ID message_id already contains an active React with ID react_id"'''
 
 @APP.route('/message/unreact', methods=['POST'])
 def unreact():
@@ -175,97 +97,11 @@ def unreact():
     react_id = request.form.get('react_id')
     return dumps(message_unreact(int(token), int(message_id), int(react_id)))
 
-'''@APP.route('/message/unreact/test1', methods=['POST'])
-def unreact_test1():
-    clear_backup()
-    for i in range(5):
-        message_send(1,1,"hello")
-    try:
-        message_unreact(1, 3, -1)
-    except ValueError:
-        return "invalid react_id"
-
-@APP.route('/message/unreact/test2', methods=['POST'])
-def unreact_test2():
-    clear_backup()
-    for i in range(5):
-        message_send(1,1,"hello")
-    try:
-        message_unreact(9, 3, 1)
-    except ValueError:
-        return "message_id is not a valid message within a channel that the authorised user has joined"
-
-@APP.route('/message/unreact/test3', methods=['POST'])
-def unreact_test3():
-    clear_backup()
-    for i in range(5):
-        message_send(1,1,"hello")
-    try:
-        message_unreact(2, 3, 2)
-    except ValueError:
-        return "Message with ID message_id does not contain an active unreact with ID unreact_id"
-
-@APP.route('/message/unreact/test4', methods=['POST'])
-def unreact_test4():
-    clear_backup()
-    for i in range(5):
-        message_send(1,1,"hello")
-    message_react(1, 3, 1)
-    try:
-        message_unreact(1, 3, 5)
-    except ValueError:
-        return "invalid react_id"'''
-
 @APP.route('/message/unpin', methods=['POST'])
 def unpin():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
     return dumps(message_unpin(int(token), int(message_id)))
-
-'''@APP.route('/message/unpin/test1', methods=['POST'])
-def unpin_test1():
-    clear_backup()
-    for i in range(5):
-        message_send(1, 1, "hello")
-    try:
-        message_unpin(3, 10)
-    except ValueError:
-        return "invalid message_id"
-
-@APP.route('/message/unpin/test2', methods=['POST'])
-def unpin_test2():
-    clear_backup()
-    for i in range(5):
-        message_send(1, 1, "hello")
-    message_pin(3, 3)
-    try:
-        message_unpin(1, 3)
-    except ValueError:
-        return "authorised user is not admin"
-
-@APP.route('/message/unpin/test3', methods=['POST'])
-def unpin_test3():
-    clear_backup()
-    for i in range(5):
-        message_send(1,1,"hello")
-    message_pin(3,3)
-    message_unpin(3,3)
-    try:
-        message_unpin(3,3)
-    except ValueError:
-        return "already unpinned"
-
-@APP.route('/message/unpin/test4', methods=['POST'])
-def unpin_test4():
-    clear_backup()
-    for i in range(5):
-        message_send(1,1,"hello")
-    message_pin(3,3)    
-    try:
-        message_unpin(9,3)
-    except AccessError:
-        return "The authorised user is not a member of the channel that the message is within"'''
-
 
 @APP.route('/user/create',methods = ['POST'])
 def user_register():

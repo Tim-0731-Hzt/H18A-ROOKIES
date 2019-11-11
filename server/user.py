@@ -50,7 +50,10 @@ def user_profile(token, u_id):
                 'name_last': (user['last_name']),
                 'handle_str': (user['handle'])
             }
-            return d
+            return {
+                'user': d
+            }
+            # return d
     raise ValueError('u_id was incorrect')
     
     
