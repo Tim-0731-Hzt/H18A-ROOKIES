@@ -58,6 +58,18 @@ def get_messages(message_ids):
                 break
     return list(mess)
 
+def is_in_channel(u_id, channel_id):
+    u_id = int(u_id)
+    channel_id = int(channel_id)
+    data = load()
+    channelDict = data['channelDict']
+    for cha in channelDict:
+        if cha['channel_id'] == channel_id:
+            if u_id in cha['channel_member'] or u_id in cha['channel_owner']:
+                return True
+            else:
+                return False
+
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
 def channel_id_check(channel_id):
@@ -72,12 +84,13 @@ def u_id_check(u_id):
     DATA = load()
     userDict = DATA['userDict']
     for parts in userDict:
-        if (parts['u_id'] == u_id):
+        if (int(parts['u_id']) == int(u_id)):
             return True
     return False
 
 # check if user a owner or member
 def if_User_Owner(token,channel_id):
+    channel_id = int(channel_id)
     DATA = load()
     channelDict = DATA['channelDict']
     userDict = DATA['userDict']
@@ -152,9 +165,11 @@ def channel_invite(token, channel_id, u_id):
         raise ValueError("u_id does not refer to a valid user")
     if auth_id_check(token,channel_id) == False:
         raise AccessError("Auth user is not a member of channel")
+    if is_in_channel(u_id, channel_id):
+        raise AccessError('The user you are inviting is already in this channel.')
     
     for parts in channelDict:
-        if (parts['channel_id'] == channel_id):
+        if (int(parts['channel_id']) == int(channel_id)):
             # the user invite by owner is also a owner
             if if_User_Owner(token,channel_id) == True:
                 parts['channel_owner'].append(u_id)
@@ -162,6 +177,7 @@ def channel_invite(token, channel_id, u_id):
                 parts['channel_member'].append(u_id)
     DATA['channelDict'] = channelDict
     save(DATA)
+    return {}
 
 # Given a Channel with ID channel_id that the authorised user is part of, 
 # provide basic details about the channel

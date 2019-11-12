@@ -135,7 +135,7 @@ def channel_list():
     lis = channels_list(token)
     return dumps(lis)
 
-@APP.route('/channels/invite', methods = ['POST'])
+@APP.route('/channel/invite', methods = ['POST'])
 def channels_invite():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
