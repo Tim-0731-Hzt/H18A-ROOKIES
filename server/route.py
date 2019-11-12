@@ -47,7 +47,7 @@ def begin():
 def send_mail():
     mail = Mail(APP)
     try:
-        msg = Message("Send Mail Test!",
+        msg = Message("Slackr Password Reset Number",
             sender="ROOKIESTHEBEST@gmail.com",
             recipients=["person.sending.to@gmail.com"])
         msg.body = generateResetCode()
@@ -63,15 +63,6 @@ def sendlater():
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
     time_sent = request.form.get('time_sent')
-    '''print(time_sent)
-    converted_d1 = datetime.fromtimestamp(int(time_sent))
-    print('\n\n\n')
-    print(converted_d1)
-    if (datetime.now()) > converted_d1:
-        raise ValueError("Time sent is a time in the past")
-    diff = int((converted_d1-datetime.now()).total_seconds())
-    print(diff)
-    print('\n\n\n')'''
     return dumps(message_sendlater(token,channel_id,message, time_sent))
 
 @APP.route('/message/send', methods=['POST'])
@@ -79,7 +70,6 @@ def send():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
-    #print(Request.localhost)
     return dumps(message_send(token,channel_id,message))
 
 @APP.route('/message/remove', methods=['DELETE'])
@@ -227,12 +217,12 @@ def password_request():
     email = request.form.get('email')
     mail = Mail(APP)
     try:
-        msg = Message("Send Mail Test!",
+        msg = Message("Slackr Password Reset Number",
             sender="ROOKIESTHEBEST@gmail.com",
             recipients=[email])
-        msg.body = generateResetCode()
+        msg.body = auth_passwordreset_request(email)
         mail.send(msg)
-        return 'Mail sent!'
+        return {}
     except Exception as e:
         return (str(e))
     
