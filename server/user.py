@@ -157,6 +157,6 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     userDict = DATA['userDict']
     for user in userDict:
         if int(id) == int(user['u_id']):
-            user['profile_img_url'] = "http://"+ request.localhost + '/static/'+ str(id) + '.jpg'
+            user['profile_img_url'] = "http://"+ request.localhost() + '/static/'+ str(id) + '.jpg'
     DATA['userDict'] = userDict
     save(DATA)
