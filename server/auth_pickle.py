@@ -87,17 +87,13 @@ def auth_login (email, password):
         raise ValueError("Email entered doesn't belong to a user")
     for user in userDict:     
         if user['email'] == email and user['password'] == hashPassword(password):
-            if user['online'] == True:
-                pass
-                # raise ValueError("Already login")
-            else:
-                user['online'] = True
-                DATA['userDict'] = userDict
-                save(DATA)
-                return {
-                    'u_id': user['u_id'],
-                    'token': generateToken(user['u_id'])
-                }
+            user['online'] = True
+            DATA['userDict'] = userDict
+            save(DATA)
+            return {
+                'u_id': user['u_id'],
+                'token': generateToken(user['u_id'])
+            }
     raise ValueError("Username or password incorrect")
     
 

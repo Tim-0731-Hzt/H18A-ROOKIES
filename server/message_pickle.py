@@ -29,10 +29,14 @@ def message_sendlater(token, channel_id, message, time_sent):
     m = {
         'channel_id': int(channel_id),
         'message_id': DATA['messID'],
-        'u_id': int(uID),   # fix that later
+        'u_id': int(uID),
         'message': message,
-        'time_created': datetime.now(),
-        'reacts': None,
+        'time_created': int(datetime.now().timestamp()),
+        'reacts': [{
+            'react_id': 1,
+            'u_ids': [],
+            'is_this_user_reacted': False
+        }],
         'is_pinned': False
     }
     if time_sent < 0:
@@ -64,25 +68,12 @@ def message_send(token, channel_id, message):
             else:
                 raise AccessError("The authorised user has not joined the channel they are trying to post to")
     DATA['messID'] += 1
-    '''m = {
-        'channel_id': int(channel_id),
-        'message_id': int(DATA['messID']),
-        'u_id': int(uID),
-        'message': message,
-        'time_created': int(datetime.now().timestamp()),
-        'reacts': None,
-        'is_pinned': False
-    }'''
-
-
     m = {
         'channel_id': int(channel_id),
         'message_id': int(DATA['messID']),
         'u_id': int(uID),
         'message': message,
         'time_created': int(datetime.now().timestamp()),
-        # 'time_created': 0,
-
         'reacts': [{
             'react_id': 1,
             'u_ids': [],
@@ -90,7 +81,6 @@ def message_send(token, channel_id, message):
         }],
         'is_pinned': False
     }
-
 
     mID = int(m['message_id'])
     messDict.append(m)

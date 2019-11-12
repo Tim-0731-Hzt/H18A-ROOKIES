@@ -214,16 +214,11 @@ def channels_messages (token, channel_id, start):
     for parts in messDict:
         if int(parts['channel_id']) == int(channel_id):
             L.append(int(parts['message_id']))
-    if L == []:
-        raise AccessError("no message sent in this channel")
-    print(L)
     if len(L) != 1:
         L = L[::-1]
     L = get_messages(L)
-    print(L)
-
-    if len(L) <= int(start):
-        raise ValueError("start is greater than or equal to the total number of messages in the channel")
+    if len(L) < int(start):
+        raise ValueError("start is greater than the total number of messages in the channel")
 
     if (int(start) + 50 >= len(L)):
         for parts in L[int(start):len(L)]:
@@ -345,9 +340,6 @@ def channels_list(token):
     for parts in channelDict:
         if (uid in parts['channel_member'] or uid in parts['channel_owner']):
             L.append(parts['channel_id'])
-    if L == []:
-        raise AccessError("the authorised user does not belong to any channel")
-    # return  channel_id, name 
     L = get_channels(L)
     return {'channels': L}
 
@@ -362,8 +354,8 @@ def channels_listall(token):
             'name': cha['name'] 
         }
         channel.append(c)
-
     return {'channels': channel}
+
 # Creates a new channel with that name that is either a public or private channel
 def channels_create(token, name, is_public):
     DATA = load()
