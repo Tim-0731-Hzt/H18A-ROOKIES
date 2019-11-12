@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 # DATA store
-
+datastore.p
 
 # C extensions
 *.so
