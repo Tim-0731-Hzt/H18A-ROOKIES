@@ -1,4 +1,4 @@
-from server.message_pickle import message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
+from server.message_pickle import message_send, message_sendlater, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
 from server.Error import AccessError, ValueError
 from flask import Flask, request, jsonify, send_from_directory
 from flask_mail import Mail, Message
@@ -11,6 +11,8 @@ from server.admin_userpermission_change import admin_userpermission_change
 from server.pickle_unpickle import restart
 from werkzeug.exceptions import HTTPException
 from flask_cors import CORS
+
+from datetime import datetime
 
 def defaultHandler(err):
     response = err.get_response()
@@ -61,13 +63,23 @@ def sendlater():
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
     time_sent = request.form.get('time_sent')
-    return dumps(message_send(token,channel_id,message))
+    '''print(time_sent)
+    converted_d1 = datetime.fromtimestamp(int(time_sent))
+    print('\n\n\n')
+    print(converted_d1)
+    if (datetime.now()) > converted_d1:
+        raise ValueError("Time sent is a time in the past")
+    diff = int((converted_d1-datetime.now()).total_seconds())
+    print(diff)
+    print('\n\n\n')'''
+    return dumps(message_sendlater(token,channel_id,message, time_sent))
 
 @APP.route('/message/send', methods=['POST'])
 def send():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
+    #print(Request.localhost)
     return dumps(message_send(token,channel_id,message))
 
 @APP.route('/message/remove', methods=['DELETE'])

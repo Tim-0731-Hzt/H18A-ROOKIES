@@ -1,7 +1,8 @@
 # MESSAGE
 from datetime import datetime
 from server.auth_pickle import getUserFromToken
-
+import threading
+import time
 from server.Error import AccessError, ValueError
 from server.pickle_unpickle import *
 
@@ -11,41 +12,15 @@ from server.pickle_unpickle import *
 # Message is more than 1000 characters
 # Time sent is a time in the past
 def message_sendlater(token, channel_id, message, time_sent):
-    DATA = load()
-    messDict = DATA['messDict']
-    channelDict = DATA['channelDict']
-    uID = getUserFromToken(token)
+
     if len(message) > 1000:
         raise ValueError("Message is more than 1000 characters")
-    
-    for cha in channelDict:
-        if cha['channel_id'] == channel_id:
-            if uID in cha['channel_member'] or uID in cha['channel_owner']:
-                pass
-            else:
-                raise AccessError("The authorised user has not joined the channel they are trying to post to")
-    
-    DATA['messID'] += 1
-    m = {
-        'channel_id': int(channel_id),
-        'message_id': DATA['messID'],
-        'u_id': int(uID),
-        'message': message,
-        'time_created': int(datetime.now().timestamp()),
-        'reacts': [{
-            'react_id': 1,
-            'u_ids': [],
-            'is_this_user_reacted': False
-        }],
-        'is_pinned': False
-    }
-    if time_sent < 0:
+    stime = datetime.fromtimestamp(int(time_sent))
+    if datetime.now() > stime:
         raise ValueError("Time sent is a time in the past")
-    time.sleep(time_sent)       # time_sent is in unit seconds
-    messDict.append(m)
-    DATA['messDict'] = messDict
-    save(DATA)
-    return m['message_id']
+    diff = int((stime-datetime.now()).total_seconds())
+    time.sleep(diff)
+    return message_send(token, channel_id, message)
 
 
 # Send a message from authorised_user to the channel specified by channel_id
@@ -61,11 +36,7 @@ def message_send(token, channel_id, message):
     
     for cha in channelDict:
         if cha['channel_id'] == channel_id:
-            if uID in cha['channel_owner']:
-                pass
-            elif uID in cha['channel_member']:
-                pass
-            else:
+            if uID not in cha['channel_owner'] and uID not in cha['channel_member']:
                 raise AccessError("The authorised user has not joined the channel they are trying to post to")
     DATA['messID'] += 1
     m = {
@@ -86,8 +57,6 @@ def message_send(token, channel_id, message):
     messDict.append(m)
     DATA['messDict'] = messDict
     save(DATA)
-    print(f'message_id: {mID}')
-    # return {'message_id': mID}
     return int(mID)
 
 # Given a message_id for a message, this message is removed from the channel
