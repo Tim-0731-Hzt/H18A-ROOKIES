@@ -325,7 +325,6 @@ def uploadphoto():
     y_end = request.form.get('y_end')
     user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end)
     id = getUserFromToken(token)
-    #return send_from_directory("server/photo/",str(id)+'.jpg')
     return dumps({})
 if __name__ == '__main__':
     APP.run()
