@@ -45,12 +45,15 @@ def user_profile(token, u_id):
         if int(user['u_id']) == int(u_id):
             d = {
                 'u_id': int(u_id),
-                'profile_img_url': (user['profile_img_url']),
                 'email': (user['email']), 
                 'name_first': (user['first_name']),
                 'name_last': (user['last_name']),
-                'handle_str': (user['handle'])
+                'handle_str': (user['handle']),
+                'profile_img_url': (user['profile_img_url'])
             }
+            '''return {
+                'user': d
+            }'''
             return d
     raise ValueError('u_id was incorrect')
     
