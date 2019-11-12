@@ -9,7 +9,8 @@ import requests
 import urllib.request
 import sys
 import re
-
+from flask import request
+import os
 def users_all(token):
     uid = getUserFromToken(token)
     data = load()
@@ -154,6 +155,9 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     userDict = DATA['userDict']
     for user in userDict:
         if int(id) == int(user['u_id']):
-            user['profile_img_url'] = 'http://localhost:8002/server/photo/'+ str(id) + '.jpg'
+            #user['profile_img_url'] = 'http://localhost:8002/server/photo/'+ str(id) + '.jpg'
+            #user['profile_img_url'] = request.localhost() + str(id) + '.jpg'
+            #print(request.localhost())
+            user['profile_img_url'] = os.environ['HTTP_HOST']
     DATA['userDict'] = userDict
     save(DATA)
