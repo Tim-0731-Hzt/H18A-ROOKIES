@@ -255,13 +255,10 @@ def message_pin(token, message_id):
             break
     if not found:
         raise ValueError("Invalid message_id")
-    is_admin = False
     for user in userDict:
         if user['u_id'] == uID:
-            if user['permission_id'] == 1 or user['permission_id'] == 2:
-                is_admin = True
-    if not is_admin:
-        raise ValueError('The authorised user is not an admin')
+            if not(user['permission_id'] == 1 or user['permission_id'] == 2):
+                raise ValueError('The authorised user is not an admin')        
 
     if not is_in_channel(uID, channelID):
         raise AccessError('message_id is not a valid message within a channel that the authorised user has joined')
@@ -298,13 +295,10 @@ def message_unpin(token, message_id):
             break
     if not found:
         raise ValueError("Invalid message_id")
-    is_admin = False
     for user in userDict:
         if user['u_id'] == uID:
-            if user['permission_id'] == 1 or user['permission_id'] == 2:
-                is_admin = True
-    if not is_admin:
-        raise ValueError('The authorised user is not an admin')
+            if not(user['permission_id'] == 1 or user['permission_id'] == 2):
+                raise ValueError('The authorised user is not an admin')        
 
     for chan in channelDict:
         if chan['channel_id'] == channelID:
