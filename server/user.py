@@ -1,25 +1,57 @@
 # For a valid user, returns information about their email, first name, last name, and handle
 # ValueError when:
 # User with u_id is not a valid user
-from Error import AccessError
-from auth_pickle import getUserFromToken
-from pickle_unpickle import *
+from server.Error import AccessError, ValueError
+from server.auth_pickle import getUserFromToken
+from server.pickle_unpickle import *
+from PIL import Image
+import requests
+import urllib.request
+import sys
 import re
+from flask import Flask, request
+def users_all(token):
+    uid = getUserFromToken(token)
+    data = load()
+    userDict = data['userDict']
+    lis = []
+    for user in userDict:
+        d = {
+            'u_id': user['u_id'],
+            'profile_img_url': user['profile_img_url'],
+            # 'profile_img_url': None,
+            'email': (user['email']), 
+            'name_first': (user['first_name']),
+            'name_last': (user['last_name']),
+            'handle_str': (user['handle'])
+        }
+        lis.append(d)
 
+    return {
+        'users': list(lis)
+    }
 
 def user_profile(token, u_id):
-    opid = getUserFromToken(token)
-    
+    try:
+        ID = getUserFromToken(token)
+    except:
+        raise ValueError('token was incorrect')
     DATA = load()
     userdict = DATA['userDict']
     for user in userdict:
-        if user['u_id'] == u_id:
-            return {
-                'email': user['email'], 
-                'first_name': user['first_name'],
-                'last_name': user['last_name'],
-                'handle': user['handle']
+        if int(user['u_id']) == int(u_id):
+            d = {
+                'u_id': int(u_id),
+                'email': (user['email']), 
+                'name_first': (user['first_name']),
+                'name_last': (user['last_name']),
+                'handle_str': (user['handle']),
+                'profile_img_url': (user['profile_img_url'])
             }
+            '''return {
+                'user': d
+            }'''
+            return d
     raise ValueError('u_id was incorrect')
     
     
@@ -48,9 +80,6 @@ def user_profile_setemail(token, email):
             return
    
      
-
-
-
 
 def user_profile_sethandle(token,handle_str):
     opid = getUserFromToken(token)
@@ -103,13 +132,29 @@ def user_profile_setname(token, name_first, name_last):
 
 
 
-
-'''def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
-    if img_url != 200:
+def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
+    response = requests.get(img_url)
+    if response.status_code != 200:
         raise ValueError('url corrupted')
-    size = 400
-    if x_end > 400 or y_end >400 or x_start > 400 or y_start > 400:
+    img = Image. open(urllib. request. urlopen(img_url))
+    width, height = img.size
+    if img == -1:
+        raise ValueError("image does not exist")
+    if x_end == x_start or y_end == y_start:
+        raise ValueError("incorrect range")
+    if int(x_end) > width or int(y_end) > height or int(x_start) > width or int(y_start) > height:
         raise ValueError('Out of bound')
-    if x_end < 0 or y_end < 0 or x_start < 0 or y_start < 0:
+    if int(x_end) < 0 or int(y_end) < 0 or int(x_start) < 0 or int(y_start) < 0:
         raise ValueError('Out of bound')
-    pass'''
+    if img.format !=  "JPEG" and img.format != "JPG":
+        raise ValueError("Image uploaded is not a JPG")
+    cropped =  img.crop((int(x_start), int(y_start), int(x_end), int(y_end)))
+    id = getUserFromToken(token)
+    cropped = cropped.save('frontend/prebundle/static/' + str(id) + '.jpg')
+    DATA = load()
+    userDict = DATA['userDict']
+    for user in userDict:
+        if int(id) == int(user['u_id']):
+            user['profile_img_url'] = "http://"+ request.localhost() + '/static/'+ str(id) + '.jpg'
+    DATA['userDict'] = userDict
+    save(DATA)

@@ -1,9 +1,9 @@
-from Error import AccessError
-from channel import *
-from message_pickle import *
-from auth_pickle import *
-import pickle_unpickle
-from standup import *
+from server.Error import AccessError, ValueError
+from server.channel import *
+from server.message_pickle import *
+from server.auth_pickle import *
+import server.pickle_unpickle
+from server.standup import *
 import pytest
 
 restart()
@@ -31,21 +31,21 @@ def test_standup_all():
     channel_invite(token1,channel_id,UID2)
     channel_invite(token1,channel_id,UID3)
 
-    showtime()
+    showtime(20)
 
     with pytest.raises(ValueError, match=r".*"):
         standup_send(token2, channel_id, 'hello')
 
-    standup_start(token1,channel_id)
+    standup_start(token1,channel_id, 20)
     
     with pytest.raises(ValueError, match = r".*"):
-        standup_start(token2, channel_id)
+        standup_start(token2, channel_id, 20)
 
     with pytest.raises(AccessError, match=r".*"):
-        standup_start(token4,channel_id)
+        standup_start(token4,channel_id, 20)
         
     with pytest.raises(ValueError,match = r".*"):
-        standup_start(token1,-1)
+        standup_start(token1,-1, 20)
 
     with pytest.raises(AccessError, match=r".*"):
         standup_send(token4, channel_id , 'hello')

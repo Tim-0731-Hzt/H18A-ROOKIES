@@ -1,10 +1,10 @@
 
 import pytest
 import re
-from auth_pickle import *
-from message_pickle import *
-from channel import *
-from user import *
+from server.auth_pickle import *
+from server.message_pickle import *
+from server.channel import *
+from server.user import *
 
 
 # For a valid user, returns information about their email, first name, last name, and handle
@@ -185,16 +185,9 @@ def test3_user_profile_setemail():
         user_profile_setemail(token, "sahduyhasdh**(())")
     restart()
 
-restart()
-
-'''
 def test1_user_profiles_uploadphoto():
-    user_profiles_uploadphoto(123,200,2,2,2,2)
-def test2_user_profiles_uploadphoto():
-    user_profiles_uploadphoto(123,100,3,3,3,3)
-def test3_user_profiles_uploadphoto():
-    user_profiles_uploadphoto(123,200,-5,3,877,9237)
-def test4_user_profiles_uploadphoto():
-    user_profiles_uploadphoto(123,200,600,5,5,5)
-def test5_user_profiles_uploadphoto():
-    user_profiles_uploadphoto(123,200,3,456,-1,-1)'''
+    restart()
+    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    token = authRegisterDict['token']
+    user_profiles_uploadphoto(token, "https://romanroadlondon.com/wp-content/uploads/2019/03/phil-verney-night-sky-bow-1.jpg", 40, 40, 1000 , 600)
+

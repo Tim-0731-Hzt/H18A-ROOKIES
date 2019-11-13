@@ -1,8 +1,8 @@
-from channel import *
-from message_pickle import *
-from auth_pickle import *
+from server.channel import *
+from server.message_pickle import *
+from server.auth_pickle import *
 
-import pickle_unpickle
+import server.pickle_unpickle
 def search(token, query_str): 
     data = load()
     messDict = data['messDict']
