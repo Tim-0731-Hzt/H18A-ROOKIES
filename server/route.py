@@ -99,6 +99,12 @@ def unreact():
     react_id = request.form.get('react_id')
     return dumps(message_unreact((token), int(message_id), int(react_id)))
 
+@APP.route('/message/pin', methods=['POST'])
+def pin():
+    token = request.form.get('token')
+    message_id = request.form.get('message_id')
+    return dumps(message_pin((token), int(message_id)))
+
 @APP.route('/message/unpin', methods=['POST'])
 def unpin():
     token = request.form.get('token')

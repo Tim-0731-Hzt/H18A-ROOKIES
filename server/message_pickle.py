@@ -5,7 +5,7 @@ import threading
 import time
 from server.Error import AccessError, ValueError
 from server.pickle_unpickle import *
-from server.channel import is_in_channel
+from server.channel import is_in_channel, if_User_Owner
 
 def is_owner(token, channel_id):
     channel_id = int(channel_id)
@@ -237,6 +237,8 @@ def message_unreact(token, message_id, react_id):
 # The authorised user is not a member of the channel that the message is within
 def message_pin(token, message_id):
     uID = getUserFromToken(token)
+    uID = int(uID)
+    message_id = int(message_id)
     DATA = load()
     messDict = DATA['messDict']
     channelDict = DATA['channelDict']
@@ -261,19 +263,13 @@ def message_pin(token, message_id):
     if not is_admin:
         raise ValueError('The authorised user is not an admin')
 
-    for chan in channelDict:
-        if chan['channel_id'] == channelID:
-            
-            if uID in chan['channel_owner'] or uID in chan['channel_member']:
-                pass
-            else:
-                # raise ValueError('message_id:{message_id} is not a valid message within a channel that the authorised user has joined')
-                raise AccessError('message_id is not a valid message within a channel that the authorised user has joined')
+    if not is_in_channel(uID, channelID):
+        raise AccessError('message_id is not a valid message within a channel that the authorised user has joined')
     message['is_pinned'] = True
     DATA['messDict'] = messDict
     save(DATA)
 
-    pass
+    return {}
 
 # Given a message within a channel, remove it's mark as unpinned
 # ValueError when:
@@ -284,6 +280,8 @@ def message_pin(token, message_id):
 # The authorised user is not a member of the channel that the message is within
 def message_unpin(token, message_id):
     uID = getUserFromToken(token)
+    uID = int(uID)
+    message_id = int(message_id)
     DATA = load()
     messDict = DATA['messDict']
     channelDict = DATA['channelDict']
@@ -321,7 +319,7 @@ def message_unpin(token, message_id):
     DATA['channelDict'] = channelDict
     save(DATA)
 
-    pass
+    return {}
 
 
 
