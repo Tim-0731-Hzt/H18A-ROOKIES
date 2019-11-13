@@ -10,6 +10,7 @@ import urllib.request
 import sys
 import re
 from flask import Flask, request
+
 def users_all(token):
     uid = getUserFromToken(token)
     data = load()
