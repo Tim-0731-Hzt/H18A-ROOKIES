@@ -97,6 +97,7 @@ def if_User_Owner(token,channel_id):
     userDict = DATA['userDict']
     # get the user id from token
     id = getUserFromToken(token)
+    id = int(id)
     
     # slacker owner or admin
     for parts in userDict:
@@ -105,7 +106,8 @@ def if_User_Owner(token,channel_id):
     # find the channel and serach the owner
     for elements in channelDict:
         if (elements['channel_id'] == channel_id):
-            if (elements['channel_creater'] == id):
+            # if (elements['channel_creater'] == id):
+            if id in elements['channel_owner']:
                 return True
     return False
 
@@ -299,6 +301,9 @@ def channel_addowner(token, channel_id, u_id):
         raise ValueError("channel_id is invalid")
     # already an owner
     id = getUserFromToken(token)
+    id = int(id)
+    u_id = int(u_id)
+    channel_id = int(channel_id)
     for parts in channelDict:
         if parts['channel_id'] == channel_id and u_id in parts['channel_owner']:
             raise ValueError("user is already an owner in the channel")    
@@ -312,23 +317,33 @@ def channel_addowner(token, channel_id, u_id):
             parts['channel_member'].remove(u_id)
     DATA['channelDict'] = channelDict
     save(DATA)
+    return {}
+
 # Remove user with user id u_id an owner of this channel
 def channel_removeowner(token, channel_id, u_id):
+    id = getUserFromToken(token)
+    id = int(id)
+    u_id = int(u_id)
+    channel_id = int(channel_id)
+    
     DATA = load()
     channelDict = DATA['channelDict']   
-    id = getUserFromToken(token)
+
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     if if_User_Owner(token,channel_id) == False: 
         raise AccessError("the authorised user is not an owner of the slackr, or an owner of this channel")
     if u_id not in channelDict[channel_id - 1]['channel_owner']:
         raise AccessError("user with user id u_id is not an owner of the channel")
+    
     for parts in channelDict:
         if (parts['channel_id'] == channel_id):
             parts['channel_owner'].remove(u_id)
             parts['channel_member'].append(u_id)
     DATA['channelDict'] = channelDict
     save(DATA)
+    return {}
+
 # Provide a list of all channels (and their associated details) that 
 # the authorised user is part of
 def channels_list(token):

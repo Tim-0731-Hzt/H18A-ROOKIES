@@ -175,14 +175,14 @@ def channels_join():
     channel_id = request.form.get('channel_id')
     return dumps(channel_join(token, channel_id))
 
-@APP.route('/channels/addowner',methods = ['POST '])
+@APP.route('/channel/addowner',methods = ['POST'])
 def channels_addowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
     return dumps(channel_addowner(token, channel_id,u_id))
 
-@APP.route('/channels/removeowner',methods = ['POST '])
+@APP.route('/channel/removeowner',methods = ['POST'])
 def channels_removeowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
