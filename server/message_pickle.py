@@ -181,10 +181,13 @@ def message_react(token, message_id, react_id):
     if not is_in_channel(uID, channelID):
         raise ValueError('message_id is not a valid message within a channel that the authorised user has joined')
 
-    message['reacts'][0]['react_id'] = react_id
-    message['reacts'][0]['u_ids'].append(uID)
-    DATA['messDict'] = messDict
-    save(DATA)
+    if uID in message['reacts'][0]['u_ids']:
+        raise ValueError(f'Message with ID {message_id} already contains an active React with ID {react_id}')
+    else:
+        message['reacts'][0]['react_id'] = react_id
+        message['reacts'][0]['u_ids'].append(uID)
+        DATA['messDict'] = messDict
+        save(DATA)
 
     return {}
 
