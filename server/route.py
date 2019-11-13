@@ -90,20 +90,20 @@ def react():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
     react_id = request.form.get('react_id')
-    return dumps(message_react(int(token), int(message_id), int(react_id)))
+    return dumps(message_react((token), int(message_id), int(react_id)))
 
 @APP.route('/message/unreact', methods=['POST'])
 def unreact():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
     react_id = request.form.get('react_id')
-    return dumps(message_unreact(int(token), int(message_id), int(react_id)))
+    return dumps(message_unreact((token), int(message_id), int(react_id)))
 
 @APP.route('/message/unpin', methods=['POST'])
 def unpin():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
-    return dumps(message_unpin(int(token), int(message_id)))
+    return dumps(message_unpin((token), int(message_id)))
 
 @APP.route('/channels/create',methods = ['POST'])
 def channel_create():

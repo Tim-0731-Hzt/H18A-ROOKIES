@@ -4,6 +4,19 @@ from server.auth_pickle import *
 from server.pickle_unpickle import *
 # global varaibles:
 
+def is_user_reacted(u_id, message_id):
+    u_id = int(u_id)
+    message_id = int(message_id)
+    data = load()
+    messDict = data['messDict']
+    for m in messDict:
+        if m['message_id'] == message_id:
+            if u_id in m['reacts'][0]['u_ids']:
+                return True
+            else:
+                return False
+    return False
+
 # input: list of u_id
 # output: list of members dictionary
 def get_members(uids):
@@ -39,7 +52,7 @@ def get_channels(channel_ids):
                 break
     return channel
 
-def get_messages(message_ids):
+def get_messages(u_id, message_ids):
     data = load()
     messDict = data['messDict']
     mess = []
@@ -54,6 +67,8 @@ def get_messages(message_ids):
                     'reacts': message['reacts'],
                     'is_pinned': message['is_pinned']
                 }
+                if is_user_reacted(u_id, message['message_id']):
+                    m['reacts'][0]['is_this_user_reacted'] = True
                 mess.append(m)
                 break
     return list(mess)
@@ -208,6 +223,8 @@ def channel_details (token, channel_id):
 # returns -1 in "end" to indicate there are no more messages to load after this return.
 
 def channels_messages (token, channel_id, start):
+    u_id = getUserFromToken(token)
+    u_id = int(u_id)
     DATA = load()
     messDict = DATA['messDict']
     start = int(start)
@@ -226,7 +243,7 @@ def channels_messages (token, channel_id, start):
             L.append(int(parts['message_id']))
     if len(L) != 1:
         L = L[::-1]
-    L = get_messages(L)
+    L = get_messages(u_id, L)
     if len(L) < int(start):
         raise ValueError("start is greater than the total number of messages in the channel")
 

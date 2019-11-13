@@ -5,6 +5,7 @@ import threading
 import time
 from server.Error import AccessError, ValueError
 from server.pickle_unpickle import *
+from server.channel import is_in_channel
 
 def is_owner(token, channel_id):
     channel_id = int(channel_id)
@@ -79,7 +80,7 @@ def message_send(token, channel_id, message):
         'message': message,
         'time_created': int(datetime.now().timestamp()),
         'reacts': [{
-            'react_id': 1,
+            'react_id': None,
             'u_ids': [],
             'is_this_user_reacted': False
         }],
@@ -159,66 +160,33 @@ def message_edit(token, message_id, message):
 # Message with ID message_id already contains an active React with ID react_id
 def message_react(token, message_id, react_id):
     uID = getUserFromToken(token)
+    uID = int(uID)
+    message_id = int(message_id)
+    react_id = int(react_id)
     DATA = load()
     messDict = DATA['messDict']
-    reactDict = DATA['reactDict']
     channelDict = DATA['channelDict']
 
-    if react_id < 0:
+    if react_id != 1:
         raise ValueError('React_id is not a valid React ID')
     is_mess = False
     for mess in messDict:
         if mess['message_id'] == message_id:
-            if mess['reacts'] != react_id and mess['reacts'] != None:
-                raise ValueError('Message with ID message_id already contains an active React with ID')
             channelID = mess['channel_id']
-            sender_id = mess['u_id']
             message = mess
             is_mess = True
             break
     if not is_mess:
         raise ValueError('invalid message_id')
-    for chan in channelDict:
-        if chan['channel_id'] == channelID:
-            if uID in chan['channel_owner']:
-                pass
-            elif uID in chan['channel_member']:
-                pass
-            else:
-                raise ValueError('message_id is not a valid message within a channel that the authorised user has joined')
-    m = {'reacts': int(react_id)}
-    message.update(m)
+    if not is_in_channel(uID, channelID):
+        raise ValueError('message_id is not a valid message within a channel that the authorised user has joined')
 
-    found = False
-    for rea in reactDict:
-        if rea['react_id'] == react_id:
-            if int(uID) not in rea['u_ids']:
-                rea['u_ids'].append(int(uID))
-            found = True
-            if uID == sender_id:
-                u = {'is_this_user_reacted': True}
-                rea.update(u)
-    if not found:
-        
-        if uID == sender_id:
-            r = {
-                'react_id': react_id, 
-                'u_ids': [int(uID)], 
-                'is_this_user_reacted': True
-            }
-        else:
-            r = {
-                'react_id': react_id, 
-                'u_ids': [int(uID)], 
-                'is_this_user_reacted': False
-            }
-        reactDict.append(r)
+    message['reacts'][0]['react_id'] = react_id
+    message['reacts'][0]['u_ids'].append(uID)
     DATA['messDict'] = messDict
-    DATA['reactDict'] = reactDict
-    DATA['channelDict'] = channelDict
     save(DATA)
 
-    pass
+    return {}
 
 # Given a message within a channel the authorised user is part of, remove a "react" to that particular message
 # ValueError when:
@@ -227,49 +195,38 @@ def message_react(token, message_id, react_id):
 # Message with ID message_id does not contain an active React with ID react_id
 def message_unreact(token, message_id, react_id):
     uID = getUserFromToken(token)
+    uID = int(uID)
+    message_id = int(message_id)
+    react_id = int(react_id)
     DATA = load()
     messDict = DATA['messDict']
-    reactDict = DATA['reactDict']
     channelDict = DATA['channelDict']
-    if react_id < 0:
+    if react_id != 1:
         raise ValueError('React_id is not a valid React ID')
     is_mess = False
     for mess in messDict:
         if mess['message_id'] == message_id:
-            if mess['reacts'] == None:
-                raise ValueError('Message with ID message_id does not contain an active React with ID')
-            if mess['reacts'] != react_id:
+            if mess['reacts'][0]['react_id'] == None:
+                raise ValueError('Message with ID message_id does not contain an active React')
+            if mess['reacts'][0]['react_id'] != react_id:
                 raise ValueError('React_id is not a valid React ID')
             channelID = mess['channel_id']
-            #sender_id = mess['u_id']
             message = mess
             is_mess = True
             break
     if not is_mess:
         raise ValueError('invalid message_id')
-    for chan in channelDict:
-        if chan['channel_id'] == channelID:
-            if uID in chan['channel_owner']:
-                pass
-            elif uID in chan['channel_member']:
-                pass
-            else:
-                raise ValueError('message_id is not a valid message within a channel that the authorised user has joined')
+    if not is_in_channel(uID, channelID):
+        raise ValueError('message_id is not a valid message within a channel that the authorised user has joined')
 
-    for rea in reactDict:
-        if rea['react_id'] == react_id:
-            rea['u_ids'].remove(int(uID))
-            if rea['u_ids'] == []:
-                m = {'reacts': None}
-                message.update(m)
-                reactDict.remove(rea)
-            break
+    if uID in message['reacts'][0]['u_ids']:
+        message['reacts'][0]['u_ids'].remove(uID)
+    if len(message['reacts'][0]['u_ids']) == 0:
+        message['reacts'][0]['react_id'] = None
     DATA['messDict'] = messDict
-    DATA['reactDict'] = reactDict
-    DATA['channelDict'] = channelDict
     save(DATA)
 
-    pass
+    return {}
 
 # Given a message within a channel, mark it as "pinned" to be given special display treatment by the frontend
 # ValueError when:
