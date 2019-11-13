@@ -18,12 +18,11 @@ def users_all(token):
     for user in userDict:
         d = {
             'u_id': user['u_id'],
-            'profile_img_url': user['profile_img_url'],
-            # 'profile_img_url': None,
             'email': (user['email']), 
             'name_first': (user['first_name']),
             'name_last': (user['last_name']),
-            'handle_str': (user['handle'])
+            'handle_str': (user['handle']),
+            'profile_img_url': user['profile_img_url']
         }
         lis.append(d)
 
@@ -36,14 +35,18 @@ def user_profile(token, u_id):
         ID = getUserFromToken(token)
     except:
         raise ValueError('token was incorrect')
+    '''
     if int(u_id) != int(ID):
+        print(u_id)
+        print(ID)
         raise ValueError('incorrect u_id')
+    '''
     DATA = load()
     userdict = DATA['userDict']
     for user in userdict:
         if int(user['u_id']) == int(u_id):
             d = {
-                'u_id': int(u_id),
+                'u_id': (user['u_id']),
                 'email': (user['email']), 
                 'name_first': (user['first_name']),
                 'name_last': (user['last_name']),
@@ -54,7 +57,7 @@ def user_profile(token, u_id):
                 'user': d
             }'''
             return d
-    raise ValueError('u_id was incorrect')
+    #raise ValueError('u_id was incorrect')
     
     
 # returned: { email, name_first, name_last, handle_str }
@@ -157,6 +160,6 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     userDict = DATA['userDict']
     for user in userDict:
         if int(id) == int(user['u_id']):
-            user['profile_img_url'] = "http://"+ request.localhost() + '/static/'+ str(id) + '.jpg'
+            user['profile_img_url'] = "http://localhost:8001/frontend/prebundle/static/"+ str(id) + '.jpg'
     DATA['userDict'] = userDict
     save(DATA)
