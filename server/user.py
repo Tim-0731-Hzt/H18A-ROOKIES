@@ -57,7 +57,7 @@ def user_profile(token, u_id):
     
 # returned: { email, name_first, name_last, handle_str }
 
-def user_profile_setemail(token, email):
+def user_profile_setmail(token, email):
     opid = getUserFromToken(token)
     
     DATA = load()

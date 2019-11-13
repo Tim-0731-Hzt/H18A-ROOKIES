@@ -232,7 +232,7 @@ def user1():
     # profile['profile_img_url'] = 'https://webcms3.cse.unsw.edu.au/static/uploads/coursepic/COMP1531/19T3/f69768934fc5db2bb478f938db95efe98b02af69adc0d4a9e79545d0aae44908/Screenshot_from_2019-09-10_22-16-33.png'
     return dumps(profile)
 
-@APP.route('/users/profile/setname', methods = ['PUT'])
+@APP.route('/user/profile/setname', methods = ['PUT'])
 def user2():
     token = request.form.get('token')
     name_first = request.form.get('name_first')
@@ -240,14 +240,14 @@ def user2():
     user_profile_setname(token,name_first, name_last)
     return dumps({})
 
-@APP.route('/users/profile/setemail', methods = ['PUT'])
+@APP.route('/user/profile/setemail', methods = ['PUT'])
 def user3():
     token = request.form.get('token')
     email = request.form.get('email')
     user_profile_setmail(token,email)
     return dumps({})
 
-@APP.route('/users/profile/sethandle', methods = ['PUT'])
+@APP.route('/user/profile/sethandle', methods = ['PUT'])
 def user4():
     token = request.form.get('token')
     handle_str = request.form.get('handle_str')
