@@ -241,35 +241,25 @@ def channels_messages (token, channel_id, start):
 
 # Given a channel ID, the user removed as a member of this channel
 def channel_leave(token, channel_id):
-    DATA = load()
-    channelDict = DATA['channelDict']
+    id = getUserFromToken(token)
+    id = int(id)
+    channel_id = int(channel_id)
+    
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
-    id = getUserFromToken(token)
-    
-    '''channel = None
+    if not is_in_channel(id, channel_id):
+        raise ValueError("user is not a member of channel")
+    DATA = load()
+    channelDict = DATA['channelDict']
     for cha in channelDict:
         if cha['channel_id'] == channel_id:
-            channel = cha
-            break
-    if channel == None:
-        raise ValueError("invalid channel_id")'''
-    channel = channelDict[int(channel_id) - 1]
-    if channel['channel_owner'] != []:
-        if id in channel['channel_owner']:
-            channel['channel_owner'].remove(id)
-        else:
-            if (channel['channel_member'] == [] or id not in channel['channel_member']):
-                raise ValueError("user is not a member of channel")
+            if id in cha['channel_owner']:
+                cha['channel_owner'].remove(id)
             else:
-                channel['channel_member'].remove(id)
-    else:
-        if (channel['channel_member'] == [] or id not in channel['channel_member']):
-            raise ValueError("user is not a member of channel")
-        else:
-            channel['channel_member'].remove(id)
+                cha['channel_member'].remove(id)
     DATA['channelDict'] = channelDict
     save(DATA)
+
 
 # Given a channel_id of a channel that the authorised user can join, adds them to that channel
 def channel_join(token, channel_id):
@@ -278,6 +268,7 @@ def channel_join(token, channel_id):
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     id = getUserFromToken(token)
+    id = int(id)
     # private channel
     if channel_property_check(channel_id) == False:
         if channel_admin_check(token) == False:

@@ -163,7 +163,7 @@ def channel_messages():
     messages = channels_messages(token, channel_id, start)
     return dumps(messages)
 
-@APP.route('/channels/leave', methods = ['POST'])
+@APP.route('/channel/leave', methods = ['POST'])
 def channels_leave():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
