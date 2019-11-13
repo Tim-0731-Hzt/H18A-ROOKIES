@@ -104,6 +104,19 @@ def u_id_check(u_id):
             return True
     return False
 
+def if_slackr_owner(token):
+    DATA = load()
+    userDict = DATA['userDict']
+    # get the user id from token
+    id = getUserFromToken(token)
+    id = int(id)
+    
+    # slacker owner or admin
+    for parts in userDict:
+        if (parts['u_id'] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
+            return True
+    return False
+
 # check if user a owner or member
 def if_User_Owner(token,channel_id):
     channel_id = int(channel_id)
@@ -189,7 +202,7 @@ def channel_invite(token, channel_id, u_id):
     for parts in channelDict:
         if (int(parts['channel_id']) == int(channel_id)):
             # the user invite by owner is also a owner
-            if if_User_Owner(token,channel_id) == True:
+            if if_slackr_owner(token) == True:
                 parts['channel_owner'].append(int(u_id))
             else:
                 parts['channel_member'].append(int(u_id))
