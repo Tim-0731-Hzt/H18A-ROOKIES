@@ -65,10 +65,11 @@ def is_in_channel(u_id, channel_id):
     channelDict = data['channelDict']
     for cha in channelDict:
         if cha['channel_id'] == channel_id:
-            if u_id in cha['channel_member'] or u_id in cha['channel_owner']:
+            if int(u_id) in cha['channel_member'] or int(u_id) in cha['channel_owner']:
                 return True
             else:
                 return False
+    return False
 
 # Given a user's first and last name, email address, and password, 
 # create a new account for them and return a new token for authentication in their session
@@ -157,8 +158,6 @@ def channel_admin_check(token):
 # Invites a user (with user id u_id) to join a channel with ID channel_id. 
 # Once invited the user is added to the channel immediately
 def channel_invite(token, channel_id, u_id):
-    DATA = load()
-    channelDict = DATA['channelDict']
     if channel_id_check(int(channel_id)) == False:
         raise ValueError("channel_id is invalid")
     if u_id_check(u_id) == False:
@@ -168,13 +167,15 @@ def channel_invite(token, channel_id, u_id):
     if is_in_channel(u_id, channel_id):
         raise AccessError('The user you are inviting is already in this channel.')
     
+    DATA = load()
+    channelDict = DATA['channelDict']
     for parts in channelDict:
         if (int(parts['channel_id']) == int(channel_id)):
             # the user invite by owner is also a owner
             if if_User_Owner(token,channel_id) == True:
-                parts['channel_owner'].append(u_id)
+                parts['channel_owner'].append(int(u_id))
             else:
-                parts['channel_member'].append(u_id)
+                parts['channel_member'].append(int(u_id))
     DATA['channelDict'] = channelDict
     save(DATA)
     return {}
@@ -183,20 +184,11 @@ def channel_invite(token, channel_id, u_id):
 # provide basic details about the channel
 def channel_details (token, channel_id):
     DATA = load()
-
-    # return DATA
-
-
     channelDict = DATA['channelDict']
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     if not auth_id_check(token,channel_id):
         raise AccessError("Auth user is not a member of channel")
-    '''detail = {
-        'name': None,
-        'all_members': [],
-        'owner_members': []
-    }'''
     detail = {}
     for parts in channelDict:
         if (int(parts['channel_id']) == int(channel_id)):
@@ -383,9 +375,9 @@ def channels_create(token, name, is_public):
         d = {
             'channel_id': 1,
             'name': name,
-            'channel_creater': id,
+            'channel_creater': int(id),
             'channel_member': [],
-            'channel_owner':[id],
+            'channel_owner':[int(id)],
             'is_public': is_public,
             'standUp': 0,
             'standlist' : ''
@@ -403,9 +395,9 @@ def channels_create(token, name, is_public):
         d = {
             'channel_id': int(count),
             'name': name,
-            'channel_creater': id,
+            'channel_creater': int(id),
             'channel_member': [],
-            'channel_owner':[id],
+            'channel_owner':[int(id)],
             'is_public': is_public,
             'standUp':0,
             'standlist' : ''
