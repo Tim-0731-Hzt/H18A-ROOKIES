@@ -36,8 +36,6 @@ def user_profile(token, u_id):
         ID = getUserFromToken(token)
     except:
         raise ValueError('token was incorrect')
-    if int(u_id) != int(ID):
-        raise ValueError('incorrect u_id')
     DATA = load()
     userdict = DATA['userDict']
     for user in userdict:
