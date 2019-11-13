@@ -9,7 +9,8 @@ from server.Error import AccessError, ValueError
 from server.channel import channel_invite, channel_details, channels_messages, channel_leave, channel_join
 from server.channel import channel_addowner, channel_removeowner, channels_list, channels_listall, channels_create 
 from server.auth_pickle import auth_login, auth_logout, auth_register, auth_passwordreset_request, auth_passwordreset_reset
-from server.user import users_all, user_profile, user_profile_setmail, user_profile_sethandle, user_profile_setname, user_profiles_uploadphoto
+from server.user import users_all, user_profile, user_profile_setmail, user_profile_sethandle
+from server.user import user_profile_setname, user_profiles_uploadphoto, getUserFromToken
 from server.search import search
 from server.admin_userpermission_change import admin_userpermission_change
 from server.pickle_unpickle import restart
