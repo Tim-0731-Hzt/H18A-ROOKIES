@@ -105,17 +105,6 @@ def unpin():
     message_id = request.form.get('message_id')
     return dumps(message_unpin(int(token), int(message_id)))
 
-@APP.route('/user/create',methods = ['POST'])
-def user_register():
-    email = request.form.get("email")
-    password = request.form.get("password")
-    name_first = request.form.get("name_first")
-    name_last = request.form.get("name_last")
-    dic = {}
-    dic = auth_register(email, password, name_first, name_last)
-    token = dic['token']
-    return dumps(token)
-
 @APP.route('/channels/create',methods = ['POST'])
 def channel_create():
     token = request.form.get("token")
@@ -139,7 +128,6 @@ def channel_list():
 def channels_invite():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
-    #return dumps(channel_id)
     u_id = request.form.get('u_id')
     return dumps(channel_invite(token, channel_id, u_id))
 
@@ -148,12 +136,6 @@ def channels_details():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
     return dumps(channel_details(token, channel_id))
-    '''print(channel_details(token, channel_id))
-    return dumps({
-        'name': "haha",
-        'all_members': [],
-        'owner_members': []
-    })'''
 
 @APP.route('/channel/messages', methods = ['GET'])
 def channel_messages():

@@ -110,20 +110,18 @@ def message_remove(token, message_id):
     for mess in messDict:
         if mess['message_id'] == int(message_id):
             channelID = int(mess['channel_id'])
-            # messDict.remove(mess)
+            m = mess
             found = True
             break
     if not found:
         raise ValueError("Message (based on ID) no longer exists")
-    for channel in channelDict:
-        if channel['channel_id'] == channelID:
-            if uID not in channel['channel_owner']:
-                raise AccessError('Unauthorised remove')
-    messDict.remove(mess)
+    if not is_owner(token, channelID) and not is_sender(token, message_id):
+        raise AccessError('Unauthorised remove !')
+    messDict.remove(m)
     DATA['messDict'] = messDict
     save(DATA)
 
-    pass
+    return {}
 
 # Given a message, update it's text with new text
 # ValueError when all of the following are not true:
