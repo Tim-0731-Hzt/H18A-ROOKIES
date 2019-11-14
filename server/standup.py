@@ -34,7 +34,7 @@ def standup_active(token, channel_id):
     data = load()
     channelDict = data['channelDict']
     for ch in channelDict:
-        if channel_id == ch['channel_id']:
+        if int(channel_id) == ch['channel_id']:
             a = ch['standUp']
             b = ch['standtime']
             return [a,b]
