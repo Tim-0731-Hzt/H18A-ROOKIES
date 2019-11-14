@@ -436,7 +436,7 @@ def channels_create(token, name, is_public):
             'channel_member': [],
             'channel_owner':[int(id)],
             'is_public': is_public,
-            'standUp':False,
+            'standUp': False,
             'standlist' : '',
             'standtime' : None
         }

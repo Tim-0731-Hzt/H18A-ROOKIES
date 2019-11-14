@@ -8,7 +8,7 @@ import time
 from datetime import datetime, timedelta
 import server.pickle_unpickle
 def standup_start(token, channel_id, second):
-    
+    channel_id = int(channel_id)
     data = load()
     channelDict = data['channelDict']
 
@@ -32,6 +32,7 @@ def standup_start(token, channel_id, second):
     raise ValueError('incorrect channel id')
   
 def standup_active(token, channel_id):
+    channel_id = int(channel_id)
     data = load()
     channelDict = data['channelDict']
     for ch in channelDict:
@@ -39,13 +40,13 @@ def standup_active(token, channel_id):
             a = ch['standUp']
             b = ch['standtime']
             return {
-                'is_active': a,
-                'time_finish': b
+                'is_active': bool(a),
+                'time_finish': (b)
             }
     raise ValueError('incorrect channel id')
             
 def send(channel_id,token):
-    
+    channel_id = int(channel_id)
     data = load()
     channelDict = data['channelDict']
     for channel in channelDict:
@@ -65,6 +66,7 @@ def showtime(time):
     return int(now_15.timestamp())
 
 def standup_send(token, channel_id, message):
+    channel_id = int(channel_id)
     data = load()
     channelDict = data['channelDict']
     userDict = data['userDict']
