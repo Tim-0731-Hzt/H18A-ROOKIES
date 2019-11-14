@@ -17,19 +17,28 @@ def standup_start(token, channel_id, second):
         if channel_id == ch['channel_id']:
             if opid not in ch['channel_member'] and opid not in ch['channel_owner']:
                 raise AccessError('You are not a member of this channel')
-            if ch['standUp'] == 1:
+            if ch['standUp'] == True:
                 raise ValueError('this channel is already in standup')
-            ch['standUp'] = 1
-            
+            ch['standUp'] = True
+            ch['standtime'] = showtime(second)
             data['channelDict'] = channelDict
             save(data)
             
             timer = threading.Timer(second,send,[channel_id,token])
             timer.start()
                     
-            return
+            return 
     raise ValueError('incorrect channel id')
   
+def standup_active(token, channel_id):
+    data = load()
+    channelDict = data['channelDict']
+    for ch in channelDict:
+        if channel_id == ch['channel_id']:
+            a = ch['standUp']
+            b = ch['standtime']
+            return [a,b]
+    raise ValueError('incorrect channel id')
             
 def send(channel_id,token):
     
@@ -37,7 +46,7 @@ def send(channel_id,token):
     channelDict = data['channelDict']
     for channel in channelDict:
         if channel_id == channel['channel_id']:
-            channel['standUp'] == 0
+            channel['standUp'] == False
             message_send(token, channel_id, channel['standlist'])
             channel['standlist'] == ''
             data['channelDict'] = channelDict
@@ -65,7 +74,7 @@ def standup_send(token, channel_id, message):
         if channel_id == ch['channel_id']:
             if opid not in ch['channel_member'] and opid not in ch['channel_owner']:
                 raise AccessError('You are not a member of this channel')
-            if ch['standUp'] != 1:
+            if ch['standUp'] != True:
                 raise ValueError(
                     'An active standup is not currently running in this channel')
             append = name + ': ' + message

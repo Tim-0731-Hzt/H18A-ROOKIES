@@ -14,6 +14,7 @@ from server.user import user_profile_setname, user_profiles_uploadphoto, getUser
 from server.search import search
 from server.admin_userpermission_change import admin_userpermission_change
 from server.pickle_unpickle import restart
+from server.standup import standup_active, standup_send, standup_start
 
 def defaultHandler(err):
     response = err.get_response()
@@ -280,9 +281,10 @@ def standup2():
 def active():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
+    result = standup_active(token, channel_id)
     return dumps({
-        'is_active': False,
-        'time_finish': None
+        'is_active': result[0],
+        'time_finish': result[1]
     })
 
 

@@ -415,8 +415,9 @@ def channels_create(token, name, is_public):
             'channel_member': [],
             'channel_owner':[int(id)],
             'is_public': is_public,
-            'standUp': 0,
-            'standlist' : ''
+            'standUp': False,
+            'standlist' : '',
+            'standtime': None
         }
         channelDict.append(d)
         DATA['channelDict'] = channelDict
