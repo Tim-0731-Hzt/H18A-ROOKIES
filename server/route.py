@@ -282,10 +282,7 @@ def active():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
     result = standup_active(token, channel_id)
-    return dumps({
-        'is_active': result[0],
-        'time_finish': result[1]
-    })
+    return dumps(result)
 
 
 @APP.route('/search', methods=['GET'])

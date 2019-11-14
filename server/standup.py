@@ -37,7 +37,10 @@ def standup_active(token, channel_id):
         if int(channel_id) == ch['channel_id']:
             a = ch['standUp']
             b = ch['standtime']
-            return [a,b]
+            return {
+                'is_active': a,
+                'time_finish': b
+            }
     raise ValueError('incorrect channel id')
             
 def send(channel_id,token):
