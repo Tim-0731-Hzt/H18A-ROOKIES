@@ -266,7 +266,6 @@ def standup1():
     channel_id = request.form.get('channel_id')
     second = request.form.get('length')
     time = standup_start(token, channel_id)
-    
     return dumps(time)
 
 @APP.route('/standup/send', methods=['POST'])

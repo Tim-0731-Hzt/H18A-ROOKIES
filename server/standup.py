@@ -28,7 +28,7 @@ def standup_start(token, channel_id, second):
             timer = threading.Timer(second,send,[channel_id,token])
             timer.start()
                     
-            return time
+            return {'time_finish': time}
     raise ValueError('incorrect channel id')
   
 def standup_active(token, channel_id):
@@ -62,7 +62,7 @@ def send(channel_id,token):
 def showtime(time):
     now = datetime.now()
     now_15 = now + timedelta(seconds=int(time))
-    return now_15
+    return int(now_15.timestamp())
 
 def standup_send(token, channel_id, message):
     data = load()
