@@ -8,36 +8,51 @@ import time
 from datetime import datetime, timedelta
 import server.pickle_unpickle
 def standup_start(token, channel_id, second):
-    
+    channel_id = int(channel_id)
     data = load()
     channelDict = data['channelDict']
 
     opid = getUserFromToken(token)
     for ch in channelDict:
-        if channel_id == ch['channel_id']:
+        if int(channel_id) == ch['channel_id']:
             if opid not in ch['channel_member'] and opid not in ch['channel_owner']:
                 raise AccessError('You are not a member of this channel')
-            if ch['standUp'] == 1:
+            if ch['standUp'] == True:
                 raise ValueError('this channel is already in standup')
-            ch['standUp'] = 1
-            
+            ch['standUp'] = True
+            ch['standtime'] = showtime(second)
+            time = ch['standtime']
             data['channelDict'] = channelDict
             save(data)
             
             timer = threading.Timer(second,send,[channel_id,token])
             timer.start()
                     
-            return
+            return {'time_finish': time}
     raise ValueError('incorrect channel id')
   
+def standup_active(token, channel_id):
+    channel_id = int(channel_id)
+    data = load()
+    channelDict = data['channelDict']
+    for ch in channelDict:
+        if int(channel_id) == ch['channel_id']:
+            a = ch['standUp']
+            b = ch['standtime']
+            return {
+                'is_active': bool(a),
+                'time_finish': (b)
+            }
+    raise ValueError('incorrect channel id')
             
 def send(channel_id,token):
-    
+    channel_id = int(channel_id)
     data = load()
     channelDict = data['channelDict']
     for channel in channelDict:
         if channel_id == channel['channel_id']:
-            channel['standUp'] == 0
+            channel['standUp'] = False
+            channel['standtime'] = None
             message_send(token, channel_id, channel['standlist'])
             channel['standlist'] == ''
             data['channelDict'] = channelDict
@@ -48,9 +63,10 @@ def send(channel_id,token):
 def showtime(time):
     now = datetime.now()
     now_15 = now + timedelta(seconds=int(time))
-    return now_15
+    return int(now_15.timestamp())
 
 def standup_send(token, channel_id, message):
+    channel_id = int(channel_id)
     data = load()
     channelDict = data['channelDict']
     userDict = data['userDict']
@@ -65,7 +81,7 @@ def standup_send(token, channel_id, message):
         if channel_id == ch['channel_id']:
             if opid not in ch['channel_member'] and opid not in ch['channel_owner']:
                 raise AccessError('You are not a member of this channel')
-            if ch['standUp'] != 1:
+            if ch['standUp'] != True:
                 raise ValueError(
                     'An active standup is not currently running in this channel')
             append = name + ': ' + message

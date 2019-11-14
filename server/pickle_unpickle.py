@@ -13,7 +13,6 @@ def restart():
     DATA = {
         'messDict': [],
         'messID': 0,
-        'reactDict': [],
         'channelDict': [],
         'userDict': []
     }

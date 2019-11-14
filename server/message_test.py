@@ -3,6 +3,7 @@ from server.message_pickle import *
 from server.channel import channels_create, channel_join
 from server.auth_pickle import auth_register
 import pytest
+from datetime import datetime, timedelta
 from server.Error import AccessError
 from server.pickle_unpickle import *
 from server.admin_userpermission_change import *
@@ -39,10 +40,12 @@ def test_message_sendlater_notinchannel():
 
     channelID = channels_create(token, "Channel 1", True)
     channel_join(token3, channelID)
-    message_sendlater(token3, channelID, "Hello world", 5)
+
+    t = datetime.now() + timedelta(seconds = 5)
+    t_sent = t.timestamp()
     # testing ValueError
     with pytest.raises(AccessError, match = r".*"):
-        message_sendlater(token2, channelID, "Hello world", 5)
+        message_sendlater(token2, channelID, "Hello world", t_sent)
 
 
 def test_message_send_valerr():
@@ -149,7 +152,7 @@ def test_message_remove_accerr2():
     token2 = authRegisterDict2['token']
 
     authRegisterDict3 = auth_register("normaluser1@gmail.com", "123456789", "normal1", "user")
-    token3 = authRegisterDict2['token']
+    token3 = authRegisterDict3['token']
 
     authRegisterDict4 = auth_register("normaluser2@gmail.com", "123456789", "normal2", "user")
     token4 = authRegisterDict2['token']
@@ -159,7 +162,7 @@ def test_message_remove_accerr2():
     channel_join(token3, channelID)
     channel_join(token4, channelID)
 
-    messID = message_send(token3, channelID, "Hello")
+    messID = message_send(token2, channelID, "Hello")
     # testing (a normal user try to remove a message with message_id was sent by another member in channel)
     with pytest.raises(AccessError, match = r".*"):
         message_remove(token3, messID)
@@ -240,7 +243,7 @@ def test_message_edit_accerr2():
     token2 = authRegisterDict2['token']
 
     authRegisterDict3 = auth_register("normaluser1@gmail.com", "123456789", "normal1", "user")
-    token3 = authRegisterDict2['token']
+    token3 = authRegisterDict3['token']
 
     authRegisterDict4 = auth_register("normaluser2@gmail.com", "123456789", "normal2", "user")
     token4 = authRegisterDict2['token']
@@ -405,17 +408,17 @@ def test_message_react_reacted():
     token2 = authRegisterDict2['token']
 
     authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
-    token3 = authRegisterDict2['token']
+    token3 = authRegisterDict3['token']
 
     channelID = channels_create(token, "Channel 1", True)
     channel_join(token2, channelID)
     channel_join(token3, channelID)
 
     messID = message_send(token, channelID, "Hello")
-    message_react(token2, messID, 2)
+    message_react(token2, messID, 1)
     # testing
     with pytest.raises(ValueError, match = r".*"):
-        message_react(token3, messID, 3)
+        message_react(token2, messID, 1)
 
 def test_message_unreact_invalidmessid():
     # set up

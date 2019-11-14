@@ -54,10 +54,7 @@ def user_profile(token, u_id):
             return d
     #raise ValueError('u_id was incorrect')
     
-    
-# returned: { email, name_first, name_last, handle_str }
-
-def user_profile_setemail(token, email):
+def user_profile_setmail(token, email):
     opid = getUserFromToken(token)
     
     DATA = load()
@@ -79,8 +76,6 @@ def user_profile_setemail(token, email):
             save(DATA)
             return
    
-     
-
 def user_profile_sethandle(token,handle_str):
     opid = getUserFromToken(token)
     DATA = load()
@@ -99,12 +94,6 @@ def user_profile_sethandle(token,handle_str):
             DATA['userDict'] = userDict
             save(DATA)
             return
-    
-    
-
-
-
-
 
 def user_profile_setname(token, name_first, name_last):
     opid = getUserFromToken(token)
@@ -127,11 +116,6 @@ def user_profile_setname(token, name_first, name_last):
             save(DATA)
             return
     
-
-
-
-
-
 def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     response = requests.get(img_url)
     if response.status_code != 200:
