@@ -299,7 +299,16 @@ def admin():
     admin_userpermission_change(token, u_id, permission_id)
     return dumps({})
 
-@APP.route('/user/profiles/uploadphoto', methods=['POST'])
+@APP.route('/frontend/prebundle/static/<filename>', methods=['GET'])
+def show_img(filename):
+    '''print('Displaying image:')
+    print(filename)'''
+    # send_from_directory("frontend/prebundle/static/",filename)
+    return send_from_directory(APP.config['UPLOAD_FOLDER'],
+                               filename, as_attachment=True)
+    return {}
+
+@APP.route('/user/profiles/uploadphoto',methods = ['POST'])
 def uploadphoto():
     token = request.form.get('token')
     img_url = request.form.get('img_url')
@@ -307,9 +316,6 @@ def uploadphoto():
     y_start = request.form.get('y_start')
     x_end = request.form.get('x_end')
     y_end = request.form.get('y_end')
-    user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end)
-    uid = getUserFromToken(token)
-    return dumps({})
-
+    return dumps(user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end))
 if __name__ == '__main__':
     APP.run()
