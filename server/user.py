@@ -10,6 +10,7 @@ import urllib.request
 import sys
 import re
 from flask import Flask, request
+from os import environ
 def users_all(token):
     uid = getUserFromToken(token)
     data = load()
@@ -35,12 +36,6 @@ def user_profile(token, u_id):
         ID = getUserFromToken(token)
     except:
         raise ValueError('token was incorrect')
-    '''
-    if int(u_id) != int(ID):
-        print(u_id)
-        print(ID)
-        raise ValueError('incorrect u_id')
-    '''
     DATA = load()
     userdict = DATA['userDict']
     for user in userdict:
@@ -158,8 +153,10 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     cropped = cropped.save('frontend/prebundle/static/' + str(id) + '.jpg')
     DATA = load()
     userDict = DATA['userDict']
+    port = request.url_root
     for user in userDict:
         if int(id) == int(user['u_id']):
-            user['profile_img_url'] = "http://localhost:8001/frontend/prebundle/static/"+ str(id) + '.jpg'
+            user['profile_img_url'] = str(port) + "frontend/prebundle/static/" + str(id) + '.jpg'
+            print(user['profile_img_url'])
     DATA['userDict'] = userDict
     save(DATA)

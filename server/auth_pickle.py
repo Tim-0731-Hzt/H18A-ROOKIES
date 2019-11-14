@@ -32,12 +32,15 @@ def handle_check(handle):
 
 #random.randint(1,10)
 def generateResetCode():
-    num = []
+    '''num = []
     for i in range(6):
-         num.append(randrange(10))
-    reset_code = ''.join(map(str,num))
+        num.append(randrange(10))
+    reset_code = ''.join(map(str,num))'''
+    reset_code = ''
+    for i in range(6):
+        reset_code += str(randrange(10))
     
-    return reset_code
+    return (reset_code)
     
 
 def generateToken(username):
@@ -151,7 +154,7 @@ def auth_register(email, password, name_first, name_last):
         'handle' : None,
         'password' : None,
         'online' : True,
-        'reset_code': None,
+        'reset_code': 0,
         'profile_img_url': None
     }
     firstName = name_first.lower()
@@ -216,10 +219,12 @@ def auth_passwordreset_request(email):
     userDict = DATA['userDict']
     for user in userDict:
         if user['email'] == email:
-            user['reset_code'] = generateResetCode()
+            user['reset_code'] = int(generateResetCode())
             DATA['userDict'] = userDict
             save(DATA)
-            return user['reset_code']
+            print(user['reset_code'])
+            print(type(user['reset_code']))
+            return str(user['reset_code'])
             
 
 # Given a reset code for a user, set that user's new password to the password provided
@@ -232,16 +237,17 @@ def auth_passwordreset_reset(reset_code, new_password):
     #incorrect password
     if (len(new_password) < 5):
         raise ValueError("New password is not valid")
-    if (len(reset_code) != 6):
-        raise ValueError("reset_code is not valid")
+    '''if (len(reset_code) != 6):
+        raise ValueError("reset_code is not valid")'''
 
     for user in userDict:
-        if user['reset_code'] == reset_code:
+        if int(user['reset_code']) == int(reset_code):
             user['password'] = hashPassword(new_password)
-            user['reset_code'] = None
+            user['reset_code'] = 0
             DATA['userDict'] = userDict
             save(DATA)
             return {}
+    raise ValueError("reset_code is not valid")
     
 
 

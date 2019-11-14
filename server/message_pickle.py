@@ -1,9 +1,43 @@
 # MESSAGE
 from datetime import datetime
 from server.auth_pickle import getUserFromToken
-
+import threading
+import time
 from server.Error import AccessError, ValueError
 from server.pickle_unpickle import *
+
+def is_owner(token, channel_id):
+    channel_id = int(channel_id)
+    DATA = load()
+    channelDict = DATA['channelDict']
+    userDict = DATA['userDict']
+    # get the user id from token
+    id = getUserFromToken(token)
+    id = int(id)
+    
+    # slacker owner or admin
+    for parts in userDict:
+        if (parts['u_id'] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
+            return True
+    # find the channel and serach the owner
+    for elements in channelDict:
+        if (elements['channel_id'] == channel_id):
+            # if (elements['channel_creater'] == id):
+            if id in elements['channel_owner']:
+                return True
+    return False
+
+def is_sender(token, message_id):
+    u_id = getUserFromToken(token)
+    u_id = int(u_id)
+    message_id = int(message_id)
+    data = load()
+    messDict = data['messDict']
+    for m in messDict:
+        if m['message_id'] == message_id:
+            if m['u_id'] == u_id:
+                return True
+    return False
 
 # Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future
 # ValueError when:
@@ -11,41 +45,15 @@ from server.pickle_unpickle import *
 # Message is more than 1000 characters
 # Time sent is a time in the past
 def message_sendlater(token, channel_id, message, time_sent):
-    DATA = load()
-    messDict = DATA['messDict']
-    channelDict = DATA['channelDict']
-    uID = getUserFromToken(token)
+
     if len(message) > 1000:
         raise ValueError("Message is more than 1000 characters")
-    
-    for cha in channelDict:
-        if cha['channel_id'] == channel_id:
-            if uID in cha['channel_member'] or uID in cha['channel_owner']:
-                pass
-            else:
-                raise AccessError("The authorised user has not joined the channel they are trying to post to")
-    
-    DATA['messID'] += 1
-    m = {
-        'channel_id': int(channel_id),
-        'message_id': DATA['messID'],
-        'u_id': int(uID),
-        'message': message,
-        'time_created': int(datetime.now().timestamp()),
-        'reacts': [{
-            'react_id': 1,
-            'u_ids': [],
-            'is_this_user_reacted': False
-        }],
-        'is_pinned': False
-    }
-    if time_sent < 0:
+    stime = datetime.fromtimestamp(int(time_sent))
+    if datetime.now() > stime:
         raise ValueError("Time sent is a time in the past")
-    time.sleep(time_sent)       # time_sent is in unit seconds
-    messDict.append(m)
-    DATA['messDict'] = messDict
-    save(DATA)
-    return m['message_id']
+    diff = int((stime-datetime.now()).total_seconds())
+    time.sleep(diff)
+    return message_send(token, channel_id, message)
 
 
 # Send a message from authorised_user to the channel specified by channel_id
@@ -61,11 +69,7 @@ def message_send(token, channel_id, message):
     
     for cha in channelDict:
         if cha['channel_id'] == channel_id:
-            if uID in cha['channel_owner']:
-                pass
-            elif uID in cha['channel_member']:
-                pass
-            else:
+            if uID not in cha['channel_owner'] and uID not in cha['channel_member']:
                 raise AccessError("The authorised user has not joined the channel they are trying to post to")
     DATA['messID'] += 1
     m = {
@@ -86,8 +90,6 @@ def message_send(token, channel_id, message):
     messDict.append(m)
     DATA['messDict'] = messDict
     save(DATA)
-    print(f'message_id: {mID}')
-    # return {'message_id': mID}
     return int(mID)
 
 # Given a message_id for a message, this message is removed from the channel
@@ -130,6 +132,8 @@ def message_remove(token, message_id):
 # Message with message_id was not sent by an admin or owner of the slack
 def message_edit(token, message_id, message):
     uID = getUserFromToken(token)
+    uID = int(uID)
+    message_id = int(message_id)
 
     DATA = load()
     messDict = DATA['messDict']
@@ -137,16 +141,18 @@ def message_edit(token, message_id, message):
     for mess in messDict:
         if mess['message_id'] == message_id:
             channelID = mess['channel_id']
+            m = mess
             break
-    for channel in channelDict:
-        if channel['channel_id'] == channelID:
-            if uID not in channel['channel_owner']:
-                raise AccessError('Unauthorised edit')
-    mess['message'] = message
+    if not is_owner(token, channelID) and not is_sender(token, message_id):
+        raise AccessError('Unauthorised edit !')
+    if len(message) == 0:
+        DATA['messDict'].remove(m)
+    else:
+        m['message'] = message
     DATA['messDict'] = messDict
     save(DATA)
 
-    pass
+    return {}
 
 # Given a message within a channel the authorised user is part of, add a "react" to that particular message
 # ValueError when:

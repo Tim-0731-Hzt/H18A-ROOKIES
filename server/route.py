@@ -1,4 +1,4 @@
-from server.message_pickle import message_send, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
+from server.message_pickle import message_send, message_sendlater, message_remove, message_edit, message_react, message_unreact, message_pin, message_unpin
 from server.Error import AccessError, ValueError
 from flask import Flask, request, jsonify, send_from_directory
 from flask_mail import Mail, Message
@@ -11,6 +11,8 @@ from server.admin_userpermission_change import admin_userpermission_change
 from server.pickle_unpickle import restart
 from werkzeug.exceptions import HTTPException
 from flask_cors import CORS
+
+from datetime import datetime
 
 def defaultHandler(err):
     response = err.get_response()
@@ -45,7 +47,7 @@ def begin():
 def send_mail():
     mail = Mail(APP)
     try:
-        msg = Message("Send Mail Test!",
+        msg = Message("Slackr Password Reset Number",
             sender="ROOKIESTHEBEST@gmail.com",
             recipients=["person.sending.to@gmail.com"])
         msg.body = generateResetCode()
@@ -61,7 +63,7 @@ def sendlater():
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
     time_sent = request.form.get('time_sent')
-    return dumps(message_send(token,channel_id,message))
+    return dumps(message_sendlater(token,channel_id,message, time_sent))
 
 @APP.route('/message/send', methods=['POST'])
 def send():
@@ -133,7 +135,7 @@ def channel_list():
     lis = channels_list(token)
     return dumps(lis)
 
-@APP.route('/channels/invite', methods = ['POST'])
+@APP.route('/channel/invite', methods = ['POST'])
 def channels_invite():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
@@ -161,7 +163,7 @@ def channel_messages():
     messages = channels_messages(token, channel_id, start)
     return dumps(messages)
 
-@APP.route('/channels/leave', methods = ['POST'])
+@APP.route('/channel/leave', methods = ['POST'])
 def channels_leave():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
@@ -173,14 +175,14 @@ def channels_join():
     channel_id = request.form.get('channel_id')
     return dumps(channel_join(token, channel_id))
 
-@APP.route('/channels/addowner',methods = ['POST '])
+@APP.route('/channel/addowner',methods = ['POST'])
 def channels_addowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
     return dumps(channel_addowner(token, channel_id,u_id))
 
-@APP.route('/channels/removeowner',methods = ['POST '])
+@APP.route('/channel/removeowner',methods = ['POST'])
 def channels_removeowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
@@ -215,12 +217,12 @@ def password_request():
     email = request.form.get('email')
     mail = Mail(APP)
     try:
-        msg = Message("Send Mail Test!",
+        msg = Message("Slackr Password Reset Number",
             sender="ROOKIESTHEBEST@gmail.com",
             recipients=[email])
-        msg.body = generateResetCode()
+        msg.body = auth_passwordreset_request(email)
         mail.send(msg)
-        return 'Mail sent!'
+        return {}
     except Exception as e:
         return (str(e))
     
@@ -315,6 +317,15 @@ def admin():
     admin_userpermission_change(token,u_id,premission_id)
     return dumps({})
 
+@APP.route('/frontend/prebundle/static/<filename>', methods=['GET'])
+def show_img(filename):
+    '''print('Displaying image:')
+    print(filename)'''
+    # send_from_directory("frontend/prebundle/static/",filename)
+    return send_from_directory(APP.config['UPLOAD_FOLDER'],
+                               filename, as_attachment=True)
+    return {}
+
 @APP.route('/user/profiles/uploadphoto',methods = ['POST'])
 def uploadphoto():
     token = request.form.get('token')
@@ -323,9 +334,7 @@ def uploadphoto():
     y_start = request.form.get('y_start')
     x_end = request.form.get('x_end')
     y_end = request.form.get('y_end')
-    user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end)
-    id = getUserFromToken(token)
-    return dumps({})
+    return dumps(user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end))
 if __name__ == '__main__':
     APP.run()
 
