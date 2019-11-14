@@ -14,20 +14,21 @@ def standup_start(token, channel_id, second):
 
     opid = getUserFromToken(token)
     for ch in channelDict:
-        if channel_id == ch['channel_id']:
+        if int(channel_id) == ch['channel_id']:
             if opid not in ch['channel_member'] and opid not in ch['channel_owner']:
                 raise AccessError('You are not a member of this channel')
             if ch['standUp'] == True:
                 raise ValueError('this channel is already in standup')
             ch['standUp'] = True
             ch['standtime'] = showtime(second)
+            time = ch['standtime']
             data['channelDict'] = channelDict
             save(data)
             
             timer = threading.Timer(second,send,[channel_id,token])
             timer.start()
                     
-            return 
+            return time
     raise ValueError('incorrect channel id')
   
 def standup_active(token, channel_id):
@@ -49,7 +50,8 @@ def send(channel_id,token):
     channelDict = data['channelDict']
     for channel in channelDict:
         if channel_id == channel['channel_id']:
-            channel['standUp'] == False
+            channel['standUp'] = False
+            channel['standtime'] = None
             message_send(token, channel_id, channel['standlist'])
             channel['standlist'] == ''
             data['channelDict'] = channelDict
