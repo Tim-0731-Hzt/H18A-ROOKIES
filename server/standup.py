@@ -55,7 +55,6 @@ def send(channel_id,token):
             channel['standUp'] = False
             channel['standtime'] = None
             message_send(token, channel_id, str(channel['standlist']))
-            print('\n\n\nsent2\n\n\n')
 
     data = load()
     channelDict = data['channelDict']
@@ -64,9 +63,6 @@ def send(channel_id,token):
             channel['standlist'] == ''
             data['channelDict'] = channelDict
             save(data)
-            
-            print('\n\n\nsent2\n\n\n')
-
             return
 
 def showtime(time):
