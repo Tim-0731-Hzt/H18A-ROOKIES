@@ -3,6 +3,9 @@ from flask_mail import Mail, Message
 from json import dumps
 from werkzeug.exceptions import HTTPException
 from flask_cors import CORS
+
+import os
+
 from server.message_pickle import message_send, message_sendlater, message_remove, message_edit
 from server.message_pickle import message_react, message_unreact, message_pin, message_unpin
 from server.Error import AccessError, ValueError
@@ -26,8 +29,8 @@ def defaultHandler(err):
     response.content_type = 'application/json'
     return response
 
-
 APP = Flask(__name__)
+APP._static_folder = os.path.abspath("/frontend/prebundle/static/")
 APP.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=465,
@@ -264,8 +267,8 @@ def user_all():
 def standup1():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
-    second = request.form.get('length')
-    time = standup_start(token, channel_id)
+    length = request.form.get('length')
+    time = standup_start(token, channel_id, length)
     return dumps(time)
 
 @APP.route('/standup/send', methods=['POST'])
@@ -299,16 +302,24 @@ def admin():
     admin_userpermission_change(token, u_id, permission_id)
     return dumps({})
 
-@APP.route('/frontend/prebundle/static/<filename>', methods=['GET'])
+@APP.route('/frontend/prebundle/static/<path:filename>')
 def show_img(filename):
-    '''print('Displaying image:')
-    print(filename)'''
+    print('\n\n\n')
+    print('Displaying image:')
+    print(filename)
+    print('\n\n\n')
+    '''try:
+        send_from_directory("/frontend/prebundle/static", str(filename))
+    except:
+        return dumps({})'''
     # send_from_directory("frontend/prebundle/static/",filename)
-    return send_from_directory(APP.config['UPLOAD_FOLDER'],
-                               filename, as_attachment=True)
-    return {}
+    root_dir = os.path.dirname(os.getcwd())
+    print(root_dir)
+    print(os.path.join(root_dir, 'project', 'frontend', 'prebundle', 'static/'))
+    return send_from_directory(os.path.join(root_dir, 'frontend', 'prebundle', 'static/'), str(filename))
+    #     return send_from_directory("/frontend/prebundle/static", str(filename))
 
-@APP.route('/user/profiles/uploadphoto',methods = ['POST'])
+@APP.route('/user/profiles/uploadphoto', methods=['POST'])
 def uploadphoto():
     token = request.form.get('token')
     img_url = request.form.get('img_url')
@@ -317,5 +328,6 @@ def uploadphoto():
     x_end = request.form.get('x_end')
     y_end = request.form.get('y_end')
     return dumps(user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end))
+
 if __name__ == '__main__':
     APP.run()

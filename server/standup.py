@@ -7,7 +7,7 @@ from server.auth_pickle import *
 import time
 from datetime import datetime, timedelta
 import server.pickle_unpickle
-def standup_start(token, channel_id, second):
+def standup_start(token, channel_id, length):
     channel_id = int(channel_id)
     data = load()
     channelDict = data['channelDict']
@@ -20,12 +20,12 @@ def standup_start(token, channel_id, second):
             if ch['standUp'] == True:
                 raise ValueError('this channel is already in standup')
             ch['standUp'] = True
-            ch['standtime'] = showtime(second)
+            ch['standtime'] = showtime(length)
             time = ch['standtime']
             data['channelDict'] = channelDict
             save(data)
             
-            timer = threading.Timer(second,send,[channel_id,token])
+            timer = threading.Timer(length,send,[channel_id,token])
             timer.start()
                     
             return {'time_finish': time}
@@ -50,7 +50,7 @@ def send(channel_id,token):
     data = load()
     channelDict = data['channelDict']
     for channel in channelDict:
-        if channel_id == channel['channel_id']:
+        if int(channel_id) == channel['channel_id']:
             channel['standUp'] = False
             channel['standtime'] = None
             message_send(token, channel_id, channel['standlist'])
@@ -73,25 +73,26 @@ def standup_send(token, channel_id, message):
     
     opid = getUserFromToken(token)
     for user in userDict:
-        if user['u_id'] == opid:
+        if int(user['u_id']) == int(opid):
             name = user['first_name']
+            break
     if len(message) > 1000 :
         raise ValueError("Message too long")
     for ch in channelDict:
-        if channel_id == ch['channel_id']:
+        if int(channel_id) == int(ch['channel_id']):
             if opid not in ch['channel_member'] and opid not in ch['channel_owner']:
                 raise AccessError('You are not a member of this channel')
             if ch['standUp'] != True:
                 raise ValueError(
                     'An active standup is not currently running in this channel')
-            append = name + ': ' + message
+            append = str(name) + ': ' + str(message)
             if ch['standlist'] == "":
                 ch['standlist'] = append
                 data['channelDict'] = channelDict
                 save(data)
-                return
+                return {}
             else:
-                ch['standlist'] = ch['standlist'] + ' ' + append
+                ch['standlist'] = ch['standlist'] + '\n' + append
                 data['channelDict'] = channelDict
                 save(data)
                 return
