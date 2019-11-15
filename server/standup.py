@@ -1,8 +1,9 @@
 from server.Error import AccessError, ValueError
-from server.channel import *
-from server.message_pickle import *
+# from server.channel import *
+from server.message_pickle import message_send
 import threading
-from server.auth_pickle import *
+from server.auth_pickle import getUserFromToken
+from server.pickle_unpickle import load, save
 
 import time
 from datetime import datetime, timedelta
@@ -25,7 +26,7 @@ def standup_start(token, channel_id, length):
             data['channelDict'] = channelDict
             save(data)
             
-            timer = threading.Timer(length,send,[channel_id,token])
+            timer = threading.Timer(int(length),send,[channel_id,token])
             timer.start()
                     
             return {'time_finish': time}
@@ -53,11 +54,19 @@ def send(channel_id,token):
         if int(channel_id) == channel['channel_id']:
             channel['standUp'] = False
             channel['standtime'] = None
-            message_send(token, channel_id, channel['standlist'])
+            message_send(token, channel_id, str(channel['standlist']))
+            print('\n\n\nsent2\n\n\n')
+
+    data = load()
+    channelDict = data['channelDict']
+    for channel in channelDict:
+        if int(channel_id) == channel['channel_id']:
             channel['standlist'] == ''
             data['channelDict'] = channelDict
             save(data)
             
+            print('\n\n\nsent2\n\n\n')
+
             return
 
 def showtime(time):

@@ -233,6 +233,7 @@ def user1():
     profile = user_profile(token, u_id)
     # profile['u_id'] = 3
     # profile['profile_img_url'] = 'https://webcms3.cse.unsw.edu.au/static/uploads/coursepic/COMP1531/19T3/f69768934fc5db2bb478f938db95efe98b02af69adc0d4a9e79545d0aae44908/Screenshot_from_2019-09-10_22-16-33.png'
+    profile['profile_img_url'] = '7'
     return dumps(profile)
 
 @APP.route('/user/profile/setname', methods=['PUT'])

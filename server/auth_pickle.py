@@ -144,7 +144,7 @@ def auth_register(email, password, name_first, name_last):
         'password' : None,
         'online' : True,
         'reset_code': 0,
-        'profile_img_url': None
+        'profile_img_url': ''
     }
     firstName = name_first.lower()
     lastName = name_last.lower()
