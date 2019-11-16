@@ -141,7 +141,7 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     for user in userDict:
         if int(id) == int(user['u_id']):
             # user['profile_img_url'] = str(port) + "frontend/prebundle/static/" + str(id) + '.jpg'
-            user['profile_img_url'] = "http://127.0.0.1:5001/frontend/prebundle/static/" + str(id) + '.jpg'
+            user['profile_img_url'] = str(id) + '.jpg'
 
             print(user['profile_img_url'])
     DATA['userDict'] = userDict
