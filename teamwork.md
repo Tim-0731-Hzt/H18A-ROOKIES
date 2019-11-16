@@ -3,7 +3,7 @@ Teamwork
 
 Our group have regular meetings 3 times a week : on Wednesday, Thursday(lab) and  Sunday, because we seperated the work in group of two, each group is mainly focusing on the code problems between group members. When someone came across difficulties and unknown problems, it's more easier to discuss in groups rather then individually google it.
 
-A group meeting directly helps members to write and debug code. In a sufficent and elegant w
+A group meeting directly helps members to write and debug code. In a sufficent and elegant way.
 
 Each meeting usually last at least 90 minutes, and even up to 4 hours once.
 
