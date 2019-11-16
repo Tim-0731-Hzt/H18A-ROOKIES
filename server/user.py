@@ -10,7 +10,7 @@ import urllib.request
 import sys
 import re
 from flask import Flask, request
-
+from os import environ
 def users_all(token):
     uid = getUserFromToken(token)
     data = load()
@@ -19,12 +19,11 @@ def users_all(token):
     for user in userDict:
         d = {
             'u_id': user['u_id'],
-            'profile_img_url': user['profile_img_url'],
-            # 'profile_img_url': None,
             'email': (user['email']), 
             'name_first': (user['first_name']),
             'name_last': (user['last_name']),
-            'handle_str': (user['handle'])
+            'handle_str': (user['handle']),
+            'profile_img_url': user['profile_img_url']
         }
         lis.append(d)
 
@@ -42,7 +41,7 @@ def user_profile(token, u_id):
     for user in userdict:
         if int(user['u_id']) == int(u_id):
             d = {
-                'u_id': int(u_id),
+                'u_id': (user['u_id']),
                 'email': (user['email']), 
                 'name_first': (user['first_name']),
                 'name_last': (user['last_name']),
@@ -53,7 +52,7 @@ def user_profile(token, u_id):
                 'user': d
             }'''
             return d
-    raise ValueError('u_id was incorrect')
+    #raise ValueError('u_id was incorrect')
     
 def user_profile_setmail(token, email):
     opid = getUserFromToken(token)
@@ -121,7 +120,7 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     response = requests.get(img_url)
     if response.status_code != 200:
         raise ValueError('url corrupted')
-    img = Image. open(urllib. request. urlopen(img_url))
+    img = Image.open(urllib. request. urlopen(img_url))
     width, height = img.size
     if img == -1:
         raise ValueError("image does not exist")
@@ -138,8 +137,13 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     cropped = cropped.save('frontend/prebundle/static/' + str(id) + '.jpg')
     DATA = load()
     userDict = DATA['userDict']
+    port = request.url_root
     for user in userDict:
         if int(id) == int(user['u_id']):
-            user['profile_img_url'] = "http://"+ request.localhost() + '/static/'+ str(id) + '.jpg'
+            # user['profile_img_url'] = str(port) + "frontend/prebundle/static/" + str(id) + '.jpg'
+            user['profile_img_url'] = str(id) + '.jpg'
+
+            print(user['profile_img_url'])
     DATA['userDict'] = userDict
     save(DATA)
+    return {}

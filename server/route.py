@@ -3,6 +3,9 @@ from flask_mail import Mail, Message
 from json import dumps
 from werkzeug.exceptions import HTTPException
 from flask_cors import CORS
+
+import os
+
 from server.message_pickle import message_send, message_sendlater, message_remove, message_edit
 from server.message_pickle import message_react, message_unreact, message_pin, message_unpin
 from server.Error import AccessError, ValueError
@@ -26,8 +29,8 @@ def defaultHandler(err):
     response.content_type = 'application/json'
     return response
 
-
 APP = Flask(__name__)
+APP._static_folder = os.path.abspath("/frontend/prebundle/static/")
 APP.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=465,
@@ -209,11 +212,12 @@ def password_request():
         msg = Message("Slackr Password Reset Number",
             sender="ROOKIESTHEBEST@gmail.com",
             recipients=[email])
-        msg.body = auth_passwordreset_request(email)
+        msg.body = str(auth_passwordreset_request(email))
         mail.send(msg)
         return {}
     except Exception as e:
         return (str(e))
+    return dumps({})
     # return dumps(auth_passwordreset_request(email))
 
 @APP.route('/auth/passwordreset/reset', methods=['POST'])
@@ -230,6 +234,7 @@ def user1():
     profile = user_profile(token, u_id)
     # profile['u_id'] = 3
     # profile['profile_img_url'] = 'https://webcms3.cse.unsw.edu.au/static/uploads/coursepic/COMP1531/19T3/f69768934fc5db2bb478f938db95efe98b02af69adc0d4a9e79545d0aae44908/Screenshot_from_2019-09-10_22-16-33.png'
+    # profile['profile_img_url'] = '7'
     return dumps(profile)
 
 @APP.route('/user/profile/setname', methods=['PUT'])
@@ -264,9 +269,8 @@ def user_all():
 def standup1():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
-    second = request.form.get('length')
-    time = standup_start(token, channel_id)
-    
+    length = request.form.get('length')
+    time = standup_start(token, channel_id, length)
     return dumps(time)
 
 @APP.route('/standup/send', methods=['POST'])
@@ -282,10 +286,7 @@ def active():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
     result = standup_active(token, channel_id)
-    return dumps({
-        'is_active': result[0],
-        'time_finish': result[1]
-    })
+    return dumps(result)
 
 
 @APP.route('/search', methods=['GET'])
@@ -303,6 +304,23 @@ def admin():
     admin_userpermission_change(token, u_id, permission_id)
     return dumps({})
 
+@APP.route('/frontend/prebundle/static/<path:filename>')
+def show_img(filename):
+    print('\n\n\n')
+    print('Displaying image:')
+    print(filename)
+    print('\n\n\n')
+    '''try:
+        send_from_directory("/frontend/prebundle/static", str(filename))
+    except:
+        return dumps({})'''
+    # send_from_directory("frontend/prebundle/static/",filename)
+    root_dir = os.path.dirname(os.getcwd())
+    print(root_dir)
+    print(os.path.join(root_dir, 'project', 'frontend', 'prebundle', 'static/'))
+    return send_from_directory(os.path.join(root_dir, 'frontend', 'prebundle', 'static/'), str(filename))
+    #     return send_from_directory("/frontend/prebundle/static", str(filename))
+
 @APP.route('/user/profiles/uploadphoto', methods=['POST'])
 def uploadphoto():
     token = request.form.get('token')
@@ -311,8 +329,7 @@ def uploadphoto():
     y_start = request.form.get('y_start')
     x_end = request.form.get('x_end')
     y_end = request.form.get('y_end')
-    user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end)
-    uid = getUserFromToken(token)
-    return dumps({})
+    return dumps(user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end))
+
 if __name__ == '__main__':
     APP.run()

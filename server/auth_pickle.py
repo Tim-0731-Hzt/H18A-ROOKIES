@@ -7,6 +7,7 @@ from server.Error import ValueError
 from server.pickle_unpickle import save, load
 
 SECRET = 'ROOKIES'
+# checking digit
 def digit_check(number):
     count = 0
     while number > 0:
@@ -14,6 +15,7 @@ def digit_check(number):
         count = count + 1
     return count
 
+# checking handle
 def handle_check(handle):
     DATA = load()
     userDict = DATA['userDict']
@@ -24,32 +26,24 @@ def handle_check(handle):
 
 #random.randint(1,10)
 def generateResetCode():
-    '''num = []
-    for i in range(6):
-        num.append(randrange(10))
-    reset_code = ''.join(map(str,num))'''
     reset_code = ''
     for i in range(6):
         reset_code += str(randrange(10))
     return reset_code
 
+# using jwt to encode a u_id and return a token
 def generateToken(username):
     global SECRET
     encoded = jwt.encode({'u_id':username}, SECRET, algorithm='HS256')
     #encoded = encoded[2:len(encoded) - 1]
     return str(encoded)
 
+# using jwt to decode a token and return u_id
 def getUserFromToken(token):
     global SECRET
     decoded = jwt.decode(token[2:len(token) - 1], SECRET, algorithms=['HS256'])
     u_id = decoded['u_id']
     return u_id
-"""     characters = 'abcdefghijklmnopqrstuvwxyz'
-    if ( re.search(characters, u_id)):
-        pass
-    else:
-        raise ValueError("Invalid Token")
-"""
 
 def hashPassword(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -63,13 +57,12 @@ def hashPassword(password):
 def auth_login(email, password):
     DATA = load()
     userDict = DATA['userDict']
-    #check email
+    # check email
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
-    if re.search(regex, email):
-        pass
-    else:
+    if not re.search(regex, email):
         raise ValueError("Invalid Email")
 
+    # checking if this email has been registered
     found = False
     for user in userDict:
         if user['email'] == str(email):
@@ -77,6 +70,8 @@ def auth_login(email, password):
             break
     if not found:
         raise ValueError("Email entered doesn't belong to a user")
+
+    # logging in
     for user in userDict:
         if user['email'] == email and user['password'] == hashPassword(password):
             user['online'] = True
@@ -95,7 +90,6 @@ def auth_logout(token):
     userDict = DATA['userDict']
 
     u_id = getUserFromToken(token)
-    #print(u_id)
     for user in userDict:
         if user['u_id'] == u_id and user['online']:
             user['online'] = False
@@ -118,42 +112,41 @@ def auth_register(email, password, name_first, name_last):
     userDict = DATA['userDict']
     #check email
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
-    if re.search(regex, email):
-        pass
-    else:
+    if not re.search(regex, email):
         raise ValueError("Invalid Email")
     # Email already be used
     for user in userDict:
         if user['email'] == email:
             raise ValueError("Email address is already used bt another user.")
     # incorrect name
-    if len(name_first) > 50:
+    if len(name_first) > 50 or len(name_first) < 1:
         raise ValueError("Firstname is needed between 1 and 50 characters.")
-    if len(name_last) > 50:
+    if len(name_last) > 50 or len(name_last) < 1:
         raise ValueError("Lastname is needed between 1 and 50 characters.")
     # incorrect password
-    if len(password) < 5:
-        raise ValueError("Password is not valid")
-    newUser = {
-        'first_name' : None,
-        'last_name' : None,
-        'email' : None,
-        'u_id' : None,
-        'permission_id': None,
-        'handle' : None,
-        'password' : None,
-        'online' : True,
-        'reset_code': 0,
-        'profile_img_url': None
-    }
+    if len(password) < 6:
+        raise ValueError("Password should be at least 6 characters long")
+    
     firstName = name_first.lower()
     lastName = name_last.lower()
     handle = firstName + lastName
     if len(handle) > 40:
         handle = handle[:20]
 
-    newUser['handle'] = handle
+    newUser = {
+        'first_name' : firstName,
+        'last_name' : lastName,
+        'email' : email,
+        'u_id' : len(userDict) + 1,
+        'permission_id': None,
+        'handle' : handle,
+        'password' : password,
+        'online' : True,
+        'reset_code': 0,
+        'profile_img_url': ''
+    }
 
+    # handling
     if handle_check(handle):
         handle = handle[3:len(handle)]
         for i in range(1, 999):
@@ -180,11 +173,6 @@ def auth_register(email, password, name_first, name_last):
     else:
         newUser['permission_id'] = 3
 
-    newUser['first_name'] = name_first
-    newUser['last_name'] = name_last
-    newUser['email'] = email
-    newUser['u_id'] = len(userDict) + 1
-    newUser['password'] = hashPassword(password)
     userDict.append(newUser)
 
     returned = {
@@ -206,9 +194,8 @@ def auth_passwordreset_request(email):
             user['reset_code'] = int(generateResetCode())
             DATA['userDict'] = userDict
             save(DATA)
-            print(user['reset_code'])
-            print(type(user['reset_code']))
             return str(user['reset_code'])
+    raise ValueError('This email has not been registered')
 
 # Given a reset code for a user, set that user's new password to the password provided
 # ValueError when:
@@ -220,8 +207,8 @@ def auth_passwordreset_reset(reset_code, new_password):
     #incorrect password
     if len(new_password) < 5:
         raise ValueError("New password is not valid")
-    '''if (len(reset_code) != 6):
-        raise ValueError("reset_code is not valid")'''
+    if (len(str(reset_code)) != 6):
+        raise ValueError("reset_code is not valid")
 
     for user in userDict:
         if int(user['reset_code']) == int(reset_code):
