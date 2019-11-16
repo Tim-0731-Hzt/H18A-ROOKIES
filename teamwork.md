@@ -19,4 +19,4 @@ the last day of due date when we meet up together with the help of some reply in
 
 When we are having meetings, usually one person sitting in front of the pc and writing code, with his partner sitting around talking about the code aim and code style, we would have discussions about why this function are used instead of others, and when someone came across problems, his partner can tell him the expected answer and his opinion about this.
 
-At the final stage, the group will get together, before exchange their code, explain to their teammates how every functions work and what to\\\\\ remember, especially the abilitly they have achieved and not yet achieved. 
+At the final stage, the group will get together, before exchange their code, explain to their teammates how every functions work and what to remember, especially the abilitly they have achieved and not yet achieved. 
