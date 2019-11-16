@@ -1,8 +1,7 @@
 # channel
 from server.Error import AccessError, ValueError
-from server.auth_pickle import *
-from server.pickle_unpickle import *
-# global varaibles:
+from server.auth_pickle import getUserFromToken
+from server.pickle_unpickle import save, load
 
 def is_user_reacted(u_id, message_id):
     u_id = int(u_id)
@@ -36,7 +35,7 @@ def get_members(uids):
                 break
 
     return memDict
-
+# given a list od=f channel_ids and return channels as a list
 def get_channels(channel_ids):
     data = load()
     channelDict = data['channelDict']
@@ -52,6 +51,7 @@ def get_channels(channel_ids):
                 break
     return channel
 
+# given a list of message_ids and return messages as a list
 def get_messages(u_id, message_ids):
     data = load()
     messDict = data['messDict']
@@ -73,6 +73,7 @@ def get_messages(u_id, message_ids):
                 break
     return list(mess)
 
+# given a user's u_id and check if this user is in this channel
 def is_in_channel(u_id, channel_id):
     u_id = int(u_id)
     channel_id = int(channel_id)
@@ -96,6 +97,7 @@ def channel_id_check(channel_id):
             return True
     return False
 
+# checking u_id if exist
 def u_id_check(u_id):
     DATA = load()
     userDict = DATA['userDict']
@@ -104,6 +106,7 @@ def u_id_check(u_id):
             return True
     return False
 
+# given a token and return if this user is a slackr admin(i.e. with permission_id 1 or 2)
 def if_slackr_owner(token):
     DATA = load()
     userDict = DATA['userDict']
@@ -134,11 +137,11 @@ def if_User_Owner(token,channel_id):
     # find the channel and serach the owner
     for elements in channelDict:
         if (elements['channel_id'] == channel_id):
-            # if (elements['channel_creater'] == id):
             if id in elements['channel_owner']:
                 return True
     return False
 
+# checking if given user is in channel or is slackr owner
 def auth_id_check(token,channel_id):
     DATA = load()
     channelDict = DATA['channelDict']
@@ -155,17 +158,9 @@ def auth_id_check(token,channel_id):
                 return True
             else:
                 return False
-            '''mem = elements['channel_member']
-            owner = elements['channel_owner']
-            break
-    new = []
-    new.append(mem)
-    new.append(owner)
-    for parts in new:
-        if (uid in parts):
-            return True
-    return False'''
     return False
+
+# checking if the given channel is public
 def channel_property_check(channel_id):
     DATA = load()
     channelDict = DATA['channelDict']
@@ -176,6 +171,7 @@ def channel_property_check(channel_id):
     # private
     return False
 
+# checking if given user is slackr owner(i.e. with permission_id 1 or 2)
 def channel_admin_check(token):
     DATA = load()
     userDict = DATA['userDict']
@@ -184,7 +180,8 @@ def channel_admin_check(token):
     for parts in userDict:
         if (parts['u_id'] == int(id) and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
             return True
-    return False       
+    return False   
+    
 # Invites a user (with user id u_id) to join a channel with ID channel_id. 
 # Once invited the user is added to the channel immediately
 def channel_invite(token, channel_id, u_id):
@@ -234,7 +231,6 @@ def channel_details (token, channel_id):
 # This function returns a new index "end" which is the value of "start + 50", 
 # or, if this function has returned the least recent messages in the channel, 
 # returns -1 in "end" to indicate there are no more messages to load after this return.
-
 def channels_messages (token, channel_id, start):
     u_id = getUserFromToken(token)
     u_id = int(u_id)
@@ -444,4 +440,3 @@ def channels_create(token, name, is_public):
         DATA['channelDict'] = channelDict
         save(DATA)
         return int(d['channel_id'])
-        # return {'channel_id': d['channel_id']}
