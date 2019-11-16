@@ -35,6 +35,7 @@ def get_members(uids):
                 break
 
     return memDict
+
 # given a list od=f channel_ids and return channels as a list
 def get_channels(channel_ids):
     data = load()
@@ -181,7 +182,7 @@ def channel_admin_check(token):
         if (parts['u_id'] == int(id) and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
             return True
     return False   
-    
+
 # Invites a user (with user id u_id) to join a channel with ID channel_id. 
 # Once invited the user is added to the channel immediately
 def channel_invite(token, channel_id, u_id):
@@ -288,7 +289,6 @@ def channel_leave(token, channel_id):
     DATA['channelDict'] = channelDict
     save(DATA)
 
-
 # Given a channel_id of a channel that the authorised user can join, adds them to that channel
 def channel_join(token, channel_id):
     DATA = load()
@@ -319,6 +319,7 @@ def channel_join(token, channel_id):
     
     DATA['channelDict'] = channelDict
     save(DATA)
+
 # Make user with user id u_id an owner of this channel
 def channel_addowner(token, channel_id, u_id):
     DATA = load()

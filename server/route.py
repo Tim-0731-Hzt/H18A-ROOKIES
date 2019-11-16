@@ -42,25 +42,10 @@ APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
 CORS(APP)
 
-
 @APP.route('/restart', methods=['POST'])
 def begin():
     restart()
     return "restarted"
-
-@APP.route('/send-mail/')
-def send_mail():
-    mail = Mail(APP)
-    try:
-        msg = Message("Slackr Password Reset Number",
-            sender="ROOKIESTHEBEST@gmail.com",
-            recipients=["person.sending.to@gmail.com"])
-        msg.body = generateResetCode()
-        mail.send(msg)
-        return 'Mail sent!'
-    except Exception as e:
-        return (str(e))
-
 
 @APP.route('/message/sendlater', methods=['POST'])
 def sendlater():
