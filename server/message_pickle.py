@@ -4,7 +4,7 @@ from server.auth_pickle import getUserFromToken
 import threading
 import time
 from server.Error import AccessError, ValueError
-from server.pickle_unpickle import *
+from server.pickle_unpickle import save, load
 from server.channel import is_in_channel, if_User_Owner
 
 def is_owner(token, channel_id):
@@ -102,10 +102,8 @@ def message_send(token, channel_id, message):
 # Message with message_id was not sent by an owner of this channel
 # Message with message_id was not sent by an admin or owner of the slack
 def message_remove(token, message_id):
-    uID = getUserFromToken(token)
     DATA = load()
     messDict = DATA['messDict']
-    channelDict = DATA['channelDict']
     found = False
     
     for mess in messDict:
@@ -164,7 +162,6 @@ def message_react(token, message_id, react_id):
     react_id = int(react_id)
     DATA = load()
     messDict = DATA['messDict']
-    channelDict = DATA['channelDict']
 
     if react_id != 1:
         raise ValueError('React_id is not a valid React ID')
@@ -202,7 +199,6 @@ def message_unreact(token, message_id, react_id):
     react_id = int(react_id)
     DATA = load()
     messDict = DATA['messDict']
-    channelDict = DATA['channelDict']
     if react_id != 1:
         raise ValueError('React_id is not a valid React ID')
     is_mess = False
@@ -243,8 +239,6 @@ def message_pin(token, message_id):
     message_id = int(message_id)
     DATA = load()
     messDict = DATA['messDict']
-    channelDict = DATA['channelDict']
-    userDict = DATA['userDict']
 
     found = False
     for mess in messDict:
@@ -282,7 +276,6 @@ def message_unpin(token, message_id):
     DATA = load()
     messDict = DATA['messDict']
     channelDict = DATA['channelDict']
-    userDict = DATA['userDict']
 
     found = False
     for mess in messDict:
