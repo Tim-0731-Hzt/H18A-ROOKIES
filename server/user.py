@@ -3,7 +3,7 @@
 # User with u_id is not a valid user
 from server.Error import AccessError, ValueError
 from server.auth_pickle import getUserFromToken
-from server.pickle_unpickle import *
+from server.pickle_unpickle import save, load
 from PIL import Image
 import requests
 import urllib.request
@@ -12,7 +12,7 @@ import re
 from flask import Flask, request
 from os import environ
 def users_all(token):
-    uid = getUserFromToken(token)
+    getUserFromToken(token)
     data = load()
     userDict = data['userDict']
     lis = []
@@ -32,10 +32,7 @@ def users_all(token):
     }
 
 def user_profile(token, u_id):
-    try:
-        ID = getUserFromToken(token)
-    except:
-        raise ValueError('token was incorrect')
+    getUserFromToken(token)
     DATA = load()
     userdict = DATA['userDict']
     for user in userdict:
@@ -48,11 +45,8 @@ def user_profile(token, u_id):
                 'handle_str': (user['handle']),
                 'profile_img_url': (user['profile_img_url'])
             }
-            '''return {
-                'user': d
-            }'''
             return d
-    #raise ValueError('u_id was incorrect')
+    raise ValueError('u_id was incorrect')
     
 def user_profile_setmail(token, email):
     opid = getUserFromToken(token)
@@ -68,7 +62,6 @@ def user_profile_setmail(token, email):
     for user in userDict:
         if user['email'] == email:
             raise ValueError("Email address is already used bt another user.")
-    '''if token == uid'''
     for user in userDict:
         if opid == user['u_id']:
             user['email'] = email

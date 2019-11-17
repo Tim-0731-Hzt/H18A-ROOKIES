@@ -3,7 +3,7 @@ import re
 import hashlib
 from random import randrange
 import jwt
-from server.Error import ValueError
+from server.Error import ValueError, AccessError
 from server.pickle_unpickle import save, load
 
 SECRET = 'ROOKIES'
@@ -41,9 +41,12 @@ def generateToken(username):
 # using jwt to decode a token and return u_id
 def getUserFromToken(token):
     global SECRET
-    decoded = jwt.decode(token[2:len(token) - 1], SECRET, algorithms=['HS256'])
-    u_id = decoded['u_id']
-    return u_id
+    try:
+        decoded = jwt.decode(token[2:len(token) - 1], SECRET, algorithms=['HS256'])
+        u_id = decoded['u_id']
+        return u_id
+    except:
+        raise AccessError('Invalid token')
 
 def hashPassword(password):
     return hashlib.sha256(password.encode()).hexdigest()
