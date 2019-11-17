@@ -7,13 +7,14 @@ def is_user_reacted(u_id, message_id):
     u_id = int(u_id)
     message_id = int(message_id)
     data = load()
-    messDict = data['messDict']
-    for m in messDict:
-        if m['message_id'] == message_id:
-            if u_id in m['reacts'][0]['u_ids']:
+    messD = data['messDict']
+    for mess in messD:
+        if mess['message_id'] == message_id:
+            return bool(u_id in mess['reacts'][0]['u_ids'])
+            '''if u_id in mess['reacts'][0]['u_ids']:
                 return True
             else:
-                return False
+                return False'''
     return False
 
 # input: list of u_id
@@ -346,10 +347,8 @@ def channel_removeowner(token, channel_id, u_id):
     id = int(id)
     u_id = int(u_id)
     channel_id = int(channel_id)
-    
     DATA = load()
-    channelDict = DATA['channelDict']   
-
+    channelDict = DATA['channelDict']
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     if if_User_Owner(token, channel_id) == False: 
