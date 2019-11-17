@@ -1,6 +1,6 @@
-from json import dumps
 from flask import Flask, request, jsonify, send_from_directory
 from flask_mail import Mail, Message
+from json import dumps
 from werkzeug.exceptions import HTTPException
 from flask_cors import CORS
 
@@ -19,10 +19,7 @@ from server.user import user_profile_setname, user_profiles_uploadphoto, getUser
 from server.search import search
 from server.admin_userpermission_change import admin_userpermission_change
 from server.pickle_unpickle import restart
-from werkzeug.exceptions import HTTPException
-from flask_cors import CORS
-
-from datetime import datetime
+from server.standup import standup_active, standup_send, standup_start
 
 # Flask route for defalut handler for errors
 def defaultHandler(err):
@@ -41,8 +38,8 @@ APP.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=465,
     MAIL_USE_SSL=True,
-    MAIL_USERNAME = 'ROOKIESTHEBEST@gmail.com',
-    MAIL_PASSWORD = "lvchenkai"
+    MAIL_USERNAME='ROOKIESTHEBEST@gmail.com',
+    MAIL_PASSWORD="lvchenkai"
 )
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
@@ -61,7 +58,7 @@ def sendlater():
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
     time_sent = request.form.get('time_sent')
-    return dumps(message_sendlater(token,channel_id,message, time_sent))
+    return dumps(message_sendlater(token, channel_id, message, time_sent))
 
 # Flask route for message_send
 @APP.route('/message/send', methods=['POST'])
@@ -69,14 +66,14 @@ def send():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
-    return dumps(message_send(token,channel_id,message))
+    return dumps(message_send(token, channel_id, message))
 
 # Flask route for messsage_remove
 @APP.route('/message/remove', methods=['DELETE'])
 def remove():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
-    return dumps(message_remove(token,int(message_id)))
+    return dumps(message_remove(token, int(message_id)))
 
 # Flask route for message_edit
 @APP.route('/message/edit', methods=['PUT'])
@@ -92,7 +89,7 @@ def react():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
     react_id = request.form.get('react_id')
-    return dumps(message_react(int(token), int(message_id), int(react_id)))
+    return dumps(message_react((token), int(message_id), int(react_id)))
 
 # Flask route for message_unreact
 @APP.route('/message/unreact', methods=['POST'])
@@ -143,7 +140,6 @@ def channel_list():
 def channels_invite():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
-    #return dumps(channel_id)
     u_id = request.form.get('u_id')
     return dumps(channel_invite(token, channel_id, u_id))
 
@@ -183,7 +179,7 @@ def channels_addowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
-    return dumps(channel_addowner(token, channel_id,u_id))
+    return dumps(channel_addowner(token, channel_id, u_id))
 
 # Flask route for channel_removeowner
 @APP.route('/channel/removeowner', methods=['POST'])
@@ -191,7 +187,7 @@ def channels_removeowner():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     u_id = request.form.get('u_id')
-    return dumps(channel_removeowner(token, channel_id,u_id))
+    return dumps(channel_removeowner(token, channel_id, u_id))
 
 # Flask route for auth_login
 @APP.route('/auth/login', methods=['POST'])
@@ -216,7 +212,6 @@ def register():
     name_last = request.form.get('name_last')
     user = auth_register(email, password, name_first, name_last)
     return dumps(user)
-    
 
 # Flask route for auth_password_request
 @APP.route('/auth/passwordreset/request', methods=['POST'])
@@ -258,7 +253,7 @@ def user2():
     token = request.form.get('token')
     name_first = request.form.get('name_first')
     name_last = request.form.get('name_last')
-    user_profile_setname(token,name_first, name_last)
+    user_profile_setname(token, name_first, name_last)
     return dumps({})
 
 # Flask route for user_profile_setmail
@@ -266,7 +261,7 @@ def user2():
 def user3():
     token = request.form.get('token')
     email = request.form.get('email')
-    user_profile_setmail(token,email)
+    user_profile_setmail(token, email)
     return dumps({})
 
 # Flask route for user_profile_sethandle
@@ -274,7 +269,7 @@ def user3():
 def user4():
     token = request.form.get('token')
     handle_str = request.form.get('handle_str')
-    user_profile_sethandle(token,handle_str)
+    user_profile_sethandle(token, handle_str)
     return dumps({})
 
 # Flask route for user_all
@@ -288,9 +283,8 @@ def user_all():
 def standup1():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
-    second = request.form.get('length')
-    standup_start(token,channel_id)
-    time = showtime(second)
+    length = request.form.get('length')
+    time = standup_start(token, channel_id, length)
     return dumps(time)
 
 # Flask route for standup_send
@@ -299,7 +293,7 @@ def standup2():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
     message = request.form.get('message')
-    standup_send(token,channel_id, message)
+    standup_send(token, channel_id, message)
     return dumps({})
 
 # Flask route for standup_active
@@ -307,11 +301,8 @@ def standup2():
 def active():
     token = request.args.get('token')
     channel_id = request.args.get('channel_id')
-    
-    return dumps({
-        'is_active': False,
-        'time_finish': None
-    })
+    result = standup_active(token, channel_id)
+    return dumps(result)
 
 # Flask route for search
 @APP.route('/search', methods=['GET'])
@@ -327,12 +318,12 @@ def admin():
     token = request.form.get('token')
     u_id = request.form.get('premission_id')
     permission_id = request.form.get('premission_id')
-    admin_userpermission_change(token,u_id,premission_id)
+    admin_userpermission_change(token, u_id, permission_id)
     return dumps({})
 
-#@APP.route('/frontend/prebundle/static/<path:path>', methods=['GET'])
-@APP.route('/<path:path>',methods=['GET'])
-def show_img(path):
+'''@APP.route('/frontend/prebundle/static/<path:filename>')
+def show_img(filename):
+    print('\n\n\n')
     print('Displaying image:')
     print(filename)
     print('\n\n\n')
@@ -346,7 +337,7 @@ def show_img(path):
     print(os.path.join(root_dir, 'project', 'frontend', 'prebundle', 'static/'))
     return send_from_directory(os.path.join(root_dir, 'frontend', 'prebundle', 'static/'), str(filename))
     #     return send_from_directory("/frontend/prebundle/static", str(filename))
-
+'''
 
 # Flask route for user_profile_uploadphoto
 @APP.route('/user/profiles/uploadphoto', methods=['POST'])
@@ -362,9 +353,8 @@ def uploadphoto():
 # Flask route for displaying image
 @APP.route('/<filename>', methods=['GET'])
 def send_js(filename):
-    print('\n\n\n\n\n')
+    print('\n\n\n\nshit\n\n')
     return send_from_directory('', filename)
 
 if __name__ == '__main__':
     APP.run()
-
