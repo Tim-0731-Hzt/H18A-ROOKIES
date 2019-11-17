@@ -126,8 +126,8 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     cropped = cropped.save('frontend/prebundle/profile_image/' + str(uid) + '.jpg')
     DATA = load()
     userDict = DATA['userDict']
-    port = request.host
-    #port = request.url_root
+    # port = request.host
+    # port = request.url_root
     for user in userDict:
         if int(uid) == int(user['u_id']):
             # user['profile_img_url'] = str(port) + "frontend/prebundle/static/" + str(id) + '.jpg'
