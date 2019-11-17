@@ -125,14 +125,14 @@ def channel_create():
 @APP.route('/channels/listall', methods=['GET'])
 def channel_listall():
     token = request.args.get("token")
-    lis = channels_listalltoken
+    lis = channels_listall(token)
     return dumps(lis)
 
 # Flask route for channels_list
 @APP.route('/channels/list', methods=['GET'])
 def channel_list():
     token = request.args.get("token")
-    lis = channels_listtoken
+    lis = channels_list(token)
     return dumps(lis)
 
 # Flask route for channel_invite
@@ -201,7 +201,7 @@ def login():
 @APP.route('/auth/logout', methods=['POST'])
 def logout():
     token = request.form.get('token')
-    return dumps(auth_logouttoken)
+    return dumps(auth_logout(token))
 
 # Flask route for auth_register
 @APP.route('/auth/register', methods=['POST'])
@@ -276,7 +276,7 @@ def user4():
 @APP.route('/users/all', methods=['GET'])
 def user_all():
     token = request.args.get('token')
-    return dumps(users_alltoken)
+    return dumps(users_all(token))
 
 # Flask route for standup_start
 @APP.route('/standup/start', methods=['POST'])
