@@ -1,6 +1,6 @@
+from json import dumps
 from flask import Flask, request, jsonify, send_from_directory
 from flask_mail import Mail, Message
-from json import dumps
 from werkzeug.exceptions import HTTPException
 from flask_cors import CORS
 
