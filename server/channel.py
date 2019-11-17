@@ -150,10 +150,7 @@ def auth_id_check(token, channel_id):
             return True
     for elements in channelDict:
         if int(elements['channel_id']) == int(channel_id):
-            if int(uid) in elements['channel_member'] or int(uid) in elements['channel_owner']:
-                return True
-            else:
-                return False
+            return bool(int(uid) in elements['channel_member'] or int(uid) in elements['channel_owner'])
     return False
 
 # checking if the given channel is public
