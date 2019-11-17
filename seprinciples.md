@@ -32,3 +32,7 @@ Seprinciples
 **From: user.py**
 **Type: Top-down thinking and KISS**
     There are some parts in functions that we need to user for loop to find the exact user in userDict which is a complicated process. In order to use Top-down thinking and KISS we write a helper function to do that job.
+
+**From: stand.py**
+**Type: DRY**
+    In the "standup_send" function, there are three if statements contains the same code. After using DRY principle, we write them in one line outside the if statments, then put it back to if statements.
