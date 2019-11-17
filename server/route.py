@@ -29,8 +29,8 @@ def defaultHandler(err):
     response.content_type = 'application/json'
     return response
 
-APP = Flask(__name__)
-APP._static_folder = os.path.abspath("/frontend/prebundle/static/")
+APP = Flask(__name__, static_url_path='/frontend/prebundle/profile_image')
+# APP._static_folder = os.path.abspath("/frontend/prebundle/static/")
 APP.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=465,
@@ -289,22 +289,23 @@ def admin():
     admin_userpermission_change(token, u_id, permission_id)
     return dumps({})
 
-@APP.route('/frontend/prebundle/static/<path:filename>')
+'''@APP.route('/frontend/prebundle/static/<path:filename>')
 def show_img(filename):
     print('\n\n\n')
     print('Displaying image:')
     print(filename)
     print('\n\n\n')
-    '''try:
+    try:
         send_from_directory("/frontend/prebundle/static", str(filename))
     except:
-        return dumps({})'''
+        return dumps({})
     # send_from_directory("frontend/prebundle/static/",filename)
     root_dir = os.path.dirname(os.getcwd())
     print(root_dir)
     print(os.path.join(root_dir, 'project', 'frontend', 'prebundle', 'static/'))
     return send_from_directory(os.path.join(root_dir, 'frontend', 'prebundle', 'static/'), str(filename))
     #     return send_from_directory("/frontend/prebundle/static", str(filename))
+'''
 
 @APP.route('/user/profiles/uploadphoto', methods=['POST'])
 def uploadphoto():
@@ -315,6 +316,11 @@ def uploadphoto():
     x_end = request.form.get('x_end')
     y_end = request.form.get('y_end')
     return dumps(user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end))
+
+@APP.route('/<filename>', methods=['GET'])
+def send_js(filename):
+    print('\n\n\n\nshit\n\n')
+    return send_from_directory('', filename)
 
 if __name__ == '__main__':
     APP.run()

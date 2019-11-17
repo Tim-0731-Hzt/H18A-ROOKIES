@@ -134,14 +134,14 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
         raise ValueError("Image uploaded is not a JPG")
     cropped =  img.crop((int(x_start), int(y_start), int(x_end), int(y_end)))
     id = getUserFromToken(token)
-    cropped = cropped.save('frontend/prebundle/static/' + str(id) + '.jpg')
+    cropped = cropped.save('frontend/prebundle/profile_image/' + str(id) + '.jpg')
     DATA = load()
     userDict = DATA['userDict']
     port = request.url_root
     for user in userDict:
         if int(id) == int(user['u_id']):
             # user['profile_img_url'] = str(port) + "frontend/prebundle/static/" + str(id) + '.jpg'
-            user['profile_img_url'] = str(id) + '.jpg'
+            user['profile_img_url'] = 'frontend/prebundle/profile_image/' + str(id) + '.jpg'
 
             print(user['profile_img_url'])
     DATA['userDict'] = userDict

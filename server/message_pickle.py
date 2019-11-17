@@ -136,7 +136,6 @@ def message_edit(token, message_id, message):
 
     DATA = load()
     messDict = DATA['messDict']
-    channelDict = DATA['channelDict']
     for mess in messDict:
         if mess['message_id'] == message_id:
             channelID = mess['channel_id']

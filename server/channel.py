@@ -215,7 +215,7 @@ def channel_details (token, channel_id):
     channelDict = DATA['channelDict']
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
-    if not auth_id_check(token,channel_id):
+    if not auth_id_check(token,channel_id): 
         raise AccessError("Auth user is not a member of channel")
     detail = {}
     for parts in channelDict:
@@ -334,7 +334,7 @@ def channel_addowner(token, channel_id, u_id):
     for parts in channelDict:
         if parts['channel_id'] == channel_id and u_id in parts['channel_owner']:
             raise ValueError("user is already an owner in the channel")    
-    if if_User_Owner(token,channel_id) == False:
+    if not if_User_Owner(token,channel_id):
         raise AccessError("the authorised user is not an owner of the slackr, or an owner of this channel")
     if u_id not in channelDict[channel_id - 1]['channel_member']:
         raise AccessError("the user is not a member of this channel")

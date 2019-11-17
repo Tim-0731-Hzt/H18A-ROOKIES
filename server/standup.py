@@ -52,14 +52,14 @@ def send(channel_id,token):
     channelDict = data['channelDict']
     for channel in channelDict:
         if int(channel_id) == channel['channel_id']:
-            channel['standUp'] = False
-            channel['standtime'] = None
             message_send(token, channel_id, str(channel['standlist']))
 
     data = load()
     channelDict = data['channelDict']
     for channel in channelDict:
         if int(channel_id) == channel['channel_id']:
+            channel['standUp'] = False
+            channel['standtime'] = None
             channel['standlist'] == ''
             data['channelDict'] = channelDict
             save(data)
@@ -91,16 +91,16 @@ def standup_send(token, channel_id, message):
                 raise ValueError(
                     'An active standup is not currently running in this channel')
             append = str(name) + ': ' + str(message)
-            if ch['standlist'] == "":
+            if not ch['standlist']:
                 ch['standlist'] = append
                 data['channelDict'] = channelDict
                 save(data)
                 return {}
             else:
-                ch['standlist'] = ch['standlist'] + '\n' + append
+                ch['standlist'] += '\r\n' + append
                 data['channelDict'] = channelDict
                 save(data)
-                return
+                return {}
     raise ValueError('Channel ID is not a valid channel')
   
     
