@@ -1,31 +1,27 @@
-# For a valid user, returns information about their email, first name, last name, and handle
-# ValueError when:
-# User with u_id is not a valid user
-from server.Error import AccessError, ValueError
+import urllib.request
+import re
+import requests
+from PIL import Image
+from flask import request
+from server.Error import ValueError
 from server.auth_pickle import getUserFromToken
 from server.pickle_unpickle import save, load
-from PIL import Image
-import requests
-import urllib.request
-import sys
-import re
-from flask import Flask, request
-from os import environ
+
 def users_all(token):
     getUserFromToken(token)
     data = load()
     userDict = data['userDict']
     lis = []
     for user in userDict:
-        d = {
+        dic = {
             'u_id': user['u_id'],
-            'email': (user['email']), 
+            'email': (user['email']),
             'name_first': (user['first_name']),
             'name_last': (user['last_name']),
             'handle_str': (user['handle']),
             'profile_img_url': user['profile_img_url']
         }
-        lis.append(d)
+        lis.append(dic)
 
     return {
         'users': list(lis)
@@ -37,28 +33,28 @@ def user_profile(token, u_id):
     userdict = DATA['userDict']
     for user in userdict:
         if int(user['u_id']) == int(u_id):
-            d = {
+            dic = {
                 'u_id': (user['u_id']),
-                'email': (user['email']), 
+                'email': (user['email']),
                 'name_first': (user['first_name']),
                 'name_last': (user['last_name']),
                 'handle_str': (user['handle']),
                 'profile_img_url': (user['profile_img_url'])
             }
-            return d
+            return dic
     raise ValueError('u_id was incorrect')
-    
+
 def user_profile_setmail(token, email):
     opid = getUserFromToken(token)
-    
+
     DATA = load()
     userDict = DATA['userDict']
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
-    if (re.search(regex, email)):
+    if re.search(regex, email):
         pass
     else:
         raise ValueError("Invalid Email")
-    
+
     for user in userDict:
         if user['email'] == email:
             raise ValueError("Email address is already used bt another user.")
@@ -68,12 +64,12 @@ def user_profile_setmail(token, email):
             DATA['userDict'] = userDict
             save(DATA)
             return
-   
-def user_profile_sethandle(token,handle_str):
+
+def user_profile_sethandle(token, handle_str):
     opid = getUserFromToken(token)
     DATA = load()
     userDict = DATA['userDict']
-    if len(handle_str) <= 3 :
+    if len(handle_str) <= 3:
         raise ValueError('handle too short')
     if len(handle_str) >= 20:
         raise ValueError('handle too long')
@@ -92,15 +88,15 @@ def user_profile_setname(token, name_first, name_last):
     opid = getUserFromToken(token)
     DATA = load()
     userDict = DATA['userDict']
-    if len(name_first) > 50 :
+    if len(name_first) > 50:
         raise ValueError('First name too long')
-    if len(name_last) > 50 :
+    if len(name_last) > 50:
         raise ValueError('Last name too long')
     if len(name_first) < 1:
         raise ValueError('First name too short')
     if len(name_last) < 1:
         raise ValueError('Last name too short')
-    
+
     for user in userDict:
         if opid == user['u_id']:
             user['first_name'] = name_first
@@ -108,7 +104,7 @@ def user_profile_setname(token, name_first, name_last):
             DATA['userDict'] = userDict
             save(DATA)
             return
-    
+
 def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     response = requests.get(img_url)
     if response.status_code != 200:
@@ -123,18 +119,19 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
         raise ValueError('Out of bound')
     if int(x_end) < 0 or int(y_end) < 0 or int(x_start) < 0 or int(y_start) < 0:
         raise ValueError('Out of bound')
-    if img.format !=  "JPEG" and img.format != "JPG":
+    if img.format != "JPEG" and img.format != "JPG":
         raise ValueError("Image uploaded is not a JPG")
-    cropped =  img.crop((int(x_start), int(y_start), int(x_end), int(y_end)))
-    id = getUserFromToken(token)
-    cropped = cropped.save('frontend/prebundle/profile_image/' + str(id) + '.jpg')
+    cropped = img.crop((int(x_start), int(y_start), int(x_end), int(y_end)))
+    uid = getUserFromToken(token)
+    cropped = cropped.save('frontend/prebundle/profile_image/' + str(uid) + '.jpg')
     DATA = load()
     userDict = DATA['userDict']
-    port = request.url_root
+    port = request.host
+    #port = request.url_root
     for user in userDict:
-        if int(id) == int(user['u_id']):
+        if int(uid) == int(user['u_id']):
             # user['profile_img_url'] = str(port) + "frontend/prebundle/static/" + str(id) + '.jpg'
-            user['profile_img_url'] = 'frontend/prebundle/profile_image/' + str(id) + '.jpg'
+            user['profile_img_url'] = 'frontend/prebundle/profile_image/' + str(uid) + '.jpg'
 
             print(user['profile_img_url'])
     DATA['userDict'] = userDict

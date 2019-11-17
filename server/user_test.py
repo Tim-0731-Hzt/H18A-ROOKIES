@@ -10,7 +10,7 @@ from server.user import *
 # For a valid user, returns information about their email, first name, last name, and handle
 # ValueError when:
 # User with u_id is not a valid user
-
+        
 
     
 

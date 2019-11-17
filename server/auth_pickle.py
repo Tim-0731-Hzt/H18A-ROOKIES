@@ -129,7 +129,7 @@ def auth_register(email, password, name_first, name_last):
     # incorrect password
     if len(password) < 6:
         raise ValueError("Password should be at least 6 characters long")
-    
+
     firstName = name_first.lower()
     lastName = name_last.lower()
     handle = firstName + lastName
@@ -210,7 +210,7 @@ def auth_passwordreset_reset(reset_code, new_password):
     #incorrect password
     if len(new_password) < 5:
         raise ValueError("New password is not valid")
-    if (len(str(reset_code)) != 6):
+    if len(str(reset_code)) != 6:
         raise ValueError("reset_code is not valid")
 
     for user in userDict:
