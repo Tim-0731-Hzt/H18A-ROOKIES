@@ -12,7 +12,6 @@ def test_standup_all():
     restart()
     authRegisterDict1 = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
     token1 = authRegisterDict1["token"]
-    UID1 = authRegisterDict1['u_id']
     authRegisterDict2 = auth_register("HaydenSmith@gmail.com","1we33456","Hayden","Smith")
     token2 = authRegisterDict2["token"]
     UID2 = authRegisterDict2['u_id']
@@ -26,7 +25,6 @@ def test_standup_all():
         "quin@gmail.com", "jijijij37236", 'daniel', 'quin')
     token4 = authRegisterDict4["token"]
     
-    UID4 = authRegisterDict4['u_id']
     channel_id = channels_create(token1,'test1',True)
     channel_invite(token1,channel_id,UID2)
     channel_invite(token1,channel_id,UID3)
@@ -69,7 +67,6 @@ def test_active():
     restart()
     authRegisterDict1 = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
     token1 = authRegisterDict1["token"]
-    UID1 = authRegisterDict1['u_id']
     channel_id = channels_create(token1,'test1',True)
     standup_start(token1,channel_id, 20)
     standup_active(token1, 1)

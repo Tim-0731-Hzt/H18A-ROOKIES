@@ -52,11 +52,10 @@ def test_user_profile_invaliduid():
     restart()
     authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
-    UID = authRegisterDict['u_id']
 
     # testing
     with pytest.raises(ValueError, match = r".*"):
-        userDict = user_profile(token, -1)
+        user_profile(token, -1)
 
 def test1_user_profile_setname():
     restart()
@@ -75,7 +74,6 @@ def test2_user_profile_setname():
     authRegisterDict = auth_register(
         "haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
-    UID = authRegisterDict['u_id']
     with pytest.raises(ValueError, match=r".*"):
         user_profile_setname(token, '', 'quin')
     with pytest.raises(ValueError, match=r".*"):
@@ -113,7 +111,6 @@ def test2_user_profile_sethandle_badhandle():
     authRegisterDict = auth_register(
         "haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
-    UID = authRegisterDict['u_id']
     with pytest.raises(ValueError, match = r".*"):
         user_profile_sethandle(token,"sb")
     with pytest.raises(ValueError, match=r".*"):
@@ -125,17 +122,10 @@ def test3_user_profile_sethandle_usedhandle():
     authRegisterDict = auth_register(
         "haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
-    UID = authRegisterDict['u_id']
 
-    authRegisterDict2 = auth_register(
-        "jeff@gmail.com", "hi1234566789", "jeffsb", "lu")
-    token2 = authRegisterDict2['token']
-    UID2 = authRegisterDict['u_id']
+    auth_register("jeff@gmail.com", "hi1234566789", "jeffsb", "lu")
 
-    authRegisterDict3 = auth_register(
-        "normaluser@gmail.com", "hi1234566789", "normal", "user")
-    token3 = authRegisterDict2['token']
-    UID3 = authRegisterDict['u_id']
+    auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     with pytest.raises(ValueError, match = r".*"):
         user_profile_sethandle(token, "jeffsblu")
     with pytest.raises(ValueError, match=r".*"):
@@ -146,7 +136,6 @@ def test1_user_profile_setmail():
     authRegisterDict = auth_register(
         "haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
-    UID = authRegisterDict['u_id']
     user_profile_setmail(token,"daniel@gmail.com")
     
 def test2_user_profile_setmail_usedEmail():
@@ -154,12 +143,8 @@ def test2_user_profile_setmail_usedEmail():
     authRegisterDict = auth_register(
         "haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
-    UID = authRegisterDict['u_id']
 
-    authRegisterDict2 = auth_register(
-        "jeff@gmail.com", "hi1234566789", "jeff", "lu")
-    token2 = authRegisterDict2['token']
-    UID2 = authRegisterDict['u_id']
+    auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
 
     with pytest.raises(ValueError, match = r".*"):
         user_profile_setmail(token,"jeff@gmail.com")
@@ -169,7 +154,7 @@ def test3_user_profile_setmail():
     authRegisterDict = auth_register(
         "haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
-    UID = authRegisterDict['u_id']
+    authRegisterDict['u_id']
 
     with pytest.raises(ValueError, match = r".*"):
         user_profile_setmail(token, "sahduyhasdh**(())")
@@ -180,7 +165,6 @@ def test_user_all():
         "haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
     user = users_all(token)
-    print(user)
     assert user['users'][0]['u_id'] == 1
     assert user['users'][0]['email'] == "haodong@gmail.com"
     assert user['users'][0]['name_first'] == "haodong"
