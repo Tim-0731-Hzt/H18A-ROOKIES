@@ -1,7 +1,7 @@
 import pytest
 import re
 from server.auth_pickle import auth_register
-from server.user import user_profile, user_profile_setname, user_profile_sethandle, user_profile_setmail, user_profiles_uploadphoto
+from server.user import user_profile, user_profile_setname, user_profile_sethandle, user_profile_setmail, users_all, user_profiles_uploadphoto
 from server.pickle_unpickle import restart
 from server.Error import ValueError, AccessError
 
@@ -173,7 +173,21 @@ def test3_user_profile_setmail():
 
     with pytest.raises(ValueError, match = r".*"):
         user_profile_setmail(token, "sahduyhasdh**(())")
+
+def test_user_all():
     restart()
+    authRegisterDict = auth_register(
+        "haodong@gmail.com", "hi123456", "haodong", "lu")
+    token = authRegisterDict['token']
+    user = users_all(token)
+    print(user)
+    assert user['users'][0]['u_id'] == 1
+    assert user['users'][0]['email'] == "haodong@gmail.com"
+    assert user['users'][0]['name_first'] == "haodong"
+    assert user['users'][0]['name_last'] == "lu"
+
+
+restart()
 '''
 def test1_user_profiles_uploadphoto():
     restart()

@@ -3,7 +3,7 @@ import pytest
 import pytest
 from server.Error import AccessError, ValueError
 from server.auth_pickle import *
-import server.pickle_unpickle
+from server.pickle_unpickle import restart
 from server.channel import *
 
 from server.admin_userpermission_change import admin_userpermission_change

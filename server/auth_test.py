@@ -3,8 +3,8 @@ import server.channel
 import pytest
 from server.auth_pickle import *
 from server.Error import AccessError, ValueError
-from server.pickle_unpickle import *
-#from auth import userDict
+from server.pickle_unpickle import restart
+from server.Error import ValueError, AccessError
 from server.user import user_profile
 
 ##
@@ -225,7 +225,7 @@ def test_auth_passwordreset_reset_invalidResetCode():
 def test_auth_passwordreset_reset_invalidNewPassword():
     restart()
     auth_register('jankie@gmail.com', '123456','gaoping','zhang')
-    auth_passwordreset_request('jankie@gmai.com')
+    auth_passwordreset_request('jankie@gmail.com')
     DATA = load()
     userDict = DATA['userDict']
     reset_code = userDict[0]['reset_code']
