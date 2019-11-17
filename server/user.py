@@ -3,27 +3,27 @@
 # User with u_id is not a valid user
 from server.Error import AccessError, ValueError
 from server.auth_pickle import getUserFromToken
-from server.pickle_unpickle import *
+from server.pickle_unpickle import save, load
 from PIL import Image
 import requests
 import urllib.request
 import sys
 import re
 from flask import Flask, request
+from os import environ
 def users_all(token):
-    uid = getUserFromToken(token)
+    getUserFromToken(token)
     data = load()
     userDict = data['userDict']
     lis = []
     for user in userDict:
         d = {
             'u_id': user['u_id'],
-            'profile_img_url': user['profile_img_url'],
-            # 'profile_img_url': None,
             'email': (user['email']), 
             'name_first': (user['first_name']),
             'name_last': (user['last_name']),
-            'handle_str': (user['handle'])
+            'handle_str': (user['handle']),
+            'profile_img_url': user['profile_img_url']
         }
         lis.append(d)
 
@@ -32,32 +32,23 @@ def users_all(token):
     }
 
 def user_profile(token, u_id):
-    try:
-        ID = getUserFromToken(token)
-    except:
-        raise ValueError('token was incorrect')
+    getUserFromToken(token)
     DATA = load()
     userdict = DATA['userDict']
     for user in userdict:
         if int(user['u_id']) == int(u_id):
             d = {
-                'u_id': int(u_id),
+                'u_id': (user['u_id']),
                 'email': (user['email']), 
                 'name_first': (user['first_name']),
                 'name_last': (user['last_name']),
                 'handle_str': (user['handle']),
                 'profile_img_url': (user['profile_img_url'])
             }
-            '''return {
-                'user': d
-            }'''
             return d
     raise ValueError('u_id was incorrect')
     
-    
-# returned: { email, name_first, name_last, handle_str }
-
-def user_profile_setemail(token, email):
+def user_profile_setmail(token, email):
     opid = getUserFromToken(token)
     
     DATA = load()
@@ -71,7 +62,6 @@ def user_profile_setemail(token, email):
     for user in userDict:
         if user['email'] == email:
             raise ValueError("Email address is already used bt another user.")
-    '''if token == uid'''
     for user in userDict:
         if opid == user['u_id']:
             user['email'] = email
@@ -79,8 +69,6 @@ def user_profile_setemail(token, email):
             save(DATA)
             return
    
-     
-
 def user_profile_sethandle(token,handle_str):
     opid = getUserFromToken(token)
     DATA = load()
@@ -99,12 +87,6 @@ def user_profile_sethandle(token,handle_str):
             DATA['userDict'] = userDict
             save(DATA)
             return
-    
-    
-
-
-
-
 
 def user_profile_setname(token, name_first, name_last):
     opid = getUserFromToken(token)
@@ -127,16 +109,11 @@ def user_profile_setname(token, name_first, name_last):
             save(DATA)
             return
     
-
-
-
-
-
 def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     response = requests.get(img_url)
     if response.status_code != 200:
         raise ValueError('url corrupted')
-    img = Image. open(urllib. request. urlopen(img_url))
+    img = Image.open(urllib. request. urlopen(img_url))
     width, height = img.size
     if img == -1:
         raise ValueError("image does not exist")
@@ -150,11 +127,16 @@ def user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
         raise ValueError("Image uploaded is not a JPG")
     cropped =  img.crop((int(x_start), int(y_start), int(x_end), int(y_end)))
     id = getUserFromToken(token)
-    cropped = cropped.save('frontend/prebundle/static/' + str(id) + '.jpg')
+    cropped = cropped.save('frontend/prebundle/profile_image/' + str(id) + '.jpg')
     DATA = load()
     userDict = DATA['userDict']
+    port = request.url_root
     for user in userDict:
         if int(id) == int(user['u_id']):
-            user['profile_img_url'] = "http://"+ request.localhost() + '/static/'+ str(id) + '.jpg'
+            # user['profile_img_url'] = str(port) + "frontend/prebundle/static/" + str(id) + '.jpg'
+            user['profile_img_url'] = 'frontend/prebundle/profile_image/' + str(id) + '.jpg'
+
+            print(user['profile_img_url'])
     DATA['userDict'] = userDict
     save(DATA)
+    return {}
