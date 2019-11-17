@@ -109,11 +109,10 @@ def if_slackr_owner(token):
     DATA = load()
     userDict = DATA['userDict']
     # get the user id from token
-    id = getUserFromToken(token)
-    id = int(id)
+    u_id = getUserFromToken(token)
     # slacker owner or admin
     for parts in userDict:
-        if (parts['u_id'] == id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
+        if (parts['u_id'] == u_id and (parts['permission_id'] == 1 or parts['permission_id'] == 2)):
             return True
     return False
 
@@ -237,23 +236,22 @@ def channels_messages(token, channel_id, start):
         'start': start,
         'end': None
     }
-    L = []
+    lis = []
     for parts in messDict:
         if int(parts['channel_id']) == int(channel_id):
-            L.append(int(parts['message_id']))
-    if len(L) != 1:
-        L = L[::-1]
-    L = get_messages(u_id, L)
-    if len(L) < int(start):
+            lis.append(int(parts['message_id']))
+    if len(lis) != 1:
+        lis = lis[::-1]
+    lis = get_messages(u_id, lis)
+    if len(lis) < int(start):
         raise ValueError("start is greater than the total number of messages in the channel")
 
-    if int(start) + 50 >= len(L):
-        for parts in L[int(start):len(L)]:
-        # for parts in L[int(start):len(L) - 1]:
+    if int(start) + 50 >= len(lis):
+        for parts in lis[int(start):len(lis)]:
             dic['messages'].append(parts)
         dic['end'] = -1
     else:
-        for parts in L[int(start):int(start) + 50]:
+        for parts in lis[int(start):int(start) + 50]:
             dic['messages'].append(parts)
         dic['end'] = start + 50
     return dic
@@ -315,8 +313,7 @@ def channel_addowner(token, channel_id, u_id):
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     # already an owner
-    id = getUserFromToken(token)
-    id = int(id)
+    getUserFromToken(token)
     u_id = int(u_id)
     channel_id = int(channel_id)
     for parts in channelDict:
@@ -336,8 +333,7 @@ def channel_addowner(token, channel_id, u_id):
 
 # Remove user with user id u_id an owner of this channel
 def channel_removeowner(token, channel_id, u_id):
-    id = getUserFromToken(token)
-    id = int(id)
+    getUserFromToken(token)
     u_id = int(u_id)
     channel_id = int(channel_id)
     DATA = load()
@@ -355,7 +351,6 @@ def channel_removeowner(token, channel_id, u_id):
     DATA['channelDict'] = channelDict
     save(DATA)
     return {}
-
 # Provide a list of all channels (and their associated details) that 
 # the authorised user is part of
 def channels_list(token):
@@ -389,14 +384,14 @@ def channels_create(token, name, is_public):
     channelDict = DATA['channelDict']
     if len(name) > 20:
         raise ValueError("Name is more than 20 characters long")
-    id = getUserFromToken(token)
+    user_id = getUserFromToken(token)
     if channelDict == []:
         dic = {
             'channel_id': 1,
             'name': name,
-            'channel_creater': int(id),
+            'channel_creater': int(user_id),
             'channel_member': [],
-            'channel_owner':[int(id)],
+            'channel_owner':[int(user_id)],
             'is_public': is_public,
             'standUp': False,
             'standlist' : '',
@@ -415,9 +410,9 @@ def channels_create(token, name, is_public):
         dic = {
             'channel_id': int(count),
             'name': name,
-            'channel_creater': int(id),
+            'channel_creater': int(user_id),
             'channel_member': [],
-            'channel_owner':[int(id)],
+            'channel_owner':[int(user_id)],
             'is_public': is_public,
             'standUp': False,
             'standlist' : '',
