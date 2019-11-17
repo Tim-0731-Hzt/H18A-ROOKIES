@@ -7,13 +7,10 @@ def is_user_reacted(u_id, message_id):
     u_id = int(u_id)
     message_id = int(message_id)
     data = load()
-    messDict = data['messDict']
-    for m in messDict:
-        if m['message_id'] == message_id:
-            if u_id in m['reacts'][0]['u_ids']:
-                return True
-            else:
-                return False
+    messD = data['messDict']
+    for mess in messD:
+        if mess['message_id'] == message_id:
+            return bool(u_id in mess['reacts'][0]['u_ids'])
     return False
 
 # input: list of u_id
@@ -25,13 +22,13 @@ def get_members(uids):
     for uid in uids:
         for user in userDict:
             if int(user['u_id']) == int(uid):
-                d = {
+                dic = {
                     'u_id': uid,
                     'name_first': user['first_name'],
                     'name_last': user['last_name'],
                     'profile_img_url': user['profile_img_url']
                 }
-                memDict.append(d)
+                memDict.append(dic)
                 break
 
     return memDict
@@ -44,11 +41,11 @@ def get_channels(channel_ids):
     for cid in channel_ids:
         for cha in channelDict:
             if int(cid) == int(cha['channel_id']):
-                c = {
+                dic = {
                     'channel_id': int(cid),
                     'name': cha['name']
                 }
-                channel.append(c)
+                channel.append(dic)
                 break
     return channel
 
@@ -60,7 +57,7 @@ def get_messages(u_id, message_ids):
     for mID in list(message_ids):
         for message in messDict:
             if message['message_id'] == int(mID):
-                m = {
+                mom = {
                     'message_id': message['message_id'],
                     'u_id': message['u_id'],
                     'message': message['message'],
@@ -69,8 +66,8 @@ def get_messages(u_id, message_ids):
                     'is_pinned': message['is_pinned']
                 }
                 if is_user_reacted(u_id, message['message_id']):
-                    m['reacts'][0]['is_this_user_reacted'] = True
-                mess.append(m)
+                    mom['reacts'][0]['is_this_user_reacted'] = True
+                mess.append(mom)
                 break
     return list(mess)
 
@@ -346,10 +343,8 @@ def channel_removeowner(token, channel_id, u_id):
     id = int(id)
     u_id = int(u_id)
     channel_id = int(channel_id)
-    
     DATA = load()
-    channelDict = DATA['channelDict']   
-
+    channelDict = DATA['channelDict']
     if channel_id_check(channel_id) == False:
         raise ValueError("channel_id is invalid")
     if if_User_Owner(token, channel_id) == False: 
@@ -369,25 +364,26 @@ def channel_removeowner(token, channel_id, u_id):
 def channels_list(token):
     DATA = load()
     channelDict = DATA['channelDict']
-    L = []
+    lis = []
     uid = getUserFromToken(token)
     for parts in channelDict:
         if (uid in parts['channel_member'] or uid in parts['channel_owner']):
-            L.append(parts['channel_id'])
-    L = get_channels(L)
-    return {'channels': L}
+            lis.append(parts['channel_id'])
+    lis = get_channels(lis)
+    return {'channels': lis}
 
 # Provide a list of all channels (and their associated details)
 def channels_listall(token):
     DATA = load()
     channelDict = DATA['channelDict']
+    getUserFromToken(token)
     channel = []
     for cha in channelDict:
-        c = {
+        dic = {
             'channel_id': int(cha['channel_id']),
             'name': cha['name']
         }
-        channel.append(c)
+        channel.append(dic)
     return {'channels': channel}
 
 # Creates a new channel with that name that is either a public or private channel
@@ -398,7 +394,7 @@ def channels_create(token, name, is_public):
         raise ValueError("Name is more than 20 characters long")
     id = getUserFromToken(token)
     if channelDict == []:
-        d = {
+        dic = {
             'channel_id': 1,
             'name': name,
             'channel_creater': int(id),
@@ -409,17 +405,17 @@ def channels_create(token, name, is_public):
             'standlist' : '',
             'standtime': None
         }
-        channelDict.append(d)
+        channelDict.append(dic)
         DATA['channelDict'] = channelDict
         save(DATA)
-        return d['channel_id']
+        return dic['channel_id']
     else:
         # if same name
         for parts in channelDict:
             if parts['name'] == name:
                 raise ValueError("this name was already used")
         count = len(channelDict) + 1
-        d = {
+        dic = {
             'channel_id': int(count),
             'name': name,
             'channel_creater': int(id),
@@ -430,7 +426,7 @@ def channels_create(token, name, is_public):
             'standlist' : '',
             'standtime' : None
         }
-        channelDict.append(d)
+        channelDict.append(dic)
         DATA['channelDict'] = channelDict
         save(DATA)
-        return int(d['channel_id'])
+        return int(dic['channel_id'])
