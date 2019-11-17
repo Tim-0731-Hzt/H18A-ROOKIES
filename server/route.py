@@ -89,7 +89,7 @@ def react():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
     react_id = request.form.get('react_id')
-    return dumps(message_react((token), int(message_id), int(react_id)))
+    return dumps(message_react(token, int(message_id), int(react_id)))
 
 # Flask route for message_unreact
 @APP.route('/message/unreact', methods=['POST'])
@@ -97,21 +97,21 @@ def unreact():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
     react_id = request.form.get('react_id')
-    return dumps(message_unreact((token), int(message_id), int(react_id)))
+    return dumps(message_unreact(token, int(message_id), int(react_id)))
 
 # Flask route for message_pin
 @APP.route('/message/pin', methods=['POST'])
 def pin():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
-    return dumps(message_pin((token), int(message_id)))
+    return dumps(message_pin(token, int(message_id)))
 
 # Flask route for message_unpin
 @APP.route('/message/unpin', methods=['POST'])
 def unpin():
     token = request.form.get('token')
     message_id = request.form.get('message_id')
-    return dumps(message_unpin((token), int(message_id)))
+    return dumps(message_unpin(token, int(message_id)))
 
 # Flask route for channel_create
 @APP.route('/channels/create', methods=['POST'])
@@ -125,14 +125,14 @@ def channel_create():
 @APP.route('/channels/listall', methods=['GET'])
 def channel_listall():
     token = request.args.get("token")
-    lis = channels_listall(token)
+    lis = channels_listalltoken
     return dumps(lis)
 
 # Flask route for channels_list
 @APP.route('/channels/list', methods=['GET'])
 def channel_list():
     token = request.args.get("token")
-    lis = channels_list(token)
+    lis = channels_listtoken
     return dumps(lis)
 
 # Flask route for channel_invite
@@ -201,7 +201,7 @@ def login():
 @APP.route('/auth/logout', methods=['POST'])
 def logout():
     token = request.form.get('token')
-    return dumps(auth_logout(token))
+    return dumps(auth_logouttoken)
 
 # Flask route for auth_register
 @APP.route('/auth/register', methods=['POST'])
@@ -276,7 +276,7 @@ def user4():
 @APP.route('/users/all', methods=['GET'])
 def user_all():
     token = request.args.get('token')
-    return dumps(users_all(token))
+    return dumps(users_alltoken)
 
 # Flask route for standup_start
 @APP.route('/standup/start', methods=['POST'])
