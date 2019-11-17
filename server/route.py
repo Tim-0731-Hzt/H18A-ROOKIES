@@ -3,9 +3,19 @@ from server.Error import AccessError, ValueError
 from flask import Flask, request, jsonify, send_from_directory
 from flask_mail import Mail, Message
 from json import dumps
-from server.channel import *
-from server.auth_pickle import *
-from server.user import *
+from werkzeug.exceptions import HTTPException
+from flask_cors import CORS
+
+import os
+
+from server.message_pickle import message_send, message_sendlater, message_remove, message_edit
+from server.message_pickle import message_react, message_unreact, message_pin, message_unpin
+from server.Error import AccessError, ValueError
+from server.channel import channel_invite, channel_details, channels_messages, channel_leave, channel_join
+from server.channel import channel_addowner, channel_removeowner, channels_list, channels_listall, channels_create 
+from server.auth_pickle import auth_login, auth_logout, auth_register, auth_passwordreset_request, auth_passwordreset_reset
+from server.user import users_all, user_profile, user_profile_setmail, user_profile_sethandle
+from server.user import user_profile_setname, user_profiles_uploadphoto, getUserFromToken
 from server.search import search
 from server.admin_userpermission_change import admin_userpermission_change
 from server.pickle_unpickle import restart
@@ -24,9 +34,8 @@ def defaultHandler(err):
     response.content_type = 'application/json'
     return response
 
-
-APP = Flask(__name__,static_url_path ='/frontend/prebundle/static')
-#APP = Flask(__name__)
+APP = Flask(__name__, static_url_path='/frontend/prebundle/profile_image')
+# APP._static_folder = os.path.abspath("/frontend/prebundle/static/")
 APP.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=465,
@@ -38,25 +47,10 @@ APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
 CORS(APP)
 
-
-@APP.route('/restart', methods = ['POST'])
+@APP.route('/restart', methods=['POST'])
 def begin():
     restart()
     return "restarted"
-
-@APP.route('/send-mail/')
-def send_mail():
-    mail = Mail(APP)
-    try:
-        msg = Message("Slackr Password Reset Number",
-            sender="ROOKIESTHEBEST@gmail.com",
-            recipients=["person.sending.to@gmail.com"])
-        msg.body = generateResetCode()
-        mail.send(msg)
-        return 'Mail sent!'
-    except Exception as e:
-        return (str(e))
-
 
 @APP.route('/message/sendlater', methods=['POST'])
 def sendlater():
@@ -221,13 +215,13 @@ def password_request():
         msg = Message("Slackr Password Reset Number",
             sender="ROOKIESTHEBEST@gmail.com",
             recipients=[email])
-        msg.body = auth_passwordreset_request(email)
+        msg.body = str(auth_passwordreset_request(email))
         mail.send(msg)
         return {}
     except Exception as e:
         return (str(e))
-    
-   # return dumps(auth_passwordreset_request(email))
+    return dumps({})
+    # return dumps(auth_passwordreset_request(email))
 
 @APP.route('/auth/passwordreset/reset', methods=['POST'])
 def password_reset():
@@ -243,6 +237,7 @@ def user1():
     profile = user_profile(token, u_id)
     # profile['u_id'] = 3
     # profile['profile_img_url'] = 'https://webcms3.cse.unsw.edu.au/static/uploads/coursepic/COMP1531/19T3/f69768934fc5db2bb478f938db95efe98b02af69adc0d4a9e79545d0aae44908/Screenshot_from_2019-09-10_22-16-33.png'
+    # profile['profile_img_url'] = '7'
     return dumps(profile)
 
 @APP.route('/users/profile/setname', methods = ['PUT'])
@@ -279,9 +274,14 @@ def user_all():
 def standup1():
     token = request.form.get('token')
     channel_id = request.form.get('channel_id')
+<<<<<<< HEAD
     second = request.form.get('length')
     standup_start(token,channel_id)
     time = showtime(second)
+=======
+    length = request.form.get('length')
+    time = standup_start(token, channel_id, length)
+>>>>>>> 4c2b9fc4e2656ec45c7d5ec69cdba74fdf42316b
     return dumps(time)
 
 @APP.route('/standup/send', methods = ['POST'])
@@ -334,6 +334,12 @@ def uploadphoto():
     x_end = request.form.get('x_end')
     y_end = request.form.get('y_end')
     return dumps(user_profiles_uploadphoto(token, img_url, x_start, y_start, x_end, y_end))
+
+@APP.route('/<filename>', methods=['GET'])
+def send_js(filename):
+    print('\n\n\n\nshit\n\n')
+    return send_from_directory('', filename)
+
 if __name__ == '__main__':
     APP.run()
 

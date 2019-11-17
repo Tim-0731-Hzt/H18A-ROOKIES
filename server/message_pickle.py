@@ -4,7 +4,7 @@ from server.auth_pickle import getUserFromToken
 import threading
 import time
 from server.Error import AccessError, ValueError
-from server.pickle_unpickle import *
+from server.pickle_unpickle import save, load
 from server.channel import is_in_channel, if_User_Owner
 
 def is_owner(token, channel_id):
@@ -102,10 +102,8 @@ def message_send(token, channel_id, message):
 # Message with message_id was not sent by an owner of this channel
 # Message with message_id was not sent by an admin or owner of the slack
 def message_remove(token, message_id):
-    uID = getUserFromToken(token)
     DATA = load()
     messDict = DATA['messDict']
-    channelDict = DATA['channelDict']
     found = False
     
     for mess in messDict:
@@ -136,7 +134,6 @@ def message_edit(token, message_id, message):
 
     DATA = load()
     messDict = DATA['messDict']
-    channelDict = DATA['channelDict']
     for mess in messDict:
         if mess['message_id'] == message_id:
             channelID = mess['channel_id']
@@ -165,7 +162,6 @@ def message_react(token, message_id, react_id):
     react_id = int(react_id)
     DATA = load()
     messDict = DATA['messDict']
-    channelDict = DATA['channelDict']
 
     if react_id != 1:
         raise ValueError('React_id is not a valid React ID')
@@ -203,7 +199,6 @@ def message_unreact(token, message_id, react_id):
     react_id = int(react_id)
     DATA = load()
     messDict = DATA['messDict']
-    channelDict = DATA['channelDict']
     if react_id != 1:
         raise ValueError('React_id is not a valid React ID')
     is_mess = False
@@ -244,8 +239,6 @@ def message_pin(token, message_id):
     message_id = int(message_id)
     DATA = load()
     messDict = DATA['messDict']
-    channelDict = DATA['channelDict']
-    userDict = DATA['userDict']
 
     found = False
     for mess in messDict:
@@ -258,10 +251,8 @@ def message_pin(token, message_id):
             break
     if not found:
         raise ValueError("Invalid message_id")
-    for user in userDict:
-        if user['u_id'] == uID:
-            if not(user['permission_id'] == 1 or user['permission_id'] == 2):
-                raise ValueError('The authorised user is not an admin')        
+    if not if_User_Owner(token, channelID):
+        raise ValueError('The authorised user is not an admin')        
 
     if not is_in_channel(uID, channelID):
         raise AccessError('message_id is not a valid message within a channel that the authorised user has joined')
@@ -285,7 +276,6 @@ def message_unpin(token, message_id):
     DATA = load()
     messDict = DATA['messDict']
     channelDict = DATA['channelDict']
-    userDict = DATA['userDict']
 
     found = False
     for mess in messDict:
@@ -298,10 +288,8 @@ def message_unpin(token, message_id):
             break
     if not found:
         raise ValueError("Invalid message_id")
-    for user in userDict:
-        if user['u_id'] == uID:
-            if not(user['permission_id'] == 1 or user['permission_id'] == 2):
-                raise ValueError('The authorised user is not an admin')        
+    if not if_User_Owner(token, channelID):
+        raise ValueError('The authorised user is not an admin')        
 
     for chan in channelDict:
         if chan['channel_id'] == channelID:
