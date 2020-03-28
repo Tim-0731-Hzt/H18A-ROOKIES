@@ -144,6 +144,7 @@ def auth_id_check(token, channel_id):
     # find the channel's member and owner
     uid = getUserFromToken(token)
     # if the user is slacker owner or admin
+    # lalalalalalalal
     for parts in userDict:
         if (int(parts['u_id']) == int(uid) and (int(parts['permission_id']) == 1 or int(parts['permission_id']) == 2)):
             return True
