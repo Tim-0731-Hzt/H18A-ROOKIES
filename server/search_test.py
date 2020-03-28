@@ -1,9 +1,9 @@
-from server.channel import *
-from server.message_pickle import *
-from server.auth_pickle import *
+from server.channel import channels_create, channel_invite
+from server.message_pickle import message_send
+from server.auth_pickle import auth_register
+from server.pickle_unpickle import restart
 
-import server.pickle_unpickle
-from server.search import *
+from server.search import search
 import pytest
 
 
@@ -36,8 +36,8 @@ def test1():
     message_send(token2, channel_id, 'hi')
     message_send(token3, channel_id, 'numb')
     result = search(token1,'hello')
-    assert ['hello'] == result
-
+    assert result['messages'][0]['message'] == 'hello'
+    assert result['messages'][0]['message_id'] == 1
 
 def test2():
     restart()
@@ -67,7 +67,8 @@ def test2():
     message_send(token2, channel_id, 'hi')
     message_send(token3, channel_id, 'numb')
     result = search(token2, 'hi')
-    assert ['hi'] == result
+    assert result['messages'][0]['message'] == 'hi'
+
 
 
 def test3():
@@ -98,6 +99,7 @@ def test3():
     message_send(token2, channel_id, 'hi')
     message_send(token3, channel_id, 'numb')
     result = search(token3, 'numb')
-    assert ['numb'] == result
+    assert result['messages'][0]['message'] == 'numb'
+
 
 restart()

@@ -1,11 +1,12 @@
 
 from server.Error import AccessError, ValueError
-from server.auth_pickle import *
-import server.pickle_unpickle
-from server.channel import *
+from server.auth_pickle import getUserFromToken
+from server.pickle_unpickle import save, load
 
 def admin_userpermission_change(token, u_id, permission_id):
     fl = 1
+    u_id = int(u_id)
+    permission_id = int(permission_id)
     data = load()
     userDict = data['userDict']
     for user in userDict:

@@ -316,8 +316,8 @@ def searching():
 @APP.route('/admin/userpermission/change', methods=['POST'])
 def admin():
     token = request.form.get('token')
-    u_id = request.form.get('premission_id')
-    permission_id = request.form.get('premission_id')
+    u_id = request.form.get('u_id')
+    permission_id = request.form.get('permission_id')
     admin_userpermission_change(token, u_id, permission_id)
     return dumps({})
 

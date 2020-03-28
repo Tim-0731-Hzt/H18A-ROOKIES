@@ -1,10 +1,11 @@
 ##AUTH TEST
 import server.channel
 import pytest
-from server.auth_pickle import *
+from server.auth_pickle import auth_login, auth_logout, auth_register, hashPassword, generateResetCode
+from server.auth_pickle import auth_passwordreset_request, auth_passwordreset_reset
 from server.Error import AccessError, ValueError
-from server.pickle_unpickle import *
-#from auth import userDict
+from server.pickle_unpickle import restart, load
+from server.Error import ValueError, AccessError
 from server.user import user_profile
 
 ##
@@ -49,7 +50,7 @@ def test_auth_login_2():
 
 def test_auth_login_invalidEmail():
     restart()
-    registerDict = auth_register('zhanggaoping@gmail.com', '123456', 'gaoping', 'zhang')
+    auth_register('zhanggaoping@gmail.com', '123456', 'gaoping', 'zhang')
     with pytest.raises(ValueError, match=r".*"):
         auth_login('soundsbad', '123456')
 
@@ -69,7 +70,7 @@ def test_auth_login_passwordIncorrect():
 
 def test_auth_login_notBelongToUser():
     restart()
-    registerDict = auth_register('Jankie@gmail.com', '123456', 'hayden', 'smith') 
+    auth_register('Jankie@gmail.com', '123456', 'hayden', 'smith') 
     with pytest.raises(ValueError, match=r".*"):
         auth_login('bad@gmail.com', '123456')  
     
@@ -151,15 +152,15 @@ def test_auth_register_invalidLastName():
 
 def test_auth_register_50_handleTest():
     restart()
-    registerDict = auth_register('xuanhongzhou@gmail.com', '123456','zzxxccvvbbnnmmaassddffggh','qqwweerrttyyuuiiooppaassd')
-    DATA =load()
+    auth_register('xuanhongzhou@gmail.com', '123456','zzxxccvvbbnnmmaassddffggh','qqwweerrttyyuuiiooppaassd')
+    DATA = load()
     userDict = DATA['userDict']
     assert userDict[0]['handle'] == 'zzxxccvvbbnnmmaassdd'
 
 def test_auth_register_handleCombine():
     restart()
-    registerDict = auth_register('xuanhongzhou@gmail.com', '123456','hongzhou','xuan')
-    DATA =load()
+    auth_register('xuanhongzhou@gmail.com', '123456','hongzhou','xuan')
+    DATA = load()
     userDict = DATA['userDict']
     assert userDict[0]['handle'] == 'hongzhouxuan'
 
@@ -182,8 +183,8 @@ def test_auth_handle10plus():
 
 def test_auth_register_handleCombineConflict():
     restart()
-    registerDict = auth_register('xuanhongzhou@gmail.com', '123456','hongzhou','xuan')
-    registerDict = auth_register('xuanhongzhou123@gmail.com', '123456','hongzhou','xuan')
+    auth_register('xuanhongzhou@gmail.com', '123456','hongzhou','xuan')
+    auth_register('xuanhongzhou123@gmail.com', '123456','hongzhou','xuan')
     DATA =load()
     userDict = DATA['userDict']
     assert userDict[0]['handle'] == 'hongzhouxuan'
@@ -225,7 +226,7 @@ def test_auth_passwordreset_reset_invalidResetCode():
 def test_auth_passwordreset_reset_invalidNewPassword():
     restart()
     auth_register('jankie@gmail.com', '123456','gaoping','zhang')
-    auth_passwordreset_request('jankie@gmai.com')
+    auth_passwordreset_request('jankie@gmail.com')
     DATA = load()
     userDict = DATA['userDict']
     reset_code = userDict[0]['reset_code']

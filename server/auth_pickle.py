@@ -28,7 +28,7 @@ def handle_check(handle):
 def generateResetCode():
     reset_code = ''
     for i in range(6):
-        reset_code += str(randrange(10))
+        reset_code += str(randrange(1,9))
     return reset_code
 
 # using jwt to encode a u_id and return a token
@@ -76,15 +76,17 @@ def auth_login(email, password):
 
     # logging in
     for user in userDict:
-        if user['email'] == email and user['password'] == hashPassword(password):
-            user['online'] = True
-            DATA['userDict'] = userDict
-            save(DATA)
-            return {
-                'u_id': user['u_id'],
-                'token': generateToken(user['u_id'])
-            }
-    raise ValueError("Username or password incorrect")
+        if user['email'] == email:
+            if user['password'] == hashPassword(password):
+                user['online'] = True
+                DATA['userDict'] = userDict
+                save(DATA)
+                return {
+                    'u_id': user['u_id'],
+                    'token': generateToken(user['u_id'])
+                }
+            else:
+                raise ValueError("Username or password incorrect")
 
 # Given an active token, invalidates the taken to log the user out. If a valid token is given,
 # and the user is successfully logged out, it returns true, otherwise false.
@@ -143,7 +145,7 @@ def auth_register(email, password, name_first, name_last):
         'u_id' : len(userDict) + 1,
         'permission_id': None,
         'handle' : handle,
-        'password' : password,
+        'password' : hashPassword(password),
         'online' : True,
         'reset_code': 0,
         'profile_img_url': ''

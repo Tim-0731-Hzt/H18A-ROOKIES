@@ -4,14 +4,14 @@ from server.channel import channels_create, channel_join
 from server.auth_pickle import auth_register
 import pytest
 from datetime import datetime, timedelta
-from server.Error import AccessError
-from server.pickle_unpickle import *
+from server.Error import AccessError, ValueError
+from server.pickle_unpickle import restart
 from server.admin_userpermission_change import *
 
 def test_message_sendlater_valerr():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
     channelID = channels_create(token, "Channel 1", True)
     # testing ValueError
@@ -21,7 +21,7 @@ def test_message_sendlater_valerr():
 def test_message_sendlater_valerr2():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
     channelID = channels_create(token, "Channel 1", True)
     # testing ValueError
@@ -31,11 +31,11 @@ def test_message_sendlater_valerr2():
 def test_message_sendlater_notinchannel():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
-    authRegisterDict3 = auth_register("comp1531@gmail.com", "123456789", "cse", "lu")
+    authRegisterDict3 = auth_register("comp1531@gmail.com", "hi1234566789", "cse", "lu")
     token3 = authRegisterDict3['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -51,7 +51,7 @@ def test_message_sendlater_notinchannel():
 def test_message_send_valerr():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
     channelID = channels_create(token, "Channel 1", True)
     # testing ValueError
@@ -61,10 +61,10 @@ def test_message_send_valerr():
 def test_message_send_notinchannel():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -75,7 +75,7 @@ def test_message_send_notinchannel():
 def test_message_send_normal():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
     channelID = channels_create(token, "Channel1", True)
@@ -88,10 +88,10 @@ def test_message_remove_valerr1():
 
     # set up
     restart()
-    authRegisterDict = auth_register("haodong321@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong321@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel21", True)
@@ -105,10 +105,10 @@ def test_message_remove_valerr1():
 def test_message_remove_valerr2():
     # set up
     restart()
-    authRegisterDict = auth_register("hao123dong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("hao123dong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff123@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff123@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel31", True)
@@ -122,13 +122,13 @@ def test_message_remove_accerr1():
 
     # set up
     restart()
-    authRegisterDict = auth_register("hao431dong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("hao431dong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("123jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("123jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel", True)
@@ -145,16 +145,16 @@ def test_message_remove_accerr2():
 
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser1@gmail.com", "123456789", "normal1", "user")
+    authRegisterDict3 = auth_register("normaluser1@gmail.com", "hi1234566789", "normal1", "user")
     token3 = authRegisterDict3['token']
 
-    authRegisterDict4 = auth_register("normaluser2@gmail.com", "123456789", "normal2", "user")
+    authRegisterDict4 = auth_register("normaluser2@gmail.com", "hi1234566789", "normal2", "user")
     token4 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -171,13 +171,13 @@ def test_message_remove_accerr3():
 
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token3, "Channel 1", True)
@@ -192,13 +192,13 @@ def test_message_edit_Valerr():
 
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -214,13 +214,13 @@ def test_message_edit_accerr1():
 
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -236,16 +236,16 @@ def test_message_edit_accerr2():
 
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser1@gmail.com", "123456789", "normal1", "user")
+    authRegisterDict3 = auth_register("normaluser1@gmail.com", "hi1234566789", "normal1", "user")
     token3 = authRegisterDict3['token']
 
-    authRegisterDict4 = auth_register("normaluser2@gmail.com", "123456789", "normal2", "user")
+    authRegisterDict4 = auth_register("normaluser2@gmail.com", "hi1234566789", "normal2", "user")
     token4 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -262,13 +262,13 @@ def test_message_edit():
 
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -282,13 +282,13 @@ def test_message_edit():
 def test_message_react_bymember():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict3['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -301,10 +301,10 @@ def test_message_react_bymember():
 def test_message_react_notinchannel():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -319,10 +319,10 @@ def test_message_react_notinchannel():
 def test_message_react_multireacts():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -336,13 +336,13 @@ def test_message_react_multireacts():
 def test_message_react_messremoved():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -359,13 +359,13 @@ def test_message_react_messremoved():
 def test_message_react_Nonexist():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -380,13 +380,13 @@ def test_message_react_Nonexist():
 def test_message_react_invalidreactid():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -401,13 +401,13 @@ def test_message_react_invalidreactid():
 def test_message_react_reacted():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict3['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -423,13 +423,13 @@ def test_message_react_reacted():
 def test_message_unreact_invalidmessid():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -445,13 +445,13 @@ def test_message_unreact_invalidmessid():
 def test_message_unreact_invalidreactid():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -467,13 +467,13 @@ def test_message_unreact_invalidreactid():
 def test_message_unreact_invalidreactid2():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -491,13 +491,13 @@ def test_message_unreact_invalidreactid2():
 def test_message_unreact_notreacted():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -512,13 +512,13 @@ def test_message_unreact_notreacted():
 def test_message_unreact_notinchannel():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict3['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -537,10 +537,10 @@ def test_message_unreact_notinchannel():
 def test_message_unreact_nomore_reacts():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -556,13 +556,13 @@ def test_message_unreact_nomore_reacts():
 def test_message_pin_invalidmessid():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -577,13 +577,13 @@ def test_message_pin_invalidmessid():
 def test_message_pin_unauthoriseduser():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -598,13 +598,13 @@ def test_message_pin_unauthoriseduser():
 def test_message_pin_alreadypinned():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -620,13 +620,13 @@ def test_message_pin_alreadypinned():
 def test_message_pin_notinchannel():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict3['token']
     u_id3 = authRegisterDict3['u_id']
 
@@ -644,13 +644,13 @@ def test_message_pin_notinchannel():
 def test_message_pin():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict3['token']
     u_id3 = authRegisterDict3['u_id']
 
@@ -667,13 +667,13 @@ def test_message_pin():
 def test_message_unpin_invalidmessid():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -689,13 +689,13 @@ def test_message_unpin_invalidmessid():
 def test_message_unpin_unauthoriseduser():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -711,13 +711,13 @@ def test_message_unpin_unauthoriseduser():
 def test_message_unpin_alreadyunpinned():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict2['token']
 
     channelID = channels_create(token, "Channel 1", True)
@@ -734,13 +734,13 @@ def test_message_unpin_alreadyunpinned():
 def test_message_unpin_notinchannel():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict3['token']
     u_id3 = authRegisterDict3['u_id']
     channelID = channels_create(token, "Channel 1", True)
@@ -757,13 +757,13 @@ def test_message_unpin_notinchannel():
 def test_message_unpin():
     # set up
     restart()
-    authRegisterDict = auth_register("haodong@gmail.com", "12345", "haodong", "lu")
+    authRegisterDict = auth_register("haodong@gmail.com", "hi123456", "haodong", "lu")
     token = authRegisterDict['token']
 
-    authRegisterDict2 = auth_register("jeff@gmail.com", "123456789", "jeff", "lu")
+    authRegisterDict2 = auth_register("jeff@gmail.com", "hi1234566789", "jeff", "lu")
     token2 = authRegisterDict2['token']
 
-    authRegisterDict3 = auth_register("normaluser@gmail.com", "123456789", "normal", "user")
+    authRegisterDict3 = auth_register("normaluser@gmail.com", "hi1234566789", "normal", "user")
     token3 = authRegisterDict3['token']
     u_id3 = authRegisterDict3['u_id']
     channelID = channels_create(token, "Channel 1", True)

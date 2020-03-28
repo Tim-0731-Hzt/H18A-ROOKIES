@@ -1,9 +1,9 @@
 from server.Error import AccessError, ValueError
-from server.channel import *
-from server.message_pickle import *
-from server.auth_pickle import *
-import server.pickle_unpickle
-from server.standup import *
+from server.channel import channel_invite, channels_create
+from server.auth_pickle import auth_register
+from server.pickle_unpickle import restart, load
+from server.standup import standup_start, standup_send, showtime, standup_active
+from server.pickle_unpickle import restart
 import pytest
 
 restart()
@@ -12,7 +12,6 @@ def test_standup_all():
     restart()
     authRegisterDict1 = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
     token1 = authRegisterDict1["token"]
-    UID1 = authRegisterDict1['u_id']
     authRegisterDict2 = auth_register("HaydenSmith@gmail.com","1we33456","Hayden","Smith")
     token2 = authRegisterDict2["token"]
     UID2 = authRegisterDict2['u_id']
@@ -26,7 +25,6 @@ def test_standup_all():
         "quin@gmail.com", "jijijij37236", 'daniel', 'quin')
     token4 = authRegisterDict4["token"]
     
-    UID4 = authRegisterDict4['u_id']
     channel_id = channels_create(token1,'test1',True)
     channel_invite(token1,channel_id,UID2)
     channel_invite(token1,channel_id,UID3)
@@ -61,8 +59,18 @@ def test_standup_all():
     standup_send(token2,channel_id, 'quin' )
     channelDict = load()['channelDict']
     for ch in channelDict:
-        if channel_id == ch['channel_id']:
-            assert 'Hayden: hello Jeff: daniel Hayden: quin' == ch['standlist']
+        if int(channel_id) == ch['channel_id']:
+            assert 'hayden: hello' + '\r\n' + 'jeff: daniel' + '\r\n' + 'hayden: quin' == ch['standlist']
     pass
+
+def test_active():
+    restart()
+    authRegisterDict1 = auth_register("zhttim684123@gmail.com","123456","Tim","Hu")
+    token1 = authRegisterDict1["token"]
+    channel_id = channels_create(token1,'test1',True)
+    standup_start(token1,channel_id, 20)
+    standup_active(token1, 1)
+    with pytest.raises(ValueError, match=r'.*'):
+        standup_active(token1, -5)
 
 restart()
